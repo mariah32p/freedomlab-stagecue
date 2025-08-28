@@ -1,24 +1,18 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
-import { SignUpModal } from '../components/SignUpModal';
 
 export function Pricing() {
-  const [error, setError] = useState('');
-  const [showSignUpModal, setShowSignUpModal] = useState(false);
-  const [defaultPlan, setDefaultPlan] = useState<'basic' | 'pro'>('basic');
   const [loading, setLoading] = useState<string | null>(null);
+  const [error, setError] = useState('');
   const { user, session } = useAuth();
   const navigate = useNavigate();
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
-      // If not logged in, show sign up modal with the selected plan
-      const plan = priceId === products[0].priceId ? 'basic' : 'pro';
-      setDefaultPlan(plan);
-      setShowSignUpModal(true);
+      navigate('/login');
       return;
     }
 
@@ -54,11 +48,6 @@ export function Pricing() {
     } finally {
       setLoading(null);
     }
-  };
-
-  const handleGetStarted = (plan: 'basic' | 'pro') => {
-    setDefaultPlan(plan);
-    setShowSignUpModal(true);
   };
 
   const basicFeatures = [
@@ -110,11 +99,18 @@ export function Pricing() {
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
               <button
-                onClick={() => handleGetStarted('basic')}
+                onClick={() => handleCheckout(products[0].priceId, products[0].mode)}
                 disabled={loading === products[0].priceId}
                 className="btn w-full py-3 border-2 border-navy-700 text-navy-700 bg-white hover:bg-navy-700 hover:text-white transition-all duration-200"
               >
-                Start Free Trial
+                {loading === products[0].priceId ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-navy-700 mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  'Start Free Trial'
+                )}
               </button>
             </div>
             <div className="space-y-4">
@@ -146,11 +142,18 @@ export function Pricing() {
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
               <button
-                onClick={() => handleGetStarted('pro')}
+                onClick={() => handleCheckout(products[1].priceId, products[1].mode)}
                 disabled={loading === products[1].priceId}
                 className="btn btn-primary w-full py-3 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 text-white"
               >
-                Get Pro Plan
+                {loading === products[1].priceId ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  'Get Pro Plan'
+                )}
               </button>
             </div>
             <div className="space-y-4">
@@ -205,13 +208,6 @@ export function Pricing() {
           </div>
         </div>
       </div>
-
-      {/* Sign Up Modal */}
-      <SignUpModal 
-        isOpen={showSignUpModal} 
-        onClose={() => setShowSignUpModal(false)}
-        defaultPlan={defaultPlan}
-      />
     </div>
   );
 }

@@ -44,7 +44,6 @@ Deno.serve(async (req) => {
     }
 
     const { price_id, success_url, cancel_url, mode } = await req.json();
-    const trial_period_days = await req.json().then(body => body.trial_period_days);
 
     const error = validateParameters(
       { price_id, success_url, cancel_url, mode },
@@ -179,7 +178,7 @@ Deno.serve(async (req) => {
     }
 
     // create Checkout Session
-    const sessionConfig: Stripe.Checkout.SessionCreateParams = {
+    const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
       line_items: [
@@ -191,14 +190,7 @@ Deno.serve(async (req) => {
       mode,
       success_url,
       cancel_url,
-    };
-
-    // Add trial period for subscriptions
-    if (mode === 'subscription' && trial_period_days) {
-      sessionConfig.subscription_data = { trial_period_days };
-    }
-
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    });
 
     console.log(`Created checkout session ${session.id} for customer ${customerId}`);
 
