@@ -644,7 +644,7 @@ export function Home() {
               <p className="text-gray-600 text-sm">Reliable timing when it matters most</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-purple-600 mb-2">< 2s</div>
+              <div className="text-5xl font-bold text-purple-600 mb-2">{"< 2s"}</div>
               <div className="text-lg font-semibold text-navy-900 mb-2">Response Time</div>
               <p className="text-gray-600 text-sm">Lightning-fast timer updates</p>
             </div>
