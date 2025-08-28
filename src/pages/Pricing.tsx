@@ -214,6 +214,13 @@ export function Pricing() {
           </div>
         </div>
       </div>
+
+      {/* Sign Up Modal */}
+      <SignUpModal 
+        isOpen={showSignUpModal} 
+        onClose={() => setShowSignUpModal(false)}
+        defaultPlan={defaultPlan}
+      />
     </div>
   );
 }
