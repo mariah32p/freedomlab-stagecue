@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
 
@@ -8,8 +8,15 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { signIn } = useAuth();
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+  const { signIn, resetPassword } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Check if there's a success message from password reset
+  const resetMessage = searchParams.get('message');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +34,27 @@ export function Login() {
     setLoading(false);
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Please enter your email address');
+      return;
+    }
+
+    setResetLoading(true);
+    setError('');
+
+    const { error } = await resetPassword(email);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setResetSuccess(true);
+    }
+
+    setResetLoading(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -41,10 +69,21 @@ export function Login() {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        
+        <form className="mt-8 space-y-6" onSubmit={showForgotPassword ? handleForgotPassword : handleSubmit}>
+          {resetMessage && (
+            <Alert type="success">
+              {resetMessage}
+            </Alert>
+          )}
           {error && (
             <Alert type="error">
               {error}
+            </Alert>
+          )}
+          {resetSuccess && (
+            <Alert type="success">
+              Password reset email sent! Check your inbox for further instructions.
             </Alert>
           )}
           <div className="space-y-4">
@@ -64,7 +103,8 @@ export function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
+            {!showForgotPassword && (
+              <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
@@ -80,16 +120,44 @@ export function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            )}
           </div>
 
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={showForgotPassword ? resetLoading : loading}
               className="btn btn-primary w-full py-3"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {showForgotPassword 
+                ? (resetLoading ? 'Sending reset email...' : 'Send Reset Email')
+                : (loading ? 'Signing in...' : 'Sign in')
+              }
             </button>
+          </div>
+
+          <div className="text-center space-y-2">
+            {!showForgotPassword ? (
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                className="text-sm text-teal-600 hover:text-teal-500 font-medium"
+              >
+                Forgot your password?
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setShowForgotPassword(false);
+                  setError('');
+                  setResetSuccess(false);
+                }}
+                className="text-sm text-gray-600 hover:text-gray-500 font-medium"
+              >
+                Back to sign in
+              </button>
+            )}
           </div>
         </form>
       </div>
