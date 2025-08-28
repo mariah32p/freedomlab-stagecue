@@ -33,7 +33,30 @@ export function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation Header */}
+      <nav className="bg-white shadow-sm border-b border-navy-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-navy-900 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">SC</span>
+                </div>
+                <span className="text-xl font-bold text-navy-900">StageCue</span>
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <Link to="/" className="text-navy-700 hover:text-teal-500 px-3 py-2 rounded-md text-sm font-medium">
+                Back to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Signup Form */}
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
@@ -41,7 +64,7 @@ export function Signup() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
+            <Link to="/login" className="font-medium text-teal-600 hover:text-teal-500">
               sign in to your existing account
             </Link>
           </p>
@@ -102,6 +125,7 @@ export function Signup() {
             </button>
           </div>
         </form>
+      </div>
       </div>
     </div>
   );
