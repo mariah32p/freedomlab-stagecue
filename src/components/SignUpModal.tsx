@@ -1,40 +1,71 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
 import { products } from '../stripe-config';
-import { Alert } from '../components/Alert';
+import { Alert } from './Alert';
 
-interface Subscription {
-  subscription_status: string;
-  price_id: string | null;
-  current_period_end: number | null;
-  current_period_start: number | null;
-  cancel_at_period_end: boolean;
+interface SignUpModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  defaultPlan: 'basic' | 'pro';
 }
 
-export function Dashboard() {
-  const { user } = useAuth();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
+export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro'>(defaultPlan);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchSubscription();
-  }, []);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  const fetchSubscription = async () => {
     try {
-      const { data, error } = await supabase
-        .from('stripe_user_subscriptions')
-        .select('subscription_status, price_id, current_period_end, current_period_start, cancel_at_period_end')
-        .maybeSingle();
+      // First, sign up the user
+      const { error: signUpError } = await signUp(email, password);
 
-      if (error) {
-        throw error;
+      if (signUpError) {
+        throw signUpError;
       }
 
-      setSubscription(data);
+      // Get the selected product
+      const selectedProduct = products.find(p => 
+        selectedPlan === 'basic' ? p.name === 'StageCue Basic' : p.name === 'StageCue Pro'
+      );
+
+      if (!selectedProduct) {
+        throw new Error('Selected plan not found');
+      }
+
+      // Create Stripe checkout session
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          price_id: selectedProduct.priceId,
+          success_url: `${window.location.origin}/success`,
+          cancel_url: `${window.location.origin}/`,
+          mode: selectedProduct.mode,
+          trial_period_days: 7,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -42,161 +73,127 @@ export function Dashboard() {
     }
   };
 
-  const getProductName = (priceId: string | null) => {
-    if (!priceId) return 'No active subscription';
-    const product = products.find(p => p.priceId === priceId);
-    return product ? product.name : 'Unknown Plan';
-  };
-
-  const formatDate = (timestamp: number | null) => {
-    if (!timestamp) return 'N/A';
-    return new Date(timestamp * 1000).toLocaleDateString();
-  };
-
-  const getTrialDaysLeft = () => {
-    if (!subscription?.current_period_start || !subscription?.current_period_end) return null;
-    if (subscription.subscription_status !== 'trialing') return null;
-    
-    const now = Date.now() / 1000;
-    const daysLeft = Math.ceil((subscription.current_period_end - now) / (24 * 60 * 60));
-    return Math.max(0, daysLeft);
-  };
-
-  const handleManageSubscription = async () => {
-    try {
-      // This would call a Stripe customer portal function
-      // For now, we'll just show an alert
-      alert('Subscription management coming soon!');
-    } catch (error) {
-      console.error('Error opening customer portal:', error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-      </div>
-    );
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-navy-900">Dashboard</h1>
-          <p className="mt-2 text-navy-600">Welcome back, {user?.email}</p>
-        </div>
-
-        {error && (
-          <Alert type="error" className="mb-8">
-            {error}
-          </Alert>
-        )}
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="card">
-            <h2 className="text-xl font-semibold text-navy-900 mb-4">Subscription Status</h2>
-            {subscription ? (
-              <div className="space-y-3">
-                <div>
-                  <span className="text-sm font-medium text-navy-500">Plan:</span>
-                  <p className="text-lg font-semibold text-navy-900">
-                    {getProductName(subscription.price_id)}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-sm font-medium text-navy-500">Status:</span>
-                  <div className="flex items-center space-x-2">
-                    <p className={`text-sm font-medium capitalize ${
-                      subscription.subscription_status === 'active' 
-                        ? 'text-green-600' 
-                        : subscription.subscription_status === 'trialing'
-                        ? 'text-blue-600'
-                        : subscription.subscription_status === 'not_started'
-                        ? 'text-navy-600'
-                        : 'text-red-600'
-                    }`}>
-                      {subscription.subscription_status === 'not_started' 
-                        ? 'No Active Subscription' 
-                        : subscription.subscription_status === 'trialing'
-                        ? 'Trialing'
-                        : subscription.subscription_status}
-                    </p>
-                  </div>
-                {subscription.current_period_end && (
-                  <div>
-                    <span className="text-sm font-medium text-navy-500">
-                      {subscription.cancel_at_period_end ? 'Expires:' : 'Renews:'}
-                    </span>
-                    <p className="text-sm text-navy-900">
-                      {formatDate(subscription.current_period_end)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-navy-600">No subscription information available.</p>
-            )}
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-navy-900">Get Started with StageCue</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
-          <div className="card">
-            <h2 className="text-xl font-semibold text-navy-900 mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              {!subscription || subscription.subscription_status === 'not_started' ? (
-                <Link
-                  to="/pricing"
-                  className="btn btn-primary w-full"
+          {error && (
+            <Alert type="error" className="mb-6">
+              {error}
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Plan Selection */}
+            <div>
+              <label className="block text-sm font-medium text-navy-700 mb-3">Choose Your Plan</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan('basic')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all ${
+                    selectedPlan === 'basic'
+                      ? 'border-primary-500 bg-primary-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
                 >
-                  Subscribe to StageCue
-                </Link>
-              ) : (
-                <div className="space-y-2">
-                  <button className="btn btn-primary w-full">
-                    Create New Timer
-                  </button>
-                  <button className="btn btn-outline w-full">
-                    Manage Events
-                  </button>
-                </div>
-              )}
+                  <div className="font-semibold text-navy-900">Basic</div>
+                  <div className="text-sm text-navy-600">$29/month</div>
+                  <div className="text-xs text-navy-500 mt-1">7-day free trial</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlan('pro')}
+                  className={`p-4 rounded-lg border-2 text-left transition-all ${
+                    selectedPlan === 'pro'
+                      ? 'border-purple-500 bg-purple-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="font-semibold text-navy-900">Pro</div>
+                  <div className="text-sm text-navy-600">$49/month</div>
+                  <div className="text-xs text-navy-500 mt-1">7-day free trial</div>
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="mt-8 card">
-          <h2 className="text-xl font-semibold text-navy-900 mb-4">Event Timing Features</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="font-medium text-navy-900">Countdown Displays</h3>
-              <p className="text-sm text-navy-600 mt-1">Shareable countdown timers with clean design</p>
+            {/* Email Input */}
+            <div>
+              <label htmlFor="modal-email" className="block text-sm font-medium text-navy-700 mb-2">
+                Email address
+              </label>
+              <input
+                id="modal-email"
+                type="email"
+                required
+                className="input"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="font-medium text-navy-900">Speaker Notes</h3>
-              <p className="text-sm text-navy-600 mt-1">Organize speaker information and transitions</p>
+
+            {/* Password Input */}
+            <div>
+              <label htmlFor="modal-password" className="block text-sm font-medium text-navy-700 mb-2">
+                Password
+              </label>
+              <input
+                id="modal-password"
+                type="password"
+                required
+                className="input"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z" />
-                </svg>
-              </div>
-              <h3 className="font-medium text-navy-900">Slack Notifications</h3>
-              <p className="text-sm text-navy-600 mt-1">Automatic team alerts and updates</p>
-            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary w-full py-3"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Creating account...
+                </div>
+              ) : (
+                `Start ${selectedPlan === 'basic' ? 'Basic' : 'Pro'} Trial`
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-navy-600">
+              Already have an account?{' '}
+              <button
+                onClick={onClose}
+                className="font-medium text-primary-600 hover:text-primary-500"
+              >
+                Sign in instead
+              </button>
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
+</parameter>

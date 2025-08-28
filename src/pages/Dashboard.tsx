@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { products } from '../stripe-config';
@@ -8,6 +9,7 @@ interface Subscription {
   subscription_status: string;
   price_id: string | null;
   current_period_end: number | null;
+  current_period_start: number | null;
   cancel_at_period_end: boolean;
 }
 
@@ -25,7 +27,7 @@ export function Dashboard() {
     try {
       const { data, error } = await supabase
         .from('stripe_user_subscriptions')
-        .select('subscription_status, price_id, current_period_end, cancel_at_period_end')
+        .select('subscription_status, price_id, current_period_end, current_period_start, cancel_at_period_end')
         .maybeSingle();
 
       if (error) {
@@ -49,6 +51,25 @@ export function Dashboard() {
   const formatDate = (timestamp: number | null) => {
     if (!timestamp) return 'N/A';
     return new Date(timestamp * 1000).toLocaleDateString();
+  };
+
+  const getTrialDaysLeft = () => {
+    if (!subscription?.current_period_start || !subscription?.current_period_end) return null;
+    if (subscription.subscription_status !== 'trialing') return null;
+    
+    const now = Date.now() / 1000;
+    const daysLeft = Math.ceil((subscription.current_period_end - now) / (24 * 60 * 60));
+    return Math.max(0, daysLeft);
+  };
+
+  const handleManageSubscription = async () => {
+    try {
+      // This would call a Stripe customer portal function
+      // For now, we'll just show an alert
+      alert('Subscription management coming soon!');
+    } catch (error) {
+      console.error('Error opening customer portal:', error);
+    }
   };
 
   if (loading) {
@@ -86,17 +107,28 @@ export function Dashboard() {
                 </div>
                 <div>
                   <span className="text-sm font-medium text-navy-500">Status:</span>
-                  <p className={`text-sm font-medium capitalize ${
-                    subscription.subscription_status === 'active' 
-                      ? 'text-green-600' 
-                      : subscription.subscription_status === 'not_started'
-                      ? 'text-navy-600'
-                      : 'text-red-600'
-                  }`}>
-                    {subscription.subscription_status === 'not_started' 
-                      ? 'No Active Subscription' 
-                      : subscription.subscription_status}
-                  </p>
+                  <div className="flex items-center space-x-2">
+                    <p className={`text-sm font-medium capitalize ${
+                      subscription.subscription_status === 'active' 
+                        ? 'text-green-600' 
+                        : subscription.subscription_status === 'trialing'
+                        ? 'text-blue-600'
+                        : subscription.subscription_status === 'not_started'
+                        ? 'text-navy-600'
+                        : 'text-red-600'
+                    }`}>
+                      {subscription.subscription_status === 'not_started' 
+                        ? 'No Active Subscription' 
+                        : subscription.subscription_status === 'trialing'
+                        ? 'Free Trial'
+                        : subscription.subscription_status}
+                    </p>
+                    {subscription.subscription_status === 'trialing' && (
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        {getTrialDaysLeft()} days left
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {subscription.current_period_end && (
                   <div>
@@ -106,6 +138,16 @@ export function Dashboard() {
                     <p className="text-sm text-navy-900">
                       {formatDate(subscription.current_period_end)}
                     </p>
+                  </div>
+                )}
+                {subscription.subscription_status !== 'not_started' && (
+                  <div className="pt-3 border-t border-gray-200">
+                    <button
+                      onClick={handleManageSubscription}
+                      className="btn btn-outline w-full text-sm"
+                    >
+                      Manage Subscription
+                    </button>
                   </div>
                 )}
               </div>
