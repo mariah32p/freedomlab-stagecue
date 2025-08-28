@@ -28,32 +28,7 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation Header */}
-      <nav className="bg-white shadow-sm border-b border-navy-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="text-xl font-bold text-navy-900">StageCue</span>
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <Link to="/" className="text-navy-700 hover:text-teal-500 px-3 py-2 rounded-md text-sm font-medium">
-                Back to Home
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Login Form */}
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
@@ -117,7 +92,6 @@ export function Login() {
             </button>
           </div>
         </form>
-      </div>
       </div>
     </div>
   );
