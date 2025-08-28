@@ -114,6 +114,5 @@ export function Pricing() {
           </p>
         </div>
       </div>
-    </div>
   );
 }
