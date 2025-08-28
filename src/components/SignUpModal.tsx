@@ -196,4 +196,3 @@ export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) 
     </div>
   );
 }
-</parameter>
