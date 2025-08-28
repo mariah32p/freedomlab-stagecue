@@ -1,17 +1,8 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { products } from '../stripe-config';
-import { Alert } from '../components/Alert';
-import { SignUpModal } from '../components/SignUpModal';
-
-export function Pricing() {
-  const [loading, setLoading] = useState<string | null>(null);
+import { Link } from 'react-router-dom';
   const [error, setError] = useState('');
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [defaultPlan, setDefaultPlan] = useState<'basic' | 'pro'>('basic');
-  const { user, session } = useAuth();
-  const navigate = useNavigate();
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
@@ -27,33 +18,12 @@ export function Pricing() {
 
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
-        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          price_id: priceId,
-          success_url: `${window.location.origin}/success`,
-          cancel_url: `${window.location.origin}/pricing`,
-          mode,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(null);
-    }
+  const handleGetStarted = (plan: 'basic' | 'pro') => {
+    setDefaultPlan(plan);
+    setShowSignUpModal(true);
   };
 
   const basicFeatures = [
