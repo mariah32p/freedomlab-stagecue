@@ -3,16 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
+import { SignUpModal } from '../components/SignUpModal';
 
 export function Pricing() {
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [defaultPlan, setDefaultPlan] = useState<'basic' | 'pro'>('basic');
   const { user, session } = useAuth();
   const navigate = useNavigate();
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
-      navigate('/login');
+      // If not logged in, show sign up modal with the selected plan
+      const plan = priceId === products[0].priceId ? 'basic' : 'pro';
+      setDefaultPlan(plan);
+      setShowSignUpModal(true);
       return;
     }
 
