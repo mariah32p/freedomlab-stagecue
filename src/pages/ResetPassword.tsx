@@ -136,4 +136,3 @@ export function ResetPassword() {
     </div>
   );
 }
-</invoke>
