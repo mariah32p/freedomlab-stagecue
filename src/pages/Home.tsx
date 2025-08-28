@@ -14,7 +14,7 @@ export function Home() {
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             StageCue provides multi-session management for conferences, meetings, and live events. 
-            Keep your events running on time with precision timing tools.
+            Keep your events running on time with precision timing tools. Choose from Standard or Pro plans.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             {user ? (

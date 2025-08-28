@@ -16,4 +16,12 @@ export const products: Product[] = [
     mode: 'subscription',
     price: 29.00,
   },
+  {
+    id: 'prod_StageCuePro',
+    priceId: 'price_StageCueProMonthly',
+    name: 'StageCue Pro',
+    description: 'Advanced event timing with unlimited sessions, custom branding, analytics, and priority support for large-scale events.',
+    mode: 'subscription',
+    price: 49.00,
+  },
 ];

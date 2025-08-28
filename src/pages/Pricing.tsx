@@ -71,8 +71,16 @@ export function Pricing() {
         )}
 
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-1 sm:gap-6 lg:max-w-4xl lg:mx-auto">
+        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-5xl lg:mx-auto">
           {products.map((product) => (
-            <div key={product.id} className="card">
+            <div key={product.id} className={`card relative ${product.name === 'StageCue Pro' ? 'ring-2 ring-primary-500' : ''}`}>
+              {product.name === 'StageCue Pro' && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-primary-600 text-white px-3 py-1 text-xs font-medium rounded-full">
+                    Most Popular
+                  </span>
+                </div>
+              )}
               <div className="text-center">
                 <h3 className="text-2xl font-semibold text-gray-900">{product.name}</h3>
                 <p className="mt-4 text-gray-600">{product.description}</p>
