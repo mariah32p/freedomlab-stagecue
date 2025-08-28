@@ -63,8 +63,8 @@ export function Dashboard() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-2 text-gray-600">Welcome back, {user?.email}</p>
+          <h1 className="text-3xl font-bold text-navy-900">Dashboard</h1>
+          <p className="mt-2 text-navy-600">Welcome back, {user?.email}</p>
         </div>
 
         {error && (
@@ -75,22 +75,22 @@ export function Dashboard() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <div className="card">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Subscription Status</h2>
+            <h2 className="text-xl font-semibold text-navy-900 mb-4">Subscription Status</h2>
             {subscription ? (
               <div className="space-y-3">
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Plan:</span>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <span className="text-sm font-medium text-navy-500">Plan:</span>
+                  <p className="text-lg font-semibold text-navy-900">
                     {getProductName(subscription.price_id)}
                   </p>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-gray-500">Status:</span>
+                  <span className="text-sm font-medium text-navy-500">Status:</span>
                   <p className={`text-sm font-medium capitalize ${
                     subscription.subscription_status === 'active' 
                       ? 'text-green-600' 
                       : subscription.subscription_status === 'not_started'
-                      ? 'text-gray-600'
+                      ? 'text-navy-600'
                       : 'text-red-600'
                   }`}>
                     {subscription.subscription_status === 'not_started' 
@@ -100,37 +100,37 @@ export function Dashboard() {
                 </div>
                 {subscription.current_period_end && (
                   <div>
-                    <span className="text-sm font-medium text-gray-500">
+                    <span className="text-sm font-medium text-navy-500">
                       {subscription.cancel_at_period_end ? 'Expires:' : 'Renews:'}
                     </span>
-                    <p className="text-sm text-gray-900">
+                    <p className="text-sm text-navy-900">
                       {formatDate(subscription.current_period_end)}
                     </p>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-gray-600">No subscription information available.</p>
+              <p className="text-navy-600">No subscription information available.</p>
             )}
           </div>
 
           <div className="card">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <h2 className="text-xl font-semibold text-navy-900 mb-4">Quick Actions</h2>
             <div className="space-y-3">
               {!subscription || subscription.subscription_status === 'not_started' ? (
-                <a
-                  href="/pricing"
+                <Link
+                  to="/pricing"
                   className="btn btn-primary w-full"
                 >
                   Subscribe to StageCue
-                </a>
+                </Link>
               ) : (
                 <div className="space-y-2">
                   <button className="btn btn-primary w-full">
-                    Create New Event
+                    Create New Timer
                   </button>
                   <button className="btn btn-outline w-full">
-                    Manage Sessions
+                    Manage Events
                   </button>
                 </div>
               )}
@@ -139,34 +139,34 @@ export function Dashboard() {
         </div>
 
         <div className="mt-8 card">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Event Timing Features</h2>
+          <h2 className="text-xl font-semibold text-navy-900 mb-4">Event Timing Features</h2>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <div className="text-center p-4 bg-navy-50 rounded-lg">
               <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="font-medium text-gray-900">Precision Timers</h3>
-              <p className="text-sm text-gray-600 mt-1">Accurate countdown and session timing</p>
+              <h3 className="font-medium text-navy-900">Countdown Displays</h3>
+              <p className="text-sm text-navy-600 mt-1">Shareable countdown timers with clean design</p>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            <div className="text-center p-4 bg-navy-50 rounded-lg">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="font-medium text-gray-900">Multi-Session</h3>
-              <p className="text-sm text-gray-600 mt-1">Manage multiple concurrent events</p>
+              <h3 className="font-medium text-navy-900">Speaker Notes</h3>
+              <p className="text-sm text-navy-600 mt-1">Organize speaker information and transitions</p>
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <div className="text-center p-4 bg-navy-50 rounded-lg">
               <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z" />
                 </svg>
               </div>
-              <h3 className="font-medium text-gray-900">Live Events</h3>
-              <p className="text-sm text-gray-600 mt-1">Perfect for conferences and meetings</p>
+              <h3 className="font-medium text-navy-900">Slack Notifications</h3>
+              <p className="text-sm text-navy-600 mt-1">Automatic team alerts and updates</p>
             </div>
           </div>
         </div>

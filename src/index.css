@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
   }
 }
 
@@ -14,22 +16,22 @@
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+    @apply bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+    @apply bg-navy-100 text-navy-900 hover:bg-navy-200 focus:ring-navy-500;
   }
   
   .btn-outline {
-    @apply border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-primary-500;
+    @apply border border-navy-300 bg-white text-navy-700 hover:bg-navy-50 focus:ring-primary-500;
   }
   
   .input {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+    @apply block w-full px-3 py-2 border border-navy-300 rounded-lg shadow-sm placeholder-navy-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500;
   }
   
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+    @apply bg-white rounded-xl shadow-sm border border-navy-200 p-6;
   }
 }

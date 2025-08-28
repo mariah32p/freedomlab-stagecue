@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
@@ -50,68 +50,162 @@ export function Pricing() {
     }
   };
 
+  const basicFeatures = [
+    'Up to 10 active timers',
+    'Timer controls via web dashboard',
+    'Speaker notes management',
+    'Basic Slack notifications',
+    'Save/reuse timer configurations',
+    '7-day free trial'
+  ];
+
+  const proFeatures = [
+    'Everything in Basic, plus:',
+    'Unlimited active timers',
+    'Custom moderator links',
+    'Speaker self-service links',
+    'Advanced Slack notifications',
+    'Timer + speaker templates'
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-4">
             Choose Your Plan
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            Professional event timing system for all your needs
+          <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+            Professional event timing system for conferences, workshops, and live events
           </p>
         </div>
 
         {error && (
-          <div className="mt-8 max-w-md mx-auto">
+          <div className="mb-8 max-w-md mx-auto">
             <Alert type="error">
               {error}
             </Alert>
           </div>
         )}
 
-        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-5xl lg:mx-auto">
-          {products.map((product) => (
-            <div key={product.id} className={`card relative ${product.name === 'StageCue Pro' ? 'ring-2 ring-primary-500' : ''}`}>
-              {product.name === 'StageCue Pro' && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-primary-600 text-white px-3 py-1 text-xs font-medium rounded-full">
-                    Most Popular
+        <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Basic Plan */}
+          <div className="card relative">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
+              <p className="text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-navy-900">$29</span>
+                <span className="text-lg font-medium text-navy-500">/month</span>
+              </div>
+              <button
+                onClick={() => handleCheckout(products[0].priceId, products[0].mode)}
+                disabled={loading === products[0].priceId}
+                className="btn btn-outline w-full py-3 border-2 border-navy-300 text-navy-700 hover:bg-navy-50"
+              >
+                {loading === products[0].priceId ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-navy-700 mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  'Start Free Trial'
+                )}
+              </button>
+            </div>
+            <div className="space-y-4">
+              {basicFeatures.map((feature, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-navy-700">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pro Plan */}
+          <div className="card relative ring-2 ring-purple-500 bg-gradient-to-br from-white to-purple-50">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-purple-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                MOST POPULAR
+              </span>
+            </div>
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
+              <p className="text-navy-600 mb-6">Perfect for conferences and larger events</p>
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-navy-900">$49</span>
+                <span className="text-lg font-medium text-navy-500">/month</span>
+              </div>
+              <button
+                onClick={() => handleCheckout(products[1].priceId, products[1].mode)}
+                disabled={loading === products[1].priceId}
+                className="btn btn-primary w-full py-3 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+              >
+                {loading === products[1].priceId ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
+                  </div>
+                ) : (
+                  'Get Pro Plan'
+                )}
+              </button>
+            </div>
+            <div className="space-y-4">
+              {proFeatures.map((feature, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className={`${feature.startsWith('Everything') ? 'font-semibold text-navy-900' : 'text-navy-700'}`}>
+                    {feature}
                   </span>
                 </div>
-              )}
-              <div className="text-center">
-                <h3 className="text-2xl font-semibold text-gray-900">{product.name}</h3>
-                <p className="mt-4 text-gray-600">{product.description}</p>
-                <div className="mt-6">
-                  <span className="text-4xl font-bold text-gray-900">${product.price}</span>
-                  {product.mode === 'subscription' && (
-                    <span className="text-base font-medium text-gray-500">/month</span>
-                  )}
-                </div>
-                <button
-                  onClick={() => handleCheckout(product.priceId, product.mode)}
-                  disabled={loading === product.priceId}
-                  className="mt-8 btn btn-primary w-full py-3"
-                >
-                  {loading === product.priceId ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Processing...
-                    </div>
-                  ) : (
-                    `Get ${product.name}`
-                  )}
-                </button>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-sm text-gray-500">
-            All plans include professional event timing features and multi-session management.
-          </p>
+        <div className="mt-16 text-center">
+          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto border border-navy-200">
+            <h3 className="text-2xl font-bold text-navy-900 mb-6">All Plans Include</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-navy-900 mb-2">Secure & Reliable</h4>
+                <p className="text-sm text-navy-600">Enterprise-grade security and 99.9% uptime</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-navy-900 mb-2">24/7 Support</h4>
+                <p className="text-sm text-navy-600">Get help when you need it most</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </div>
+                <h4 className="font-semibold text-navy-900 mb-2">No Setup Required</h4>
+                <p className="text-sm text-navy-600">Start timing events in minutes</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
