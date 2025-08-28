@@ -70,7 +70,6 @@ export function Pricing() {
           </div>
         )}
 
-        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-1 sm:gap-6 lg:max-w-4xl lg:mx-auto">
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-5xl lg:mx-auto">
           {products.map((product) => (
             <div key={product.id} className={`card relative ${product.name === 'StageCue Pro' ? 'ring-2 ring-primary-500' : ''}`}>
