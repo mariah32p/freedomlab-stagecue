@@ -7,16 +7,25 @@ export function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900">
+      <div className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 min-h-screen flex items-center">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2301b79e' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2301b79e' fill-opacity='0.1'%3E%3Ccircle cx='40' cy='40' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-          <div className="text-center mb-16">
+        {/* Floating geometric shapes */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary-500/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-3/4 right-1/4 w-48 h-48 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-3/4 w-24 h-24 bg-primary-500/10 rounded-full blur-lg animate-pulse" style={{ animationDelay: '4s' }}></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Column - Hero Content */}
+            <div className="text-left">
             <div className="inline-flex items-center px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-medium mb-8">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -24,41 +33,72 @@ export function Home() {
               Professional Event Timing Platform
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight">
-              Stop the Event
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-300 block">
-                Chaos
+            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-8 leading-tight">
+              <span className="block">Stop the</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-300 to-primary-500 block">
+                Event Chaos
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-navy-200 mb-12 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl lg:text-2xl text-navy-200 mb-12 max-w-2xl leading-relaxed">
               Replace chaotic stopwatches and scattered speaker notes with organized timer management 
               and automatic Slack notifications that keep your team informed.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
+            <div className="flex flex-col sm:flex-row gap-6 mb-16">
               {user ? (
-                <Link to="/dashboard" className="btn text-lg px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200">
+                <Link to="/dashboard" className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary-500 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative">
                   Go to Dashboard
+                  </span>
                 </Link>
               ) : (
                 <>
-                  <Link to="/signup" className="btn text-lg px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200">
+                  <Link to="/signup" className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary-500 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span className="relative flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
                     Start 7-Day Free Trial
+                    </span>
                   </Link>
-                  <Link to="/pricing" className="btn text-lg px-8 py-4 border-2 border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-navy-900 rounded-xl transition-all duration-200">
+                  <Link to="/pricing" className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white hover:text-navy-900 transition-all duration-300">
                     View Pricing
                   </Link>
                 </>
               )}
             </div>
+            
+            {/* Trust indicators */}
+            <div className="flex items-center space-x-8 text-navy-300">
+              <div className="flex items-center space-x-2">
+                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span className="text-sm font-medium">Enterprise Security</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="text-sm font-medium">99.9% Uptime</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm font-medium">24/7 Support</span>
+              </div>
+            </div>
           </div>
 
-          {/* Hero Mockup */}
-          <div className="relative max-w-6xl mx-auto">
+          {/* Right Column - Hero Mockup */}
+          <div className="relative">
             <div className="relative">
               {/* Main Dashboard Mockup */}
-              <div className="bg-white rounded-3xl shadow-2xl p-8 border border-navy-100 transform perspective-1000 rotate-x-2">
+              <div className="bg-white rounded-3xl shadow-2xl p-8 border border-navy-100 transform hover:scale-105 transition-transform duration-500">
                 {/* Dashboard Header */}
                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
                   <div className="flex items-center space-x-3">
@@ -77,7 +117,7 @@ export function Home() {
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-xs font-medium text-green-700">LIVE</span>
                     </div>
-                    <button className="px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-colors">
+                    <button className="px-4 py-2 bg-primary-500 text-white rounded-xl text-sm font-medium hover:bg-primary-600 transition-colors shadow-lg">
                       + New Timer
                     </button>
                   </div>
@@ -86,7 +126,7 @@ export function Home() {
                 {/* Active Timers */}
                 <div className="grid gap-6">
                   {/* Running Timer */}
-                  <div className="bg-gradient-to-r from-teal-50 to-teal-100 border-2 border-teal-200 rounded-2xl p-6">
+                  <div className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-3">
@@ -110,13 +150,13 @@ export function Home() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-5xl font-bold text-teal-600 mb-2">12:45</div>
+                        <div className="text-5xl font-bold text-primary-600 mb-2 font-mono">12:45</div>
                         <div className="text-sm text-gray-500">Started 17:15 ago</div>
                         <div className="flex space-x-2 mt-4">
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50">
+                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
                             Pause
                           </button>
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50">
+                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
                             +5 min
                           </button>
                         </div>
@@ -125,7 +165,7 @@ export function Home() {
                   </div>
 
                   {/* Upcoming Timer */}
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-6">
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-3">
@@ -149,13 +189,13 @@ export function Home() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-5xl font-bold text-purple-600 mb-2">45:00</div>
+                        <div className="text-5xl font-bold text-purple-600 mb-2 font-mono">45:00</div>
                         <div className="text-sm text-gray-500">Starts after current</div>
                         <div className="flex space-x-2 mt-4">
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50">
+                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
                             Edit
                           </button>
-                          <button className="px-3 py-1 bg-purple-500 text-white rounded-lg text-xs font-medium hover:bg-purple-600">
+                          <button className="px-3 py-1 bg-purple-500 text-white rounded-lg text-xs font-medium hover:bg-purple-600 transition-colors">
                             Start Now
                           </button>
                         </div>
@@ -164,7 +204,7 @@ export function Home() {
                   </div>
 
                   {/* Scheduled Timer */}
-                  <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6">
+                  <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-3">
@@ -188,7 +228,7 @@ export function Home() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-3xl font-bold text-gray-600 mb-2">15:00</div>
+                        <div className="text-3xl font-bold text-gray-600 mb-2 font-mono">15:00</div>
                         <div className="text-sm text-gray-500">Starts at 3:30 PM</div>
                       </div>
                     </div>
@@ -197,7 +237,7 @@ export function Home() {
               </div>
 
               {/* Floating Slack Notification */}
-              <div className="absolute -right-4 top-1/2 transform -translate-y-1/2 w-80 bg-navy-900 rounded-2xl shadow-2xl p-6 border border-navy-700">
+              <div className="absolute -right-8 top-1/3 transform -translate-y-1/2 w-80 bg-navy-900 rounded-2xl shadow-2xl p-6 border border-navy-700 hover:scale-105 transition-transform duration-300">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-sm">#</span>
@@ -208,7 +248,7 @@ export function Home() {
                   </div>
                   <div className="ml-auto text-xs text-gray-400">2:34 PM</div>
                 </div>
-                <div className="space-y-3 text-white font-mono text-sm">
+                <div className="space-y-3 text-white text-sm">
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">⚠️</span>
                     <span>Opening Keynote - 5 minutes remaining</span>
@@ -225,11 +265,11 @@ export function Home() {
               </div>
 
               {/* Floating Public Display */}
-              <div className="absolute -left-4 bottom-8 w-64 bg-white rounded-2xl shadow-2xl p-6 border border-gray-200">
+              <div className="absolute -left-8 bottom-8 w-64 bg-white rounded-2xl shadow-2xl p-6 border border-gray-200 hover:scale-105 transition-transform duration-300">
                 <div className="text-center">
                   <div className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">PUBLIC DISPLAY</div>
                   <h4 className="text-lg font-bold text-navy-900 mb-4">Opening Keynote</h4>
-                  <div className="text-6xl font-bold text-teal-500 mb-2">12:45</div>
+                  <div className="text-6xl font-bold text-primary-500 mb-2 font-mono">12:45</div>
                   <div className="text-sm text-gray-500 mb-4">Dr. Sarah Chen</div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div className="bg-teal-500 h-2 rounded-full" style={{ width: '58%' }}></div>
@@ -238,6 +278,7 @@ export function Home() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -644,7 +685,7 @@ export function Home() {
               <p className="text-gray-600 text-sm">Reliable timing when it matters most</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-bold text-purple-600 mb-2">{"< 2s"}</div>
+              <div className="text-5xl font-bold text-purple-600 mb-2">{"<2s"}</div>
               <div className="text-lg font-semibold text-navy-900 mb-2">Response Time</div>
               <p className="text-gray-600 text-sm">Lightning-fast timer updates</p>
             </div>
