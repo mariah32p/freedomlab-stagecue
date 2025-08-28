@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from '../components/Alert';
 import { SignUpModal } from '../components/SignUpModal';
 
-export default function PricingPage() {
+export function Pricing() {
   const [error, setError] = useState('');
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [defaultPlan, setDefaultPlan] = useState<'basic' | 'pro'>('basic');
-  const [loading, setLoading] = useState<string | null>(null);
-  const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
-  const products = [
-    { priceId: 'price_basic' },
-    { priceId: 'price_pro' }
-  ];
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
@@ -34,10 +28,10 @@ export default function PricingPage() {
         }
       });
     } catch (error) {
-      setError('An error occurred');
+      console.error('Error:', error);
     }
   };
-
+  
   const handleGetStarted = (plan: 'basic' | 'pro') => {
     setDefaultPlan(plan);
     setShowSignUpModal(true);
