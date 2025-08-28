@@ -6,7 +6,11 @@
 
 @layer base {
   html {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  body {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
@@ -24,7 +28,7 @@
   }
   
   .btn-outline {
-    @apply border border-navy-300 bg-white text-navy-700 hover:bg-navy-50 focus:ring-primary-500;
+    @apply border-2 border-current bg-transparent hover:bg-current hover:text-white focus:ring-primary-500 transition-all duration-200;
   }
   
   .input {

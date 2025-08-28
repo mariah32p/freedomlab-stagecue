@@ -101,7 +101,7 @@ export function Pricing() {
               <button
                 onClick={() => handleCheckout(products[0].priceId, products[0].mode)}
                 disabled={loading === products[0].priceId}
-                className="btn btn-outline w-full py-3 border-2 border-navy-300 text-navy-700 hover:bg-navy-50"
+                className="btn w-full py-3 border-2 border-navy-700 text-navy-700 bg-white hover:bg-navy-700 hover:text-white transition-all duration-200"
               >
                 {loading === products[0].priceId ? (
                   <div className="flex items-center justify-center">
@@ -144,7 +144,7 @@ export function Pricing() {
               <button
                 onClick={() => handleCheckout(products[1].priceId, products[1].mode)}
                 disabled={loading === products[1].priceId}
-                className="btn btn-primary w-full py-3 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+                className="btn btn-primary w-full py-3 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 text-white"
               >
                 {loading === products[1].priceId ? (
                   <div className="flex items-center justify-center">

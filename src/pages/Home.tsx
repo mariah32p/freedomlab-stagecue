@@ -287,7 +287,7 @@ export function Home() {
               <Link to="/signup" className="btn btn-primary text-lg px-8 py-4 bg-white text-navy-900 hover:bg-navy-50">
                 Start Free Trial
               </Link>
-              <Link to="/pricing" className="btn btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-navy-900">
+              <Link to="/pricing" className="btn text-lg px-8 py-4 border-2 border-white text-white bg-transparent hover:bg-white hover:text-navy-900 transition-all duration-200">
                 View Plans
               </Link>
             </div>

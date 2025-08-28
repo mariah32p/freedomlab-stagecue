@@ -5,10 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    fontFamily: {
-      sans: ['Montserrat', 'system-ui', 'sans-serif'],
-    },
     extend: {
+      fontFamily: {
+        sans: ['Montserrat', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
       colors: {
         primary: {
           50: '#f0f9ff',
