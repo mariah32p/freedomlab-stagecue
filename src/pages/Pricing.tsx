@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { products } from '../stripe-config';
-import { Alert } from '../components/Alert';
 import { SignUpModal } from '../components/SignUpModal';
 
-export function Pricing() {
+export default function PricingPage() {
   const [error, setError] = useState('');
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [defaultPlan, setDefaultPlan] = useState<'basic' | 'pro'>('basic');
+  const [loading, setLoading] = useState<string | null>(null);
+  const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
+  const products = [
+    { priceId: 'price_basic' },
+    { priceId: 'price_pro' }
+  ];
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
@@ -23,33 +28,19 @@ export function Pricing() {
 
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
-        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          price_id: priceId,
-          success_url: `${window.location.origin}/success`,
-          cancel_url: `${window.location.origin}/pricing`,
-          mode,
-        }),
+        }
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(null);
+    } catch (error) {
+      setError('An error occurred');
     }
+  };
+
+  const handleGetStarted = (plan: 'basic' | 'pro') => {
+    setDefaultPlan(plan);
+    setShowSignUpModal(true);
   };
 
   const basicFeatures = [
@@ -206,5 +197,3 @@ export function Pricing() {
     </div>
   );
 }
-
-export { Pricing }
