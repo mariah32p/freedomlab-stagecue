@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
+import { Link } from 'react-router-dom';
 
 interface Subscription {
   subscription_status: string;
