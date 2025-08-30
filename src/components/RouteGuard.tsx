@@ -20,15 +20,20 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // Allow certain public routes without authentication
-    const publicRoutes = ['/login', '/signup', '/reset-password', '/pricing', '/'];
-    if (publicRoutes.includes(location.pathname)) {
+    // If not signed in → send to /signup
+    if (!user) {
+      // Allow certain public routes without authentication
+      const publicRoutes = ['/login', '/signup', '/reset-password', '/pricing', '/'];
+      if (publicRoutes.includes(location.pathname)) {
+        return;
+      }
+      navigate('/signup');
       return;
     }
 
-    // If not signed in → send to /signup
-    if (!user) {
-      navigate('/signup');
+    // If signed in and on landing page → redirect to dashboard
+    if (location.pathname === '/') {
+      navigate('/dashboard');
       return;
     }
 
