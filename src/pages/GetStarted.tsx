@@ -40,6 +40,7 @@ export function GetStarted() {
           success_url: `${window.location.origin}/dashboard`,
           cancel_url: `${window.location.origin}/get-started`,
           mode: selectedProduct.mode,
+          trial_period_days: 7,
         }),
       });
 
