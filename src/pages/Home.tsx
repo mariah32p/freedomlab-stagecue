@@ -24,9 +24,9 @@ export function Home() {
             <div className="mb-12">
               <button
                 onClick={() => setShowSignUpModal(true)}
-                className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 mb-6"
+                className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               >
-                <span className="relative z-10">Start 7-Day Free Trial</span>
+                <span className="relative z-10">Start Free Trial</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
               <div className="flex items-center justify-center text-slate-500 text-sm mt-4">

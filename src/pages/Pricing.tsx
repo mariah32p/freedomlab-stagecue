@@ -98,20 +98,6 @@ export function Pricing() {
                 <span className="text-5xl font-bold text-navy-900">$29</span>
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
-              <button
-                onClick={() => handleCheckout(products[0].priceId, products[0].mode)}
-                disabled={loading === products[0].priceId}
-                className="btn w-full py-3 border-2 border-navy-700 text-navy-700 bg-white hover:bg-navy-700 hover:text-white transition-all duration-200"
-              >
-                {loading === products[0].priceId ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-navy-700 mr-2"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  'Start Free Trial'
-                )}
-              </button>
             </div>
             <div className="space-y-4">
               {basicFeatures.map((feature, index) => (
@@ -141,20 +127,6 @@ export function Pricing() {
                 <span className="text-5xl font-bold text-navy-900">$49</span>
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
-              <button
-                onClick={() => handleCheckout(products[1].priceId, products[1].mode)}
-                disabled={loading === products[1].priceId}
-                className="btn btn-primary w-full py-3 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 text-white"
-              >
-                {loading === products[1].priceId ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  'Get Pro Plan'
-                )}
-              </button>
             </div>
             <div className="space-y-4">
               {proFeatures.map((feature, index) => (
@@ -171,6 +143,26 @@ export function Pricing() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => handleCheckout(products[0].priceId, products[0].mode)}
+            disabled={loading === products[0].priceId}
+            className="btn btn-primary px-8 py-4 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+          >
+            {loading === products[0].priceId ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Starting trial...
+              </div>
+            ) : (
+              'Start Free Trial'
+            )}
+          </button>
+          <p className="text-sm text-navy-600 mt-4">
+            7-day free trial • Choose your plan after signup
+          </p>
         </div>
 
         <div className="mt-16 text-center">
