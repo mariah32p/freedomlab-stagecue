@@ -663,5 +663,7 @@ export function Home() {
         isOpen={showSignUpModal} 
         onClose={() => setShowSignUpModal(false)} 
         defaultPlan="basic"
-  )
+      />
+    </div>
+  );
 }
