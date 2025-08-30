@@ -74,11 +74,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await supabase.auth.signOut();
     } catch (error: any) {
+      // Extract error message from various possible error formats
+      let errorMessage = '';
+      
+      if (error?.message) {
+        errorMessage = error.message;
+      } else if (error?.body) {
+        try {
+          const parsedBody = typeof error.body === 'string' ? JSON.parse(error.body) : error.body;
+          errorMessage = parsedBody?.message || '';
+        } catch {
+          // If parsing fails, use the body as is
+          errorMessage = error.body;
+        }
+      }
+      
       // Gracefully handle session_not_found errors - user is already logged out
-      if (error?.message?.includes('session_not_found') || error?.message?.includes('Session from session_id claim in JWT does not exist')) {
+      if (errorMessage.includes('session_not_found') || 
+          errorMessage.includes('Session from session_id claim in JWT does not exist')) {
         // Session doesn't exist, but that's fine - user is effectively logged out
         return;
       }
+      
       // Re-throw other errors
       throw error;
     }
