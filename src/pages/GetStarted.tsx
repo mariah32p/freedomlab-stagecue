@@ -15,6 +15,11 @@ export function GetStarted() {
       return;
     }
 
+    // Debug logging
+    console.log('User:', user?.id);
+    console.log('Session exists:', !!session);
+    console.log('Access token exists:', !!session?.access_token);
+
     setLoading(true);
     setError('');
 
@@ -27,6 +32,9 @@ export function GetStarted() {
       if (!selectedProduct) {
         throw new Error('Selected plan not found');
       }
+
+      console.log('Making request to:', `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`);
+      console.log('Authorization header:', `Bearer ${session.access_token?.substring(0, 20)}...`);
 
       // Create Stripe checkout session with trial
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
@@ -44,7 +52,11 @@ export function GetStarted() {
         }),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to create checkout session');
@@ -54,6 +66,7 @@ export function GetStarted() {
         window.location.href = data.url;
       }
     } catch (err: any) {
+      console.error('Checkout error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
