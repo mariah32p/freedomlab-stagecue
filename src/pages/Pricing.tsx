@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
@@ -9,6 +9,11 @@ export function Pricing() {
   const [error, setError] = useState('');
   const { user, session } = useAuth();
   const navigate = useNavigate();
+
+  const handleStartTrial = () => {
+    navigate('/signup');
+    setTimeout(() => window.scrollTo(0, 0), 100);
+  };
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!user || !session) {
@@ -146,12 +151,12 @@ export function Pricing() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link
-            to="/signup"
+          <button
+            onClick={handleStartTrial}
             className="btn btn-primary px-8 py-4 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
           >
             Start Free Trial
-          </Link>
+          </button>
           <p className="text-sm text-navy-600 mt-4">
             7-day free trial • Choose your plan after signup
           </p>

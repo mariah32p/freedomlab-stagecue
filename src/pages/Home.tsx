@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function Home() {
+  const navigate = useNavigate();
+
+  const handleStartTrial = () => {
+    navigate('/signup');
+    setTimeout(() => window.scrollTo(0, 0), 100);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -20,13 +27,13 @@ export function Home() {
               Keep speakers on track, coordinate your team, and deliver flawless events with automated timing and real-time notifications.
             </p>
             <div className="mb-12">
-              <Link
-                to="/signup"
+              <button
+                onClick={handleStartTrial}
                 className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
               >
                 <span className="relative z-10">Start Free Trial</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Link>
+              </button>
               <div className="flex items-center justify-center text-slate-500 text-sm mt-4">
                 <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -645,13 +652,13 @@ export function Home() {
           <p className="text-xl text-white/80 mb-10 max-w-3xl mx-auto font-light">
             Join event professionals who trust StageCue for precision timing and seamless coordination
           </p>
-          <Link
-            to="/signup"
+          <button
+            onClick={handleStartTrial}
             className="group relative px-8 py-4 bg-white text-slate-900 text-lg font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
           >
             <span className="relative z-10">Start Free Trial</span>
             <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </Link>
+          </button>
           <p className="text-white/60 mt-6 text-sm">
             Cancel anytime
           </p>
