@@ -6,334 +6,243 @@ export function Home() {
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy-50 via-white to-primary-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-navy-900 mb-6 leading-tight">
-              Professional Event
-              <span className="block bg-gradient-to-r from-primary-500 to-purple-600 bg-clip-text text-transparent">
-                Timing System
+      <section className="relative overflow-hidden pt-20 pb-32">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/30"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-8">
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Trusted by 500+ event organizers
+            </div>
+            
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-slate-900 mb-8 leading-[0.9] tracking-tight">
+              Perfect Event
+              <span className="block bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                Timing
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-navy-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Keep your conferences, workshops, and live events running on schedule with precision timing, 
-              speaker management, and seamless Slack integration.
+            
+            <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+              Professional countdown displays, speaker management, and Slack integration. 
+              Keep your events running flawlessly.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <button
                 onClick={() => setShowSignUpModal(true)}
-                className="btn btn-primary text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-primary-500 to-purple-600 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
               >
-                Start Free Trial
+                <span className="relative z-10">Start Free Trial</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-700 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
               <Link
                 to="/pricing"
-                className="text-navy-600 hover:text-primary-500 font-medium text-lg transition-colors"
+                className="text-slate-600 hover:text-primary-600 font-medium text-lg transition-colors flex items-center group"
               >
-                View Pricing →
+                View Pricing 
+                <svg className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </Link>
             </div>
-            
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-navy-500">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                7-day free trial
+          </div>
+
+          {/* Product Mockup */}
+          <div className="relative max-w-6xl mx-auto">
+            <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+              {/* Browser Chrome */}
+              <div className="bg-slate-100 px-6 py-4 border-b border-slate-200 flex items-center">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                </div>
+                <div className="flex-1 mx-6">
+                  <div className="bg-white rounded-lg px-4 py-2 text-sm text-slate-500 border">
+                    stagecue.com/timer/conference-2024
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                No setup required
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                Cancel anytime
+              
+              {/* App Interface */}
+              <div className="bg-gradient-to-br from-slate-50 to-white p-8">
+                {/* Timer Display */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-80 h-80 bg-gradient-to-br from-primary-500 to-purple-600 rounded-3xl shadow-2xl mb-6 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                    <div className="relative text-center">
+                      <div className="text-6xl font-bold text-white mb-2 font-mono tracking-tight">
+                        12:34
+                      </div>
+                      <div className="text-white/80 text-lg font-medium">
+                        Time Remaining
+                      </div>
+                    </div>
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
+                        <div className="text-white/90 text-sm font-medium mb-1">Current Speaker</div>
+                        <div className="text-white text-base font-semibold">Sarah Chen - AI in Healthcare</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Control Panel */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-slate-900">Timer Controls</h3>
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="space-y-3">
+                      <button className="w-full bg-primary-500 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                        Start Timer
+                      </button>
+                      <button className="w-full bg-slate-100 text-slate-700 py-2 px-4 rounded-lg text-sm font-medium">
+                        Pause
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-slate-900">Next Speaker</h3>
+                      <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div className="text-sm text-slate-600">
+                      <div className="font-medium text-slate-900">Dr. Michael Torres</div>
+                      <div>Machine Learning Ethics</div>
+                      <div className="text-xs text-slate-500 mt-1">15 min session</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-slate-900">Notifications</h3>
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="text-sm text-slate-600">
+                      <div className="flex items-center text-xs">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                        Slack connected
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1">Team notified at 5min, 2min, 30sec</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section className="py-20 bg-white">
+      {/* Features Grid */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-navy-900 mb-6">
-              Stop Losing Audience Attention
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+              Built for Modern Events
             </h2>
-            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
-              Running over time kills engagement. Poor transitions create awkward moments. 
-              Manual timing is stressful and error-prone.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Sessions Run Over</h3>
-              <p className="text-navy-600">
-                Speakers lose track of time, causing delays that cascade through your entire event schedule.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Awkward Transitions</h3>
-              <p className="text-navy-600">
-                Moderators scramble to manage speaker changes, creating uncomfortable dead air and confusion.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Stressed Organizers</h3>
-              <p className="text-navy-600">
-                Event teams juggle timing manually, leading to mistakes and taking focus away from content quality.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solution Section */}
-      <section className="py-20 bg-gradient-to-br from-primary-50 to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-navy-900 mb-6">
-              Professional Event Timing Made Simple
-            </h2>
-            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
-              StageCue gives you complete control over event timing with automated notifications, 
-              speaker self-service, and seamless team coordination.
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto font-light">
+              Everything you need to run professional events that start and end on time.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-navy-900 mb-2">Precision Countdown Displays</h3>
-                  <p className="text-navy-600">
-                    Share clean, professional countdown timers with speakers and audience. 
-                    Customizable warnings and automatic transitions keep everyone informed.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-navy-900 mb-2">Speaker Self-Service</h3>
-                  <p className="text-navy-600">
-                    Speakers get their own links to see time remaining, notes, and next steps. 
-                    No more frantic hand signals or interruptions.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-navy-900 mb-2">Smart Slack Integration</h3>
-                  <p className="text-navy-600">
-                    Automatic notifications keep your team coordinated. Get alerts for time warnings, 
-                    speaker changes, and schedule updates.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-navy-200">
-              <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-navy-900 mb-2">Ready to Get Started?</h3>
-                <p className="text-navy-600 mb-6">
-                  Join event organizers who trust StageCue to keep their events running smoothly.
-                </p>
-                <button
-                  onClick={() => setShowSignUpModal(true)}
-                  className="btn btn-primary text-lg px-8 py-4 w-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
-                >
-                  Start Free Trial
-                </button>
-                <p className="text-sm text-navy-500 mt-3">
-                  7-day free trial • No credit card required upfront • Cancel anytime
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-navy-900 mb-6">
-              Everything You Need for Flawless Event Timing
-            </h2>
-            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
-              From small workshops to large conferences, StageCue scales with your events.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="group relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Visual Countdown Displays</h3>
-              <p className="text-navy-600">
-                Share professional countdown timers with speakers and audience. Clean design that works on any screen.
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Visual Countdown</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Professional displays that speakers and audience can see. Clean, distraction-free design.
               </p>
             </div>
 
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <div className="group relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Speaker Notes & Cues</h3>
-              <p className="text-navy-600">
-                Organize speaker information, transition notes, and timing cues. Everything your team needs in one place.
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Speaker Links</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Give speakers their own view with time remaining and notes. No more hand signals.
               </p>
             </div>
 
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="group relative bg-gradient-to-br from-white to-slate-50 rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+              <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Slack Notifications</h3>
-              <p className="text-navy-600">
-                Keep your team informed with automatic alerts for time warnings, speaker changes, and schedule updates.
-              </p>
-            </div>
-
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Instant Setup</h3>
-              <p className="text-navy-600">
-                No downloads or installations. Create and share timer links in minutes. Works on any device.
-              </p>
-            </div>
-
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Reusable Templates</h3>
-              <p className="text-navy-600">
-                Save timer configurations and speaker templates. Reuse successful setups for future events.
-              </p>
-            </div>
-
-            <div className="card hover:shadow-lg transition-shadow duration-200">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-navy-900 mb-3">Real-time Analytics</h3>
-              <p className="text-navy-600">
-                Track session performance, timing accuracy, and audience engagement across all your events.
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">Slack Alerts</h3>
+              <p className="text-slate-600 leading-relaxed">
+                Automatic team notifications for time warnings and speaker transitions.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="py-20 bg-navy-900">
+      {/* Social Proof */}
+      <section className="py-20 bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Trusted by Event Professionals
-            </h2>
-            <p className="text-xl text-navy-300 max-w-3xl mx-auto">
-              From tech conferences to corporate workshops, StageCue helps organizers deliver flawless events.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="bg-navy-800 rounded-xl p-8 border border-navy-700">
-              <div className="text-3xl font-bold text-primary-400 mb-2">500+</div>
-              <div className="text-navy-300">Events Managed</div>
+          <div className="grid md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-white mb-2">500+</div>
+              <div className="text-slate-400">Events</div>
             </div>
-            <div className="bg-navy-800 rounded-xl p-8 border border-navy-700">
-              <div className="text-3xl font-bold text-primary-400 mb-2">99.9%</div>
-              <div className="text-navy-300">Uptime Reliability</div>
+            <div>
+              <div className="text-4xl font-bold text-white mb-2">99.9%</div>
+              <div className="text-slate-400">Uptime</div>
             </div>
-            <div className="bg-navy-800 rounded-xl p-8 border border-navy-700">
-              <div className="text-3xl font-bold text-primary-400 mb-2">50k+</div>
-              <div className="text-navy-300">Speakers Timed</div>
+            <div>
+              <div className="text-4xl font-bold text-white mb-2">50k+</div>
+              <div className="text-slate-400">Speakers</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-white mb-2">2min</div>
+              <div className="text-slate-400">Setup Time</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary-500 to-purple-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Events?
+      {/* Final CTA */}
+      <section className="py-24 bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tight">
+            Ready to go live?
           </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Join hundreds of event organizers who've eliminated timing stress and improved their event quality.
+          <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto font-light">
+            Join event organizers who've eliminated timing stress.
           </p>
           <button
             onClick={() => setShowSignUpModal(true)}
-            className="btn text-lg px-8 py-4 bg-white text-primary-600 hover:bg-gray-50 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 font-semibold"
+            className="group relative inline-flex items-center justify-center px-10 py-5 text-xl font-semibold text-primary-600 bg-white rounded-2xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300"
           >
-            Start Free Trial
+            <span className="relative z-10">Start Free Trial</span>
+            <svg className="w-6 h-6 ml-3 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </button>
-          <p className="text-primary-100 mt-4 text-sm">
-            7-day free trial • Professional timing in minutes • Cancel anytime
+          <p className="text-white/80 mt-6 text-sm">
+            7-day free trial • No credit card required • Cancel anytime
           </p>
         </div>
       </section>
