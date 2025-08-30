@@ -37,7 +37,7 @@ export function GetStarted() {
       console.log('Authorization header:', `Bearer ${session.access_token?.substring(0, 20)}...`);
 
       // Create Stripe checkout session with trial
-      const response = await fetch(`${import.meta.env.SUPABASE_URL}/functions/v1/stripe-checkout`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
