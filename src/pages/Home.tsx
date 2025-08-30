@@ -15,20 +15,24 @@ export function Home() {
             <p className="text-xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto">
               Professional event timing system with speaker coordination, team notifications, and automated scheduling for conferences and workshops
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            </p>
+            <div className="mb-8">
+              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-2xl font-bold mb-6">
                 precision timing
+              </span>
               <button
                 onClick={() => setShowSignUpModal(true)}
-                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 mb-6"
               >
                 Start Free Trial
               </button>
-              <div className="flex items-center text-slate-500">
+            </div>
+            <div className="flex items-center justify-center text-slate-500">
                 <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 7-day free trial • No setup required
               </div>
-            </div>
           </div>
         </div>
       </section>
