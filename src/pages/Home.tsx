@@ -145,5 +145,6 @@ export function Home() {
         defaultPlan="basic"
       />
     </div>
+  )
   );
 }
