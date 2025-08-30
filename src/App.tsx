@@ -9,7 +9,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Pricing } from './pages/Pricing';
 import { Success } from './pages/Success';
 import { ResetPassword } from './pages/ResetPassword';
-import { GetStarted } from './pages/GetStarted';
+import { GetStarted } from './pages/GetStarted.tsx';
 
 function App() {
   return (
