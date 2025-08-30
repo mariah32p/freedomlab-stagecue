@@ -53,7 +53,7 @@ export function useSubscriptionStatus() {
       if (data?.price_id) {
         if (data.price_id === 'price_1RznJIDn6VTzl81bqsk5O1gR') {
           plan = 'basic';
-        } else if (data.price_id === 'price_StageCueProMonthly') {
+        } else if (data.price_id === 'price_1RznJIDn6VTzl81bPK1TDU3Y') {
           plan = 'pro';
         }
       }
