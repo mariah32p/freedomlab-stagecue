@@ -71,7 +71,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (error: any) {
+      // Gracefully handle session_not_found errors - user is already logged out
+      if (error?.message?.includes('session_not_found') || error?.message?.includes('Session from session_id claim in JWT does not exist')) {
+        // Session doesn't exist, but that's fine - user is effectively logged out
+        return;
+      }
+      // Re-throw other errors
+      throw error;
+    }
   };
 
   const resetPassword = async (email: string) => {
