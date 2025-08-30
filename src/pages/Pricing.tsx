@@ -11,8 +11,8 @@ export function Pricing() {
   const navigate = useNavigate();
 
   const handleStartTrial = () => {
+    window.scrollTo(0, 0);
     navigate('/signup');
-    setTimeout(() => window.scrollTo(0, 0), 100);
   };
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {

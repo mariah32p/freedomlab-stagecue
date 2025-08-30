@@ -5,8 +5,8 @@ export function Home() {
   const navigate = useNavigate();
 
   const handleStartTrial = () => {
+    window.scrollTo(0, 0);
     navigate('/signup');
-    setTimeout(() => window.scrollTo(0, 0), 100);
   };
 
   return (
