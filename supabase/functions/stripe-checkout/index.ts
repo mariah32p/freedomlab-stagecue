@@ -2,7 +2,6 @@ import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import Stripe from 'npm:stripe@17.7.0';
 import { createClient } from 'npm:@supabase/supabase-js@2.49.1';
 
-const supabase = createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '');
 const stripeSecret = Deno.env.get('STRIPE_SECRET_KEY')!;
 const stripe = new Stripe(stripeSecret, {
   appInfo: {
@@ -61,10 +60,30 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get('Authorization')!;
     const token = authHeader.replace('Bearer ', '');
+    
+    // Create a user-scoped Supabase client for authentication
+    const userSupabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: {
+            Authorization: authHeader,
+          },
+        },
+      }
+    );
+    
+    // Create a service role client for database operations
+    const serviceSupabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
     const {
       data: { user },
       error: getUserError,
-    } = await supabase.auth.getUser(token);
+    } = await userSupabase.auth.getUser();
 
     if (getUserError) {
       return corsResponse({ error: 'Failed to authenticate user' }, 401);
@@ -74,7 +93,7 @@ Deno.serve(async (req) => {
       return corsResponse({ error: 'User not found' }, 404);
     }
 
-    const { data: customer, error: getCustomerError } = await supabase
+    const { data: customer, error: getCustomerError } = await serviceSupabase
       .from('stripe_customers')
       .select('customer_id')
       .eq('user_id', user.id)
@@ -102,7 +121,7 @@ Deno.serve(async (req) => {
 
       console.log(`Created new Stripe customer ${newCustomer.id} for user ${user.id}`);
 
-      const { error: createCustomerError } = await supabase.from('stripe_customers').insert({
+      const { error: createCustomerError } = await serviceSupabase.from('stripe_customers').insert({
         user_id: user.id,
         customer_id: newCustomer.id,
       });
@@ -113,7 +132,7 @@ Deno.serve(async (req) => {
         // Try to clean up both the Stripe customer and subscription record
         try {
           await stripe.customers.del(newCustomer.id);
-          await supabase.from('stripe_subscriptions').delete().eq('customer_id', newCustomer.id);
+          await serviceSupabase.from('stripe_subscriptions').delete().eq('customer_id', newCustomer.id);
         } catch (deleteError) {
           console.error('Failed to clean up after customer mapping error:', deleteError);
         }
@@ -122,7 +141,7 @@ Deno.serve(async (req) => {
       }
 
       if (mode === 'subscription') {
-        const { error: createSubscriptionError } = await supabase.from('stripe_subscriptions').insert({
+        const { error: createSubscriptionError } = await serviceSupabase.from('stripe_subscriptions').insert({
           customer_id: newCustomer.id,
           status: 'not_started',
         });
@@ -149,7 +168,7 @@ Deno.serve(async (req) => {
 
       if (mode === 'subscription') {
         // Verify subscription exists for existing customer
-        const { data: subscription, error: getSubscriptionError } = await supabase
+        const { data: subscription, error: getSubscriptionError } = await serviceSupabase
           .from('stripe_subscriptions')
           .select('status')
           .eq('customer_id', customerId)
@@ -163,7 +182,7 @@ Deno.serve(async (req) => {
 
         if (!subscription) {
           // Create subscription record for existing customer if missing
-          const { error: createSubscriptionError } = await supabase.from('stripe_subscriptions').insert({
+          const { error: createSubscriptionError } = await serviceSupabase.from('stripe_subscriptions').insert({
             customer_id: customerId,
             status: 'not_started',
           });
