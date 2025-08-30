@@ -15,6 +15,8 @@ export function Home() {
             <p className="text-xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto">
               Professional event timing system with speaker coordination, team notifications, and automated scheduling for conferences and workshops
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                with precision timing
+              </span>
             </p>
             <div className="mb-8">
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-2xl font-bold mb-6">
