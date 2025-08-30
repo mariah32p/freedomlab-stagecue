@@ -56,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/get-started`,
       },
     });
     return { error };

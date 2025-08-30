@@ -9,6 +9,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Pricing } from './pages/Pricing';
 import { Success } from './pages/Success';
 import { ResetPassword } from './pages/ResetPassword';
+import { GetStarted } from './pages/GetStarted';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/success" element={<Success />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/get-started" element={<GetStarted />} />
             <Route
               path="/dashboard"
               element={

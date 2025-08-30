@@ -39,7 +39,7 @@ export function Signup() {
     } else {
       setSuccess(true);
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate('/get-started');
       }, 2000);
     }
 
