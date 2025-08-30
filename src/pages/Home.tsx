@@ -8,34 +8,25 @@ export function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative pt-20 pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/50 to-purple-50/50"></div>
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white to-slate-50"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-900 mb-8 leading-tight">
-              Run flawless events with
-              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
+            <p className="text-xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto">
+              Professional event timing system with speaker coordination, team notifications, and automated scheduling for conferences and workshops
+              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 precision timing
-              </span>
-            </h1>
-            <p className="text-xl sm:text-2xl text-slate-600 mb-12 leading-relaxed font-light max-w-3xl mx-auto">
-              Complete event management platform with speaker coordination, team notifications, and millisecond-accurate timing for conferences and workshops
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <button
                 onClick={() => setShowSignUpModal(true)}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
+                className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
               >
-                <span className="relative z-10">Start Free Trial</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                Start Free Trial
               </button>
               <div className="flex items-center text-slate-500">
                 <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                7-day free trial • No credit card required
+                7-day free trial • No setup required
               </div>
             </div>
           </div>
