@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { RouteGuard } from './components/RouteGuard';
 import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
@@ -15,6 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <RouteGuard>
         <div className="min-h-screen bg-gray-50">
           <Navbar />
           <Routes>
@@ -35,6 +37,7 @@ function App() {
             />
           </Routes>
         </div>
+        </RouteGuard>
       </Router>
     </AuthProvider>
   );
