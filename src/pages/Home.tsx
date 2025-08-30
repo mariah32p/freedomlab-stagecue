@@ -23,6 +23,7 @@ export function Home() {
             </h1>
             <p className="text-2xl text-slate-600 mb-12 max-w-3xl mx-auto font-light">
               Professional countdown displays and speaker management for flawless events
+            </p>
             <button
               onClick={() => setShowSignUpModal(true)}
               className="inline-flex items-center px-8 py-4 text-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300"
