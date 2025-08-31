@@ -23,7 +23,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
     // If not signed in → send to /signup
     if (!user) {
       // Allow certain public routes without authentication
-      const publicRoutes = ['/login', '/signup', '/reset-password', '/pricing', '/'];
+      const publicRoutes = ['/login', '/signup', '/reset-password', '/pricing', '/', '/demo'];
       if (publicRoutes.includes(location.pathname)) {
         return;
       }
