@@ -344,6 +344,13 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
           <div className="font-medium text-purple-800">Notify Team</div>
           <div className="text-xs text-purple-600 mt-1">Update #product-launch channel</div>
         </button>
+        <button 
+          onClick={() => setShowNotificationModal(true)}
+          className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors"
+        >
+          <div className="font-medium text-orange-800">Alert Speaker</div>
+          <div className="text-xs text-orange-600 mt-1">Attendee has question</div>
+        </button>
         <button className="p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-200 transition-colors">
           <div className="font-medium text-blue-800">Prep Next Speaker</div>
           <div className="text-xs text-blue-600 mt-1">Alert Mike to get ready</div>
