@@ -410,6 +410,8 @@ function LiveManagementStep() {
   const [currentSpeaker] = useState('Sarah Martinez');
   const [showSlackAlert, setShowSlackAlert] = useState(false);
   const [showSlackModal, setShowSlackModal] = useState(false);
+  const [slackMessage, setSlackMessage] = useState('');
+  const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -505,12 +507,6 @@ function LiveManagementStep() {
               +5 min
             </button>
             <button
-              onClick={() => setShowSlackModal(true)}
-              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
-            >
-              Send Alert
-            </button>
-            <button
               onClick={() => {
                 setTimeRemaining(20 * 60);
                 setIsRunning(true);
@@ -581,6 +577,96 @@ function LiveManagementStep() {
                 <div className="text-sm text-slate-600 mb-2">#launch-team</div>
                 <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
                   "⏰ Sarah has {formatTime(timeRemaining)} remaining. Alex prep needed."
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Slack Notification Modal */}
+      {showSlackModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5v-1.25h-2.5a2.528 2.528 0 0 0-2.5 2.5z"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900">Send Slack Alert</h3>
+                </div>
+                <button
+                  onClick={() => setShowSlackModal(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Channel</label>
+                  <select className="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                    <option>#launch-team</option>
+                    <option>#general</option>
+                    <option>#events</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Message</label>
+                  <textarea
+                    value={slackMessage}
+                    onChange={(e) => setSlackMessage(e.target.value)}
+                    placeholder="⏰ Sarah has 18:42 remaining. Alex prep needed for next session."
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg h-20 text-sm"
+                  />
+                </div>
+                
+                <div className="flex space-x-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setShowSlackModal(false);
+                      setShowSlackSuccess(true);
+                      setTimeout(() => setShowSlackSuccess(false), 3000);
+                    }}
+                    className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                  >
+                    Send Alert
+                  </button>
+                  <button
+                    onClick={() => setShowSlackModal(false)}
+                    className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Slack Success Notification */}
+      {showSlackSuccess && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-4 max-w-sm">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-slate-900 mb-1">Alert Sent Successfully</div>
+                <div className="text-sm text-slate-600 mb-2">#launch-team</div>
+                <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
+                  Message delivered to 8 team members
                 </div>
               </div>
             </div>
