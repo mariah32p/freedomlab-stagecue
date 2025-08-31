@@ -345,7 +345,11 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
           <div className="text-xs text-purple-600 mt-1">Update #product-launch channel</div>
         </button>
         <button 
-          onClick={() => setShowNotificationModal(true)}
+          onClick={() => {
+            setShowSlackMessage(true);
+            setAutoDemo(false);
+            setTimeout(() => setShowSlackMessage(false), 3000);
+          }}
           className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors"
         >
           <div className="font-medium text-orange-800">Alert Speaker</div>
@@ -504,9 +508,7 @@ export function StageCue() {
   const [isRunning, setIsRunning] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
   const [autoDemo, setAutoDemo] = useState(true);
-  const [demoStep, setDemoStep] = useState(0);
-
-  // --- DERIVED STATE & MEMOS ---
+  const [showSlackMessage, setShowSlackMessage] = useState(false);
   const currentMinute = useMemo(() => {
     const elapsed = INITIAL_TIME_SECONDS - timeRemaining;
     return Math.floor(elapsed / 60);
@@ -547,17 +549,6 @@ export function StageCue() {
   // --- HANDLERS ---
   const handleTabClick = (tab: Tab) => {
     setActiveTab(tab);
-    setAutoDemo(false); // Stop auto demo when user interacts
-  };
-
-  const handleAdjustTime = (seconds: number) => {
-    setTimeRemaining(prev => Math.max(-300, prev + seconds));
-    setAutoDemo(false); // Stop auto demo when user interacts
-  };
-
-  const handleResetTimer = () => {
-    setTimeRemaining(INITIAL_TIME_SECONDS);
-    setIsRunning(false);
     setAutoDemo(false); // Stop auto demo when user interacts
   };
   
