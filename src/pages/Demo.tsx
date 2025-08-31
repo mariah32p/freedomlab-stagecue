@@ -231,7 +231,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
   </div>
 );
 
-const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
+const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlackMessage, setAutoDemo }: {
   timeRemaining: number;
   currentMinute: number;
   onAdjustTime: (seconds: number) => void;
@@ -352,10 +352,6 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
             setAutoDemo(false);
             setTimeout(() => setShowSlackMessage(false), 3000);
           }}
-            setShowSlackMessage(true);
-            setAutoDemo(false);
-            setTimeout(() => setShowSlackMessage(false), 3000);
-          }}
           className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors"
         >
           <div className="font-medium text-orange-800">Alert Speaker</div>
@@ -460,7 +456,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
   </div>
 );
 
-const AppHeader = ({ activeTab, setActiveTab, autoScroll, setAutoScroll }: {
+const AppHeader = ({ activeTab, setActiveTab }: {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
 }) => {
@@ -515,6 +511,7 @@ export function StageCue() {
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
   const [autoDemo, setAutoDemo] = useState(true);
   const [showSlackMessage, setShowSlackMessage] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
   const currentMinute = useMemo(() => {
     const elapsed = INITIAL_TIME_SECONDS - timeRemaining;
     return Math.floor(elapsed / 60);
@@ -538,6 +535,51 @@ export function StageCue() {
     setAutoDemo(false);
   };
 
+  const handleTabClick = (tab: Tab) => {
+    setActiveTab(tab);
+    setAutoDemo(false);
+  };
+
+  const handleToggleTimer = () => {
+    setIsRunning(prev => !prev);
+    setAutoDemo(false);
+  };
+
+  const renderActiveTabView = () => {
+    switch (activeTab) {
+      case 'organizer':
+        return (
+          <OrganizerView
+            timeRemaining={timeRemaining}
+            isRunning={isRunning}
+            onToggleTimer={handleToggleTimer}
+            onResetTimer={handleResetTimer}
+            onAdjustTime={handleAdjustTime}
+          />
+        );
+      case 'moderator':
+        return (
+          <ModeratorView
+            timeRemaining={timeRemaining}
+            currentMinute={currentMinute}
+            onAdjustTime={handleAdjustTime}
+            setShowSlackMessage={setShowSlackMessage}
+            setAutoDemo={setAutoDemo}
+          />
+        );
+      case 'speaker':
+        return (
+          <SpeakerView
+            timeRemaining={timeRemaining}
+            currentMinute={currentMinute}
+            getTimerColor={getTimerColor}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   // --- SIDE EFFECTS ---
   // Effect for auto demo cycling
   useEffect(() => {
@@ -549,6 +591,25 @@ export function StageCue() {
         setActiveTab(DEMO_SEQUENCE[nextStep].tab);
         return nextStep;
       });
+    }, DEMO_SEQUENCE[demoStep].duration);
+
+    return () => clearTimeout(timeout);
+  }, [autoDemo, demoStep]);
+
+  // Effect for timer countdown
+  useEffect(() => {
+    if (!isRunning) return;
+    
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => Math.max(-300, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {showSlackMessage && (
         <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
           <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-4 max-w-sm">
             <div className="flex items-start space-x-3">
