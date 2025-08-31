@@ -341,7 +341,6 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
               <p className="text-gray-600 text-sm">Mike Torres prepared for seamless handoff</p>
             </div>
           </div>
-        {/* FIXED: Changed closing </div> to </GlassCard> */}
         </GlassCard>
       </div>
 
