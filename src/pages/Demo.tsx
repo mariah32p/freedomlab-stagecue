@@ -407,7 +407,7 @@ function LiveManagementStep() {
   const [currentSpeaker] = useState('Sarah Martinez');
   const [showSlackAlert, setShowSlackAlert] = useState(false);
   const [showSlackModal, setShowSlackModal] = useState(false);
-  const [slackMessage, setSlackMessage] = useState('⏰ Sarah has 18:42 remaining. Alex prep needed for next session.');
+  const [slackMessage, setSlackMessage] = useState('@alex I see Jennifer has had her hand raised for a bit for a question - should we take it now or wait for Q&A?');
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
