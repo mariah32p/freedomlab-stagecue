@@ -128,7 +128,7 @@ export function Demo() {
     const mins = Math.floor(Math.abs(seconds) / 60);
     const secs = Math.abs(seconds) % 60;
     const sign = seconds < 0 ? '-' : '';
-    return \`${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getTimerColor = () => {
