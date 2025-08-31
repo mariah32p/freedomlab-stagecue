@@ -38,6 +38,8 @@ interface DemoStep {
 
 export function Demo() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [showControls, setShowControls] = useState(true);
   const [timers, setTimers] = useState<Timer[]>([
     {
       id: '1',
@@ -138,12 +140,28 @@ export function Demo() {
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => (prev + 1) % demoSteps.length);
-    }, demoSteps[currentStep]?.duration || 4000);
+    let interval: NodeJS.Timeout;
+    
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setCurrentStep((prev) => (prev + 1) % demoSteps.length);
+      }, demoSteps[currentStep]?.duration || 4000);
+    }
 
     return () => clearInterval(interval);
-  }, [currentStep, demoSteps]);
+  }, [currentStep, demoSteps, isPlaying]);
+
+  const nextStep = () => {
+    setCurrentStep((prev) => (prev + 1) % demoSteps.length);
+  };
+
+  const prevStep = () => {
+    setCurrentStep((prev) => (prev - 1 + demoSteps.length) % demoSteps.length);
+  };
+
+  const goToStep = (stepIndex: number) => {
+    setCurrentStep(stepIndex);
+  };
 
   useEffect(() => {
     // Simulate timer countdown and smart notifications
@@ -1516,6 +1534,99 @@ Q&A: Focus on practical applications"
           </div>
         </div>
       </nav>
+
+      {/* Demo Navigation Controls */}
+      {showControls && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-200 p-4">
+            <div className="flex items-center space-x-4">
+              {/* Previous Button */}
+              <button
+                onClick={prevStep}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Previous Step"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              {/* Play/Pause Button */}
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title={isPlaying ? "Pause Auto-Advance" : "Resume Auto-Advance"}
+              >
+                {isPlaying ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Step Indicators */}
+              <div className="flex space-x-2">
+                {demoSteps.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToStep(index)}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === currentStep
+                        ? 'bg-blue-600'
+                        : 'bg-slate-300 hover:bg-slate-400'
+                    }`}
+                    title={`Go to Step ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={nextStep}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Next Step"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Step Counter */}
+              <div className="text-sm text-slate-600 font-medium px-2">
+                {currentStep + 1} / {demoSteps.length}
+              </div>
+
+              {/* Hide Controls Button */}
+              <button
+                onClick={() => setShowControls(false)}
+                className="p-2 text-slate-400 hover:text-slate-600 rounded-lg transition-colors"
+                title="Hide Controls"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show Controls Button (when hidden) */}
+      {!showControls && (
+        <button
+          onClick={() => setShowControls(true)}
+          className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-colors"
+          title="Show Demo Controls"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+          </svg>
+        </button>
+      )}
 
       {/* Demo Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
