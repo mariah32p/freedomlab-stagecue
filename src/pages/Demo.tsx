@@ -6,9 +6,9 @@ const INITIAL_TIME_SECONDS = 25 * 60; // 25 minutes
 type Tab = 'organizer' | 'moderator' | 'speaker';
 
 const DEMO_SEQUENCE = [
-  { tab: 'organizer' as Tab, duration: 8000 },
-  { tab: 'moderator' as Tab, duration: 6000 },
-  { tab: 'speaker' as Tab, duration: 7000 },
+  { tab: 'organizer' as Tab, duration: 4000 },
+  { tab: 'moderator' as Tab, duration: 3000 },
+  { tab: 'speaker' as Tab, duration: 3500 },
 ];
 
 const SPEAKER_NOTES = [
@@ -496,6 +496,8 @@ export function StageCue() {
   const [timeRemaining, setTimeRemaining] = useState(INITIAL_TIME_SECONDS);
   const [isRunning, setIsRunning] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
+  const [autoDemo, setAutoDemo] = useState(true);
+  const [demoStep, setDemoStep] = useState(0);
 
   // --- DERIVED STATE & MEMOS ---
   const currentMinute = useMemo(() => {
@@ -511,23 +513,45 @@ export function StageCue() {
   }, [timeRemaining]);
   
   // --- SIDE EFFECTS ---
+  // Effect for auto demo cycling
+  useEffect(() => {
+    if (!autoDemo) return;
+    
+    const timeout = setTimeout(() => {
+      setDemoStep(prev => {
+        const nextStep = (prev + 1) % DEMO_SEQUENCE.length;
+        setActiveTab(DEMO_SEQUENCE[nextStep].tab);
+        return nextStep;
+      });
+    }, DEMO_SEQUENCE[demoStep].duration);
+    
+    return () => clearTimeout(timeout);
+  }, [autoDemo, demoStep]);
+
   // Effect for the main countdown timer
   useEffect(() => {
     if (!isRunning || timeRemaining <= 0) return;
     const interval = setInterval(() => {
-      setTimeRemaining(prev => Math.max(-300, prev - 1)); // Allow 5 minutes overtime
-    }, 1000);
+      setTimeRemaining(prev => Math.max(-300, prev - 2)); // Faster countdown for demo
+    }, 500); // Faster interval for demo
     return () => clearInterval(interval);
   }, [isRunning, timeRemaining]);
   
   // --- HANDLERS ---
+  const handleTabClick = (tab: Tab) => {
+    setActiveTab(tab);
+    setAutoDemo(false); // Stop auto demo when user interacts
+  };
+
   const handleAdjustTime = (seconds: number) => {
     setTimeRemaining(prev => Math.max(-300, prev + seconds));
+    setAutoDemo(false); // Stop auto demo when user interacts
   };
 
   const handleResetTimer = () => {
     setTimeRemaining(INITIAL_TIME_SECONDS);
     setIsRunning(false);
+    setAutoDemo(false); // Stop auto demo when user interacts
   };
   
   // --- RENDER LOGIC ---
@@ -538,7 +562,10 @@ export function StageCue() {
           <OrganizerView 
             timeRemaining={timeRemaining}
             isRunning={isRunning}
-            onToggleTimer={() => setIsRunning(!isRunning)}
+            onToggleTimer={() => {
+              setIsRunning(!isRunning);
+              setAutoDemo(false); // Stop auto demo when user interacts
+            }}
             onResetTimer={handleResetTimer}
             onAdjustTime={handleAdjustTime}
           />
@@ -568,7 +595,7 @@ export function StageCue() {
     <div className="min-h-screen bg-gray-50 font-sans">
       <AppHeader 
         activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+        setActiveTab={handleTabClick}
       />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderActiveTabView()}
