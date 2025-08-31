@@ -1,4 +1,5 @@
-              import { useState, useEffect } from 'react';
+              ```jsx
+import { useState, useEffect } from 'react';
 
 interface DemoLayoutProps {
   children: React.ReactNode;
@@ -6,50 +7,46 @@ interface DemoLayoutProps {
   onToggleControls?: () => void;
 }
 
-function DemoLayout({ children, showControls = true, onToggleControls }: DemoLayoutProps) {
+function DemoLayout({ children, showControls, onToggleControls }: DemoLayoutProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10">
-        {/* Header */}
-        <div className="p-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-slate-900 mb-4">Team Coordination Dashboard</h1>
-              <p className="text-slate-600 text-lg">Real-time event management and team communication</p>
+        <div className="max-w-4xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl">
+          <div className="absolute top-4 left-4 z-50">
+            <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full text-green-700 text-sm font-medium mb-4 border border-green-200">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-white/90 text-sm font-medium">LIVE DEMO</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Demo watermark */}
-        <div className="fixed top-6 left-6 z-50">
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-white/90 text-sm font-medium">LIVE DEMO</span>
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">{sessionTitle}</h1>
+            <p className="text-slate-600">{speakerName} • {eventLocation}</p>
+          </div>
+
+          {/* Demo controls */}
+          {showControls && onToggleControls && (
+            <div className="fixed bottom-6 right-6 z-50">
+              <button
+                onClick={onToggleControls}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white/90 hover:bg-white/20 transition-all duration-300"
+              >
+                Hide Controls
+              </button>
             </div>
-          </div>
+          )}
+
+          {children}
         </div>
-
-        {/* Demo controls */}
-        {showControls && onToggleControls && (
-          <div className="fixed bottom-6 right-6 z-50">
-            <button
-              onClick={onToggleControls}
-              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white/90 hover:bg-white/20 transition-all duration-300"
-            >
-              Hide Controls
-            </button>
-          </div>
-        )}
-
-        {children}
       </div>
     </div>
   );
@@ -620,26 +617,34 @@ export function Demo() {
                     </div>
 
                     {/* Speaker Notes */}
-                    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 shadow-xl">
-                      <h3 className="font-bold text-white mb-4">Your Notes</h3>
+                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                      <h3 className="font-bold text-slate-900 mb-4">Your Notes</h3>
                       <div className="space-y-4 text-sm">
-                        <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-                          <div className="font-medium text-white/90 mb-2">Key Points</div>
-                          <div className="text-white/70 leading-relaxed">{sessionNotes}</div>
+                        <div className="p-3 bg-white rounded-lg border border-slate-200">
+                          <div className="font-medium text-slate-900 mb-1">Session Notes</div>
+                          <div className="text-slate-600">{sessionNotes}</div>
                         </div>
                         
-                        <div className="bg-amber-500/10 border border-amber-400/20 rounded-lg p-4 border-l-4 border-l-amber-400">
-                          <div className="font-medium text-amber-200 mb-2">Timing Alerts</div>
-                          <div className="text-amber-300/80 text-xs space-y-1">
+                        <div className={`p-3 rounded-lg border ${
+                          timeRemaining > 300 ? 'bg-green-100 text-green-700 border border-green-200' :
+                          timeRemaining > 120 ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                          'bg-red-100 text-red-700 border border-red-200'
+                        }`}>
+                          <div className="font-medium mb-2">Timing Alerts</div>
+                          <div className="text-xs space-y-1">
                             <div>• 5-minute warning at 20:00</div>
                             <div>• Final warning at 23:00</div>
                             <div>• Hard stop at 25:00</div>
                           </div>
                         </div>
 
-                        <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-4">
-                          <div className="font-medium text-blue-200 mb-2">Next Up</div>
-                          <div className="text-blue-300/80 text-xs">Q&A Session (5 minutes)</div>
+                        <div className={`p-3 rounded-lg border ${
+                          timeRemaining > 300 ? 'bg-green-50 border-green-400 text-green-800' :
+                          timeRemaining > 120 ? 'bg-amber-50 border-amber-400 text-amber-800' :
+                          'bg-red-50 border-red-400 text-red-800'
+                        }`}>
+                          <div className="font-medium mb-2">Next Up</div>
+                          <div className="text-xs">Q&A Session (5 minutes)</div>
                         </div>
                       </div>
                     </div>
@@ -686,12 +691,8 @@ export function Demo() {
                             </svg>
                           </div>
                           <div>
-                            <div className="flex items-center space-x-2 mb-3">
-                              <span className="font-medium text-green-700">Slack Connected</span>
-                            </div>
-                            <div className="text-slate-600 text-sm">
-                              Connected & monitoring
-                            </div>
+                            <div className="text-white font-medium">Slack: #event-team</div>
+                            <div className="text-green-300 text-xs">Connected & monitoring</div>
                           </div>
                         </div>
                         <button
@@ -711,12 +712,8 @@ export function Demo() {
                             </svg>
                           </div>
                           <div>
-                            <div className="flex items-center space-x-2 mb-3">
-                              <span className="font-medium text-blue-700">Email Alerts</span>
-                            </div>
-                            <div className="text-slate-600 text-sm">
-                              moderators@event.com
-                            </div>
+                            <div className="text-white font-medium">Email Alerts</div>
+                            <div className="text-blue-300 text-xs">moderators@event.com</div>
                           </div>
                         </div>
                       </div>
@@ -767,65 +764,6 @@ export function Demo() {
                           <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                           <span className="text-amber-300 text-xs font-medium">Away</span>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-8">
-                  <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-6 border border-slate-200">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-6">Event Overview</h3>
-                    <div className="grid grid-cols-3 gap-6 mb-8">
-                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-                        <div className="text-2xl font-bold text-green-600">3/8</div>
-                        <div className="text-slate-600 text-sm">Sessions Complete</div>
-                      </div>
-                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-                        <div className="text-2xl font-bold text-blue-600">247</div>
-                        <div className="text-slate-600 text-sm">Attendees</div>
-                      </div>
-                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-                        <div className="text-2xl font-bold text-purple-600">5</div>
-                        <div className="text-slate-600 text-sm">Team Online</div>
-                      </div>
-                    </div>
-
-                    <h4 className="font-semibold text-slate-900 mb-4">Today's Schedule</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-4 p-4 bg-green-50 rounded-xl border-l-4 border-green-400">
-                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                        <div className="flex-1">
-                          <div className="font-medium text-green-800">{sessionTitle}</div>
-                          <div className="text-green-600 text-sm">{speakerName} • 2:00 PM - 2:30 PM</div>
-                          <div className="text-green-700 text-xs bg-green-100 px-2 py-1 rounded-md inline-block mt-1">
-                            In Progress
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
-                        <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                        <div className="flex-1">
-                          <div className="font-medium text-slate-900">Panel Discussion</div>
-                          <div className="text-slate-600 text-sm">4 speakers • 2:30 PM - 3:15 PM</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
-                        <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                        <div className="flex-1">
-                          <div className="font-medium text-slate-900">Coffee Break</div>
-                          <div className="text-slate-600 text-sm">3:15 PM - 3:30 PM</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Communication</h3>
-                    <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
-                      <div className="text-slate-600 text-sm">
-                        Real-time coordination and notifications
                       </div>
                     </div>
                   </div>
@@ -1042,3 +980,4 @@ export function Demo() {
     </>
   );
 }
+```
