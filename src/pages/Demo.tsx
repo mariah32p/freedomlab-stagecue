@@ -10,9 +10,6 @@ interface DemoStep {
 export function StageCue() {
   const [currentStep, setCurrentStep] = useState(0);
   const [stepTimer, setStepTimer] = useState(0);
-  const [showSlackModal, setShowSlackModal] = useState(false);
-  const [slackMessage, setSlackMessage] = useState('');
-  const [showSlackSuccess, setShowSlackSuccess] = useState(false);
   const [isRunning, setIsRunning] = useState(true);
 
   const demoSteps: DemoStep[] = [
@@ -25,13 +22,13 @@ export function StageCue() {
     {
       id: 'add-speakers',
       title: 'Add Speakers',
-      duration: 10,
+      duration: 7,
       component: AddSpeakersStep
     },
     {
       id: 'speaker-notes',
       title: 'Speaker Notes Setup',
-      duration: 12,
+      duration: 8,
       component: SpeakerNotesStep
     },
     {
@@ -217,46 +214,46 @@ function AddSpeakersStep() {
     timeouts.push(setTimeout(() => {
       setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
       setFormData({ name: 'Alex Chen', session: '', duration: '' });
-    }, 2000));
+    }, 1500));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, session: 'Technical Architecture' }));
-    }, 2500));
+    }, 2000));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, duration: '25 min' }));
-    }, 3000));
+    }, 2500));
     
     timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Alex Chen', session: 'Technical Architecture', duration: '25 min' }]);
       setFormData({ name: 'Jessica Park', session: '', duration: '' });
-    }, 3500));
+    }, 3000));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, session: 'Marketing Strategy' }));
-    }, 4000));
+    }, 3500));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, duration: '20 min' }));
-    }, 4500));
+    }, 4000));
     
     timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Jessica Park', session: 'Marketing Strategy', duration: '20 min' }]);
       setFormData({ name: 'Team Discussion', session: '', duration: '' });
-    }, 5000));
+    }, 4500));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, session: 'Q&A and Next Steps' }));
-    }, 5500));
+    }, 5000));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, duration: '25 min' }));
-    }, 6000));
+    }, 5500));
     
     timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Team Discussion', session: 'Q&A and Next Steps', duration: '25 min' }]);
       setFormData({ name: '', session: '', duration: '' });
-    }, 6500));
+    }, 6000));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -358,43 +355,43 @@ function SpeakerNotesStep() {
     timeouts.push(setTimeout(() => {
       setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
       setFormData({ time: '5:00', content: '', type: 'essential' });
-    }, 1500));
+    }, 1200));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, content: 'Present market research findings' }));
-    }, 2000));
+    }, 1600));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '5:00', content: 'Present market research findings', type: 'essential' }]);
       setFormData({ time: '10:00', content: '', type: 'essential' });
-    }, 2500));
+    }, 2000));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, content: 'Demo new product features' }));
-    }, 3000));
+    }, 2400));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '10:00', content: 'Demo new product features', type: 'essential' }]);
       setFormData({ time: '15:00', content: '', type: 'optional' });
-    }, 3500));
+    }, 2800));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, content: 'Discuss beta program (skip if running late)' }));
-    }, 4000));
+    }, 3200));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '15:00', content: 'Discuss beta program (skip if running late)', type: 'optional' }]);
       setFormData({ time: '18:00', content: '', type: 'transition' });
-    }, 4500));
+    }, 3600));
     
     timeouts.push(setTimeout(() => {
       setFormData(prev => ({ ...prev, content: 'Wrap up, prepare for Q&A transition' }));
-    }, 5000));
+    }, 4000));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '18:00', content: 'Wrap up, prepare for Q&A transition', type: 'transition' }]);
       setFormData({ time: '', content: '', type: 'essential' });
-    }, 5500));
+    }, 4400));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -499,10 +496,18 @@ function LiveManagementStep() {
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
-    // Show Slack modal after a brief delay so timer is visible first
-    const showSlackTimeout = setTimeout(() => {
+    // Show Slack modal after timer is visible
+    const slackTimeout = setTimeout(() => {
       setShowSlackModal(true);
-    }, 3000); // Show after 3 seconds so timer is visible first
+    }, 2000);
+
+    // Auto-close Slack modal after showing success
+    const closeTimeout = setTimeout(() => {
+      if (showSlackSuccess) {
+        setShowSlackModal(false);
+        setShowSlackSuccess(false);
+      }
+    }, 8000);
 
     if (!isRunning) return;
 
@@ -513,9 +518,10 @@ function LiveManagementStep() {
 
     return () => {
       clearInterval(interval);
-      clearTimeout(showSlackTimeout);
+      clearTimeout(slackTimeout);
+      clearTimeout(closeTimeout);
     };
-  }, [isRunning, timeRemaining]);
+  }, [isRunning, showSlackSuccess]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -693,9 +699,11 @@ function LiveManagementStep() {
                 <div className="flex space-x-3 pt-2">
                   <button
                     onClick={() => {
-                      setShowSlackModal(false);
                       setShowSlackSuccess(true);
-                      setTimeout(() => setShowSlackSuccess(false), 4000);
+                      setTimeout(() => {
+                        setShowSlackModal(false);
+                        setShowSlackSuccess(false);
+                      }, 3000);
                     }}
                     className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
                   >
