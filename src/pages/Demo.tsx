@@ -86,30 +86,6 @@ export function StageCue() {
         </div>
       </header>
 
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-slate-900">StageCue</h1>
-              <p className="text-sm text-slate-500">Tech Summit 2024 • Main Auditorium</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 bg-green-50 px-3 py-1 rounded-full border border-green-200">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-700 text-sm font-medium">Live Event</span>
-            </div>
-            <span className="text-slate-500 text-sm">247 attendees</span>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto p-6">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Main Timer */}
