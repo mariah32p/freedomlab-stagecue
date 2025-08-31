@@ -69,9 +69,9 @@ const LiveStatusIndicator = ({ text, color = 'green' }: { text: string; color?: 
   </div>
 );
 
-const GlassCard = ({ children, className = '', gradient = false }: { 
-  children: React.ReactNode; 
-  className?: string; 
+const GlassCard = ({ children, className = '', gradient = false }: {
+  children: React.ReactNode;
+  className?: string;
   gradient?: boolean;
 }) => (
   <div className={clsx(
@@ -124,8 +124,9 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
     {/* Hero Section with Main Timer */}
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 opacity-90"></div>
-      <div className="absolute inset-0 bg-dots-pattern opacity-30"></div>
-      
+      {/* FIXED: Replaced 'bg-dots-pattern' with inline SVG and fixed quotes */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=&apos;60&apos; height=&apos;60&apos; viewBox=&apos;0 0 60 60&apos; xmlns=&apos;http://www.w3.org/2000/svg&apos;%3E%3Cg fill=&apos;none&apos; fill-rule=&apos;evenodd&apos;%3E%3Cg fill=&apos;%23ffffff&apos; fill-opacity=&apos;0.05&apos;%3E%3Ccircle cx=&apos;30&apos; cy=&apos;30&apos; r=&apos;2&apos;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+
       <GlassCard className="relative p-12" gradient>
         <div className="text-center">
           <div className="flex items-center justify-center space-x-4 mb-8">
@@ -143,7 +144,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
               </p>
             </div>
           </div>
-          
+
           {/* Main Timer Display */}
           <div className="relative mb-8">
             <div className={clsx('text-8xl font-mono font-black mb-4 transition-all duration-700 tracking-wider', {
@@ -157,14 +158,14 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
             <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-xl rounded-full opacity-50"></div>
             <p className="text-gray-700 text-xl font-semibold mb-8 relative">Session Time Remaining</p>
           </div>
-          
+
           {/* Enhanced Timer Controls */}
           <div className="flex justify-center space-x-4 mb-8">
-            <button 
+            <button
               onClick={onToggleTimer}
-              className={clsx('group px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center space-x-2', 
-                isRunning 
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600' 
+              className={clsx('group px-8 py-4 rounded-xl font-bold text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center space-x-2',
+                isRunning
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
                   : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
               )}
             >
@@ -181,7 +182,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
               </div>
               <span>{isRunning ? 'Pause Session' : 'Resume Session'}</span>
             </button>
-            <button 
+            <button
               onClick={onResetTimer}
               className="group px-8 py-4 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center space-x-2"
             >
@@ -202,7 +203,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
                 { label: '+1m', seconds: 60, color: 'from-emerald-500 to-green-500' },
                 { label: '+5m', seconds: 300, color: 'from-emerald-600 to-green-600' },
               ].map(({ label, seconds, color }) => (
-                <button 
+                <button
                   key={label}
                   onClick={() => onAdjustTime(seconds)}
                   className={clsx(
@@ -282,7 +283,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
             <div className="text-right">
               <div className="text-sm text-gray-500 font-medium mb-1">Session Progress</div>
               <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-1000 ease-out"
                   style={{ width: `${Math.min(100, ((INITIAL_TIME_SECONDS - timeRemaining) / INITIAL_TIME_SECONDS) * 100)}%` }}
                 ></div>
@@ -340,9 +341,10 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
               <p className="text-gray-600 text-sm">Mike Torres prepared for seamless handoff</p>
             </div>
           </div>
-        </div>
+        {/* FIXED: Changed closing </div> to </GlassCard> */}
+        </GlassCard>
       </div>
-      
+
       {/* Enhanced Schedule Sidebar */}
       <div className="space-y-6">
         <GlassCard className="p-6" gradient>
@@ -366,7 +368,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
                 </div>
               </div>
             </div>
-            
+
             <div className="p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-sm hover:shadow-md transition-shadow">
               <p className="font-bold text-gray-900">Mike Torres - Engineering Plan</p>
               <p className="text-sm text-gray-600 mb-2">2:25 PM - 2:45 PM</p>
@@ -374,7 +376,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
                 UP NEXT
               </div>
             </div>
-            
+
             <div className="p-4 bg-white/40 backdrop-blur-sm rounded-xl border border-gray-200/30">
               <p className="font-bold text-gray-900">Team Q&A Session</p>
               <p className="text-sm text-gray-600">2:45 PM - 3:00 PM</p>
@@ -397,7 +399,7 @@ const OrganizerView = ({ timeRemaining, isRunning, onToggleTimer, onResetTimer, 
                 <div className="text-xs text-gray-600 mt-1">Auto-notifications active</div>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4 p-4 bg-blue-50/80 backdrop-blur-sm rounded-xl border border-blue-200/50 shadow-sm">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -428,8 +430,9 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
     {/* Moderator Command Center */}
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 opacity-95"></div>
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Cpath d="M20 20c0-11.046-8.954-20-20-20v20h20z"/%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
-      
+      {/* FIXED: Changed inner double quotes to single quotes */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=&apos;40&apos; height=&apos;40&apos; viewBox=&apos;0 0 40 40&apos; xmlns=&apos;http://www.w3.org/2000/svg&apos;%3E%3Cg fill=&apos;%23ffffff&apos; fill-opacity=&apos;0.03&apos;%3E%3Cpath d=&apos;M20 20c0-11.046-8.954-20-20-20v20h20z&apos;/%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+
       <GlassCard className="relative p-10" gradient>
         <div className="text-center mb-8">
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full text-white font-bold text-sm shadow-xl mb-6">
@@ -480,7 +483,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
                   { label: '+1m', seconds: 60, color: 'from-emerald-500 to-green-500' },
                   { label: '+5m', seconds: 300, color: 'from-emerald-600 to-green-600' },
                 ].map(({ label, seconds, color }) => (
-                  <button 
+                  <button
                     key={label}
                     onClick={() => onAdjustTime(seconds)}
                     className={clsx(
@@ -513,7 +516,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
               <h4 className="font-bold text-gray-900 text-lg">Mike Torres</h4>
               <p className="text-gray-600 font-medium">Engineering Implementation</p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="p-4 bg-emerald-50/80 backdrop-blur-sm rounded-xl border border-emerald-200/50">
                 <div className="flex items-center mb-2">
@@ -524,7 +527,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
                 </div>
                 <p className="text-emerald-600 text-sm font-medium">✓ Slides loaded ✓ Audio tested ✓ Screen share ready</p>
               </div>
-              
+
               <button className="w-full p-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 <div className="flex items-center justify-center space-x-2">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -533,15 +536,15 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
                   <span>Start Mike's Session</span>
                 </div>
               </button>
-              
+
               <div className="p-4 bg-slate-50/80 backdrop-blur-sm rounded-xl border border-slate-200/50">
                 <p className="text-gray-800 text-sm font-bold mb-2">Handoff Script</p>
                 <p className="text-gray-600 text-sm italic">"Thanks Sarah. Now let's dive into the technical implementation that will make this vision reality..."</p>
               </div>
             </div>
           </div>
-        </GlassCard>
-      </div>
+        </div>
+      </GlassCard>
     </div>
 
     {/* Premium Moderator Actions */}
@@ -568,7 +571,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
           <div className="text-xs text-purple-600 font-medium">Update #product-launch</div>
         </button>
 
-        <button 
+        <button
           onClick={() => {
             setShowSlackMessage(true);
             setTimeout(() => setShowSlackMessage(false), 3000);
@@ -595,7 +598,6 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
         </button>
       </div>
     </GlassCard>
-    </div>
 
     {/* Advanced Session Analytics */}
     <div className="grid lg:grid-cols-3 gap-8">
@@ -613,7 +615,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
             </div>
             <span className="text-emerald-600 font-bold">98%</span>
           </div>
-          
+
           <div className="flex items-center justify-between p-4 bg-blue-50/80 backdrop-blur-sm rounded-xl border border-blue-200/50">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center shadow-sm">
@@ -625,7 +627,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
             </div>
             <span className="text-blue-600 font-bold">3 queued</span>
           </div>
-          
+
           <div className="flex items-center justify-between p-4 bg-purple-50/80 backdrop-blur-sm rounded-xl border border-purple-200/50">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center shadow-sm">
@@ -655,7 +657,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
               </div>
               <span className="text-xs text-gray-500">2:14 PM</span>
             </div>
-            
+
             <div className="flex items-start space-x-4 p-4 bg-emerald-50/80 backdrop-blur-sm rounded-xl border border-emerald-200/50">
               <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>
               <div className="flex-1">
@@ -667,7 +669,7 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
               </div>
               <span className="text-xs text-gray-500">2:12 PM</span>
             </div>
-            
+
             <div className="flex items-start space-x-4 p-4 bg-purple-50/80 backdrop-blur-sm rounded-xl border border-purple-200/50">
               <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
               <div className="flex-1">
@@ -695,8 +697,9 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
     {/* Speaker Hero Section */}
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 opacity-90"></div>
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M0 0h80v80H0V0zm20 20v40h40V20H20zm20 35a15 15 0 100-30 15 15 0 000 30z"/%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-      
+      {/* FIXED: Changed inner double quotes to single quotes */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=&apos;80&apos; height=&apos;80&apos; viewBox=&apos;0 0 80 80&apos; xmlns=&apos;http://www.w3.org/2000/svg&apos;%3E%3Cg fill=&apos;%23ffffff&apos; fill-opacity=&apos;0.05&apos;%3E%3Cpath d=&apos;M0 0h80v80H0V0zm20 20v40h40V20H20zm20 35a15 15 0 100-30 15 15 0 000 30z&apos;/%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+
       <GlassCard className="relative p-10" gradient>
         <div className="text-center mb-8">
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full text-white font-bold text-sm shadow-xl mb-6">
@@ -706,7 +709,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
           <h1 className="text-4xl font-bold text-gray-900 mb-3">Q1 Product Launch Kickoff</h1>
           <p className="text-gray-600 text-lg font-medium">Sarah Chen • Product Overview Session</p>
         </div>
-        
+
         <div className="grid lg:grid-cols-2 gap-10">
           {/* Premium Speaker Timer */}
           <div className="text-center">
@@ -717,7 +720,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
               <div className="absolute -inset-8 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-3xl rounded-full opacity-60"></div>
             </div>
             <p className="text-gray-700 text-xl font-bold mb-8 relative">Time Remaining</p>
-            
+
             {/* Dynamic Status Indicators */}
             <div className="space-y-4">
               <div className="flex justify-center space-x-4">
@@ -729,7 +732,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
                   {timeRemaining > 300 ? 'ON TRACK' : timeRemaining > 120 ? 'WRAP UP SOON' : 'TIME UP'}
                 </div>
               </div>
-              
+
               {timeRemaining <= 300 && timeRemaining > 0 && (
                 <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-l-4 border-amber-400 shadow-lg animate-fade-in">
                   <div className="flex items-center mb-2">
@@ -741,7 +744,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
                   <p className="text-amber-700 text-sm font-medium">Start moving toward your conclusion</p>
                 </div>
               )}
-              
+
               {timeRemaining <= 0 && (
                 <div className="p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-xl border-l-4 border-red-400 shadow-lg animate-fade-in">
                   <div className="flex items-center mb-2">
@@ -770,7 +773,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
                 const isPast = actualMinute < currentMinute;
                 const isCurrent = actualMinute === currentMinute;
                 const isNext = actualMinute === currentMinute + 1;
-                
+
                 return (
                   <div key={actualMinute} className={clsx('p-5 rounded-xl border-l-4 transition-all duration-500 shadow-sm', {
                     'bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-500 shadow-lg scale-105': isCurrent,
@@ -796,7 +799,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
                 );
               })}
             </div>
-            
+
             {/* Enhanced Quick Reference */}
             <div className="mt-6 p-5 bg-gradient-to-r from-slate-50/80 to-gray-50/80 backdrop-blur-sm rounded-xl border border-slate-200/50 shadow-inner">
               <h4 className="font-bold text-slate-900 mb-3 flex items-center">
@@ -826,7 +829,7 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
             </div>
           </div>
         </div>
-      </div>
+      </GlassCard>
     </div>
   </div>
 );
@@ -836,9 +839,9 @@ const AppHeader = ({ activeTab, setActiveTab }: {
   setActiveTab: (tab: Tab) => void;
 }) => {
   const tabs = [
-    { 
-      id: 'organizer', 
-      label: 'Event Control', 
+    {
+      id: 'organizer',
+      label: 'Event Control',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
           <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
@@ -846,9 +849,9 @@ const AppHeader = ({ activeTab, setActiveTab }: {
       ),
       gradient: 'from-indigo-500 to-purple-600'
     },
-    { 
-      id: 'moderator', 
-      label: 'Moderator Hub', 
+    {
+      id: 'moderator',
+      label: 'Moderator Hub',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
@@ -856,9 +859,9 @@ const AppHeader = ({ activeTab, setActiveTab }: {
       ),
       gradient: 'from-slate-600 to-gray-700'
     },
-    { 
-      id: 'speaker', 
-      label: 'Speaker Portal', 
+    {
+      id: 'speaker',
+      label: 'Speaker Portal',
       icon: (
         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clipRule="evenodd" />
@@ -886,13 +889,13 @@ const AppHeader = ({ activeTab, setActiveTab }: {
 
           <nav className="hidden md:flex items-center space-x-2">
             {tabs.map((tab) => (
-              <button 
-                key={tab.id} 
-                onClick={() => setActiveTab(tab.id as Tab)} 
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as Tab)}
                 className={clsx(
                   'group relative px-6 py-3 rounded-xl font-bold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-1',
-                  activeTab === tab.id 
-                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl scale-105` 
+                  activeTab === tab.id
+                    ? `bg-gradient-to-r ${tab.gradient} text-white shadow-xl scale-105`
                     : 'bg-white/80 text-gray-700 hover:bg-white border border-gray-200/50 hover:border-gray-300/50'
                 )}
               >
@@ -930,7 +933,7 @@ export function StageCue() {
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
   const [showSlackMessage, setShowSlackMessage] = useState(false);
   const [demoStep, setDemoStep] = useState(0);
-  
+
   const currentMinute = useMemo(() => {
     const elapsed = INITIAL_TIME_SECONDS - timeRemaining;
     return Math.floor(elapsed / 60);
@@ -942,7 +945,7 @@ export function StageCue() {
     if (timeRemaining <= 300) return 'text-amber-500';
     return 'text-indigo-600';
   }, [timeRemaining]);
-  
+
   // --- HANDLERS ---
   const handleResetTimer = () => {
     setTimeRemaining(INITIAL_TIME_SECONDS);
@@ -1007,7 +1010,7 @@ export function StageCue() {
   // Effect for timer countdown (2x speed for demo)
   useEffect(() => {
     if (!isRunning) return;
-    
+
     const interval = setInterval(() => {
       setTimeRemaining(prev => Math.max(-300, prev - 2));
     }, 1000);
@@ -1047,11 +1050,11 @@ export function StageCue() {
         </div>
       )}
 
-      <AppHeader 
-        activeTab={activeTab} 
+      <AppHeader
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      
+
       <main className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
         {renderActiveTabView()}
       </main>
