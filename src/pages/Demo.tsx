@@ -192,9 +192,14 @@ function CreateEventStep() {
 // Step 2: Add Speakers
 function AddSpeakersStep() {
   const [speakers, setSpeakers] = useState<Array<{name: string, session: string, duration: string}>>([]);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
+    
+    timeouts.push(setTimeout(() => {
+      setShowForm(true);
+    }, 500));
     
     timeouts.push(setTimeout(() => {
       setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
@@ -226,7 +231,7 @@ function AddSpeakersStep() {
         <div className="grid lg:grid-cols-2 gap-8">
           <div>
             <h3 className="font-semibold text-slate-900 mb-4">Add New Speaker</h3>
-            <div className="space-y-4 p-6 bg-slate-50 rounded-lg">
+            <div className={`space-y-4 p-6 bg-slate-50 rounded-lg transition-opacity duration-500 ${showForm ? 'opacity-100' : 'opacity-30'}`}>
               <input
                 type="text"
                 placeholder="Speaker name..."
@@ -288,9 +293,14 @@ function AddSpeakersStep() {
 function SpeakerNotesStep() {
   const [selectedSpeaker, setSelectedSpeaker] = useState('Sarah Martinez');
   const [notes, setNotes] = useState<Array<{time: string, content: string, type: string}>>([]);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
+    
+    timeouts.push(setTimeout(() => {
+      setShowForm(true);
+    }, 500));
     
     timeouts.push(setTimeout(() => {
       setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
@@ -349,7 +359,7 @@ function SpeakerNotesStep() {
 
             <div className="space-y-4">
               <h3 className="font-semibold text-slate-900">Add Speaking Note</h3>
-              <div className="p-4 bg-slate-50 rounded-lg space-y-3">
+              <div className={`p-4 bg-slate-50 rounded-lg space-y-3 transition-opacity duration-500 ${showForm ? 'opacity-100' : 'opacity-30'}`}>
                 <input
                   type="text"
                   placeholder="Time marker (e.g., 5:00)..."
@@ -411,6 +421,11 @@ function LiveManagementStep() {
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
+    // Show Slack modal very quickly after component loads
+    const showSlackTimeout = setTimeout(() => {
+      setShowSlackModal(true);
+    }, 2000); // Show after 2 seconds
+
     if (!isRunning) return;
 
     const interval = setInterval(() => {
@@ -423,12 +438,11 @@ function LiveManagementStep() {
       setTimeout(() => setShowSlackAlert(false), 4000);
     }
 
-    // Show Slack modal automatically at 15 minutes
-    if (timeRemaining === 15 * 60) {
-      setShowSlackModal(true);
-    }
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(showSlackTimeout);
+    };
   }, [isRunning, timeRemaining]);
 
   const formatTime = (seconds: number) => {
