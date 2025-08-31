@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 
 export function StageCue() {
-  const [timeRemaining, setTimeRemaining] = useState(18 * 60 + 42); // 18:42 in seconds
+  const [timeRemaining, setTimeRemaining] = useState(18 * 60 + 42);
   const [isRunning, setIsRunning] = useState(true);
+  const [autoDemo, setAutoDemo] = useState(true);
   const [showSlackNotification, setShowSlackNotification] = useState(false);
   const [currentSpeaker] = useState({
     name: 'Dr. Sarah Chen',
@@ -23,13 +24,24 @@ export function StageCue() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRunning && timeRemaining > 0) {
+    if (isRunning && timeRemaining > 0 && autoDemo) {
       interval = setInterval(() => {
         setTimeRemaining(prev => Math.max(0, prev - 1));
       }, 1000);
     }
     return () => clearInterval(interval);
   }, [isRunning, timeRemaining]);
+
+  // Auto-demo progression
+  useEffect(() => {
+    if (!autoDemo) return;
+
+    // Show Slack notification at 5 minutes remaining
+    if (timeRemaining === 5 * 60 && !showSlackNotification) {
+      setShowSlackNotification(true);
+      setTimeout(() => setShowSlackNotification(false), 4000);
+    }
+  }, [timeRemaining, autoDemo, showSlackNotification]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -50,6 +62,30 @@ export function StageCue() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900">StageCue</h1>
+              <p className="text-sm text-slate-500">Tech Summit 2024 • Main Auditorium</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-green-700 text-sm font-medium">Live Event</span>
+            </div>
+            <span className="text-slate-500 text-sm">247 attendees</span>
+          </div>
+        </div>
+      </header>
+
       {/* Header */}
       <header className="bg-white border-b border-slate-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -120,6 +156,10 @@ export function StageCue() {
                 </button>
                 <button
                   onClick={() => {
+                    setAutoDemo(false);
+                    setAutoDemo(false);
+                    setAutoDemo(false);
+                    setAutoDemo(false);
                     setTimeRemaining(30 * 60);
                     setIsRunning(false);
                   }}
