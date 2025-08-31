@@ -446,8 +446,6 @@ const SpeakerView = ({ timeRemaining, currentMinute, getTimerColor }: {
 const AppHeader = ({ activeTab, setActiveTab, autoScroll, setAutoScroll }: {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
-  autoScroll: boolean;
-  setAutoScroll: (value: boolean | ((prev: boolean) => boolean)) => void;
 }) => {
   const tabs = [
     { id: 'organizer', label: 'Event Organizer', icon: '📊' },
@@ -466,7 +464,6 @@ const AppHeader = ({ activeTab, setActiveTab, autoScroll, setAutoScroll }: {
               </div>
               <span className="text-xl font-bold text-gray-900">StageCue</span>
             </div>
-            <LiveStatusIndicator text="Product Demo" color="blue" />
           </div>
 
           <nav className="hidden md:flex items-center space-x-1">
@@ -486,16 +483,7 @@ const AppHeader = ({ activeTab, setActiveTab, autoScroll, setAutoScroll }: {
             ))}
           </nav>
 
-          <button 
-            onClick={() => setAutoScroll(prev => !prev)} 
-            className={clsx('px-3 py-1 rounded-full text-sm font-medium transition-colors', 
-              autoScroll 
-                ? 'bg-blue-100 text-blue-700' 
-                : 'bg-gray-100 text-gray-700'
-            )}
-          >
-            Auto-demo: {autoScroll ? 'ON' : 'OFF'}
-          </button>
+          <div className="w-8"></div>
         </div>
       </div>
     </header>
@@ -508,8 +496,6 @@ export function StageCue() {
   const [timeRemaining, setTimeRemaining] = useState(INITIAL_TIME_SECONDS);
   const [isRunning, setIsRunning] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
-  const [demoStep, setDemoStep] = useState(0);
-  const [autoScroll, setAutoScroll] = useState(true);
 
   // --- DERIVED STATE & MEMOS ---
   const currentMinute = useMemo(() => {
@@ -525,22 +511,6 @@ export function StageCue() {
   }, [timeRemaining]);
   
   // --- SIDE EFFECTS ---
-
-  // Effect for Demo Mode: Auto-navigate through tabs
-  useEffect(() => {
-    if (!autoScroll) return;
-    
-    const handleNextStep = () => {
-      setDemoStep(prev => {
-        const nextStep = (prev + 1) % DEMO_SEQUENCE.length;
-        setActiveTab(DEMO_SEQUENCE[nextStep].tab);
-        return nextStep;
-      });
-    };
-    const timerId = setTimeout(handleNextStep, DEMO_SEQUENCE[demoStep].duration);
-    return () => clearTimeout(timerId);
-  }, [demoStep, autoScroll]);
-
   // Effect for the main countdown timer
   useEffect(() => {
     if (!isRunning || timeRemaining <= 0) return;
@@ -599,8 +569,6 @@ export function StageCue() {
       <AppHeader 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        autoScroll={autoScroll} 
-        setAutoScroll={setAutoScroll} 
       />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderActiveTabView()}
