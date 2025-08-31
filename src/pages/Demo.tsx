@@ -14,7 +14,10 @@ interface TimerActivity {
   timestamp: Date;
 }
 
+type DemoPage = 'dashboard' | 'live-event' | 'speaker-portal' | 'event-setup';
+
 export function Demo() {
+  const [currentPage, setCurrentPage] = useState<DemoPage>('dashboard');
   const [timeRemaining, setTimeRemaining] = useState(1800); // 30 minutes in seconds
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -147,6 +150,557 @@ export function Demo() {
     return 'future';
   };
 
+  const navigationItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'live-event', label: 'Live Event', icon: '🎯' },
+    { id: 'speaker-portal', label: 'Speaker Portal', icon: '🎤' },
+    { id: 'event-setup', label: 'Event Setup', icon: '⚙️' }
+  ];
+
+  const renderDashboard = () => (
+    <div className="space-y-8">
+      {/* Dashboard Header */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Event Dashboard</h1>
+            <p className="text-slate-600 mt-1">Manage all your events from one place</p>
+          </div>
+          <button className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
+            + New Event
+          </button>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+            <div className="text-3xl font-bold text-blue-600 mb-2">3</div>
+            <div className="text-sm text-blue-700 font-medium">Active Events</div>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
+            <div className="text-3xl font-bold text-purple-600 mb-2">12</div>
+            <div className="text-sm text-purple-700 font-medium">Speakers Today</div>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl">
+            <div className="text-3xl font-bold text-teal-600 mb-2">247</div>
+            <div className="text-sm text-teal-700 font-medium">Total Attendees</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Active Events */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-6">Active Events</h2>
+          <div className="space-y-4">
+            <div className="p-4 bg-green-50 rounded-xl border-l-4 border-green-500 transition-all duration-300 hover:shadow-md hover:scale-102">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold text-slate-900">Tech Summit 2024</h3>
+                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Live</span>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">Main Auditorium • 247 attendees</p>
+              <div className="flex space-x-4 text-xs">
+                <span className="text-green-600 font-medium">Session 3/8 • 18:42 remaining</span>
+              </div>
+            </div>
+            
+            <div className="p-4 bg-yellow-50 rounded-xl border-l-4 border-yellow-500 transition-all duration-300 hover:shadow-md hover:scale-102">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-semibold text-slate-900">Design Workshop</h3>
+                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium">Break</span>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">Room B • 45 attendees</p>
+              <div className="flex space-x-4 text-xs">
+                <span className="text-yellow-600 font-medium">15:00 break time</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-6">Quick Actions</h2>
+          <div className="space-y-3">
+            <button 
+              onClick={() => setCurrentPage('live-event')}
+              className="w-full text-left p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
+            >
+              <div className="font-medium text-blue-900">View Live Event</div>
+              <div className="text-xs text-blue-600">Tech Summit 2024</div>
+            </button>
+            <button 
+              onClick={() => setCurrentPage('speaker-portal')}
+              className="w-full text-left p-4 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
+            >
+              <div className="font-medium text-purple-900">Speaker Portal</div>
+              <div className="text-xs text-purple-600">Dr. Sarah Chen</div>
+            </button>
+            <button 
+              onClick={() => setCurrentPage('event-setup')}
+              className="w-full text-left p-4 bg-teal-50 hover:bg-teal-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
+            >
+              <div className="font-medium text-teal-900">Event Setup</div>
+              <div className="text-xs text-teal-600">Configure new event</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderLiveEvent = () => (
+    <div className="space-y-8">
+      {/* Event Header */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">AI in Healthcare: Future Perspectives</h1>
+            <p className="text-slate-600 mt-1">Dr. Sarah Chen • Main Auditorium • 247 attendees</p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 bg-green-100 px-4 py-2 rounded-full">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-green-700 text-sm font-medium">Live Session</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Main Timer */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Timer Display */}
+          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 rounded-2xl p-8 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+            <div className="relative">
+              <div className={`text-8xl font-mono font-bold mb-4 tracking-wider transition-all duration-500 ${getTimerColor()}`}>
+                {formatTime(timeRemaining)}
+              </div>
+              <div className="text-white/80 text-xl mb-8 font-medium">Session Time Remaining</div>
+              
+              {/* Timer Controls */}
+              <div className="flex justify-center space-x-4 mb-6">
+                <button
+                  onClick={handleStart}
+                  disabled={isRunning && !isPaused}
+                  className="px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
+                >
+                  Start
+                </button>
+                <button
+                  onClick={handlePause}
+                  disabled={!isRunning}
+                  className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
+                >
+                  {isPaused ? 'Resume' : 'Pause'}
+                </button>
+                <button
+                  onClick={handleStop}
+                  className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
+                >
+                  Reset
+                </button>
+              </div>
+
+              {/* Time Adjustment Controls */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div className="text-white/60 text-sm mb-3 uppercase tracking-wide">Adjust Time</div>
+                <div className="flex justify-center space-x-2">
+                  <button
+                    onClick={() => adjustTime(-5)}
+                    className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
+                  >
+                    -5m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(-1)}
+                    className="px-4 py-2 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
+                  >
+                    -1m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(1)}
+                    className="px-4 py-2 bg-green-500/60 hover:bg-green-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
+                  >
+                    +1m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(5)}
+                    className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
+                  >
+                    +5m
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Activity Feed */}
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+            <h3 className="font-bold text-slate-900 text-lg mb-4">Timer Activity</h3>
+            <div className="space-y-3">
+              {timerActivity.length === 0 ? (
+                <p className="text-slate-500 text-sm">No timer activity yet</p>
+              ) : (
+                timerActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg transition-all duration-300 hover:bg-slate-100 hover:shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                      <span className="text-sm font-medium text-slate-900">{activity.action}</span>
+                      {activity.amount > 0 && (
+                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                          {activity.amount}m
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-slate-500">
+                      {activity.timestamp.toLocaleTimeString()}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Speaker Notes Panel */}
+        <div className="space-y-6">
+          {/* Add New Note */}
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+            <h3 className="font-bold text-slate-900 text-lg mb-4">Add Speaker Note</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Minute Mark
+                </label>
+                <select
+                  value={newNoteMinute}
+                  onChange={(e) => setNewNoteMinute(Number(e.target.value))}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+                >
+                  {Array.from({ length: 30 }, (_, i) => i + 1).map(minute => (
+                    <option key={minute} value={minute}>
+                      {minute} minute{minute !== 1 ? 's' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Note
+                </label>
+                <textarea
+                  value={newNoteText}
+                  onChange={(e) => setNewNoteText(e.target.value)}
+                  placeholder="Add your speaker note..."
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none transition-all duration-200"
+                  rows={3}
+                />
+              </div>
+              <button
+                onClick={addSpeakerNote}
+                disabled={!newNoteText.trim()}
+                className="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
+              >
+                Add Note
+              </button>
+            </div>
+          </div>
+
+          {/* Speaker Notes Timeline */}
+          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+            <h3 className="font-bold text-slate-900 text-lg mb-4">Speaker Notes Timeline</h3>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {speakerNotes.length === 0 ? (
+                <p className="text-slate-500 text-sm">No speaker notes yet</p>
+              ) : (
+                speakerNotes.map((note) => {
+                  const status = getNoteStatus(note.minute);
+                  
+                  return (
+                    <div
+                      key={note.id}
+                      className={`p-4 rounded-lg border-l-4 transition-all duration-500 transform hover:scale-102 hover:shadow-md ${
+                        status === 'current'
+                          ? 'bg-green-50 border-green-500 animate-pulse'
+                          : status === 'past'
+                          ? 'bg-slate-50 border-slate-300'
+                          : 'bg-blue-50 border-blue-500'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className={`text-sm font-bold ${
+                              status === 'current'
+                                ? 'text-green-700'
+                                : status === 'past'
+                                ? 'text-slate-500'
+                                : 'text-blue-700'
+                            }`}>
+                              {note.minute} minute{note.minute !== 1 ? 's' : ''}
+                            </span>
+                            {status === 'current' && (
+                              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium animate-bounce">
+                                Current
+                              </span>
+                            )}
+                            {status === 'past' && (
+                              <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-full text-xs font-medium">
+                                Completed
+                              </span>
+                            )}
+                          </div>
+                          <p className={`text-sm ${
+                            status === 'past' ? 'text-slate-500' : 'text-slate-700'
+                          }`}>
+                            {note.note}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeSpeakerNote(note.id)}
+                          className="text-slate-400 hover:text-red-500 transition-all duration-200 transform hover:scale-110 hover:rotate-90 ml-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSpeakerPortal = () => (
+    <div className="space-y-8">
+      {/* Speaker Welcome */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center">
+        <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-700 text-sm font-medium mb-4">
+          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
+          Your session starts in 5 minutes
+        </div>
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome, Dr. Sarah Chen</h1>
+        <p className="text-slate-600">AI in Healthcare: Future Perspectives • Main Auditorium</p>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Speaker Timer */}
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center">
+          <div className="text-6xl font-mono font-bold text-slate-900 mb-4 transition-all duration-500">30:00</div>
+          <div className="text-slate-600 text-lg mb-6">Your Session Time</div>
+          <div className="flex justify-center space-x-3">
+            <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+              Ready to Start
+            </div>
+            <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+              Q&A Follows
+            </div>
+          </div>
+        </div>
+
+        {/* Speaker Instructions */}
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <h3 className="font-bold text-slate-900 text-lg mb-4">Session Instructions</h3>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-3 p-3 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium text-amber-800">5-minute warning at 25:00</span>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg border-l-4 border-red-400">
+              <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm font-medium text-red-800">Hard stop at 30:00</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-lg">
+              <span className="text-sm text-slate-600">Q&A follows immediately after presentation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Speaker's Personal Notes */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+        <h3 className="font-bold text-slate-900 text-lg mb-4">Your Presentation Notes</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <h4 className="font-semibold text-blue-900 mb-2">Opening (0-10 min)</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• Welcome and introduction</li>
+                <li>• Current state of AI in healthcare</li>
+                <li>• Key statistics and market overview</li>
+              </ul>
+            </div>
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <h4 className="font-semibold text-purple-900 mb-2">Main Content (10-25 min)</h4>
+              <ul className="text-sm text-purple-800 space-y-1">
+                <li>• Case studies from Johns Hopkins</li>
+                <li>• AI diagnostic accuracy data</li>
+                <li>• Implementation challenges</li>
+              </ul>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="p-4 bg-teal-50 rounded-lg">
+              <h4 className="font-semibold text-teal-900 mb-2">Conclusion (25-30 min)</h4>
+              <ul className="text-sm text-teal-800 space-y-1">
+                <li>• Future roadmap</li>
+                <li>• Call to action</li>
+                <li>• Q&A transition</li>
+              </ul>
+            </div>
+            <div className="p-4 bg-green-50 rounded-lg">
+              <h4 className="font-semibold text-green-900 mb-2">Key Reminders</h4>
+              <ul className="text-sm text-green-800 space-y-1">
+                <li>• Speak slowly and clearly</li>
+                <li>• Make eye contact with audience</li>
+                <li>• Save 5 minutes for Q&A setup</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderEventSetup = () => (
+    <div className="space-y-8">
+      {/* Setup Header */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Create New Event</h1>
+        <p className="text-slate-600">Set up timing, speakers, and notifications for your event</p>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* Event Details */}
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <h3 className="font-bold text-slate-900 text-lg mb-6">Event Details</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Event Name</label>
+              <input
+                type="text"
+                placeholder="e.g., Tech Summit 2024"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
+              <input
+                type="text"
+                placeholder="e.g., Main Auditorium"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Expected Attendees</label>
+              <input
+                type="number"
+                placeholder="e.g., 250"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Timer Configuration */}
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+          <h3 className="font-bold text-slate-900 text-lg mb-6">Timer Settings</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Session Duration</label>
+              <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
+                <option>15 minutes</option>
+                <option>20 minutes</option>
+                <option>30 minutes</option>
+                <option>45 minutes</option>
+                <option>60 minutes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Warning Alerts</label>
+              <div className="space-y-2">
+                <label className="flex items-center">
+                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
+                  <span className="ml-2 text-sm text-slate-700">5-minute warning</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
+                  <span className="ml-2 text-sm text-slate-700">2-minute warning</span>
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
+                  <span className="ml-2 text-sm text-slate-700">Time's up alert</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Notification Setup */}
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+        <h3 className="font-bold text-slate-900 text-lg mb-6">Team Notifications</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="p-4 bg-blue-50 rounded-xl">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5z"/>
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-900">Slack Integration</h4>
+                <p className="text-xs text-blue-700">Send alerts to your team</p>
+              </div>
+            </div>
+            <input
+              type="text"
+              placeholder="#event-team"
+              className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            />
+          </div>
+          
+          <div className="p-4 bg-purple-50 rounded-xl">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-semibold text-purple-900">Email Alerts</h4>
+                <p className="text-xs text-purple-700">Notify moderators</p>
+              </div>
+            </div>
+            <input
+              type="email"
+              placeholder="moderators@event.com"
+              className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-center space-x-4">
+        <button className="px-8 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
+          Save as Draft
+        </button>
+        <button className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
+          Create Event
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Professional Header */}
@@ -162,13 +716,26 @@ export function Demo() {
                 </div>
                 <span className="text-xl font-bold text-slate-900">StageCue</span>
               </div>
-              <nav className="hidden md:flex space-x-6">
-                <a href="#" className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">Dashboard</a>
-                <a href="#" className="text-teal-600 px-3 py-2 text-sm font-medium">Events</a>
-                <a href="#" className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">Speakers</a>
-                <a href="#" className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">Settings</a>
+              
+              {/* Navigation Tabs */}
+              <nav className="hidden md:flex space-x-1">
+                {navigationItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setCurrentPage(item.id as DemoPage)}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 transform hover:scale-105 ${
+                      currentPage === item.id
+                        ? 'bg-teal-100 text-teal-700 shadow-sm'
+                        : 'text-slate-700 hover:text-teal-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    <span className="mr-2">{item.icon}</span>
+                    {item.label}
+                  </button>
+                ))}
               </nav>
             </div>
+            
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
@@ -184,278 +751,42 @@ export function Demo() {
         </div>
       </header>
 
+      {/* Mobile Navigation */}
+      <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3">
+        <div className="flex space-x-1 overflow-x-auto">
+          {navigationItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentPage(item.id as DemoPage)}
+              className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                currentPage === item.id
+                  ? 'bg-teal-100 text-teal-700'
+                  : 'text-slate-700 hover:text-teal-600 hover:bg-slate-100'
+              }`}
+            >
+              <span className="mr-2">{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Page Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Event Header */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900">AI in Healthcare: Future Perspectives</h1>
-              <p className="text-slate-600 mt-1">Dr. Sarah Chen • Main Auditorium • 247 attendees</p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2 bg-green-100 px-4 py-2 rounded-full">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-green-700 text-sm font-medium">Live Session</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Timer */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Timer Display */}
-            <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 rounded-2xl p-8 text-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-              <div className="relative">
-                <div className={`text-8xl font-mono font-bold mb-4 tracking-wider ${getTimerColor()}`}>
-                  {formatTime(timeRemaining)}
-                </div>
-                <div className="text-white/80 text-xl mb-8 font-medium">Session Time Remaining</div>
-                
-                {/* Timer Controls */}
-                <div className="flex justify-center space-x-4 mb-6">
-                  <button
-                    onClick={handleStart}
-                    disabled={isRunning && !isPaused}
-                    className="px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-                  >
-                    Start
-                  </button>
-                  <button
-                    onClick={handlePause}
-                    disabled={!isRunning}
-                    className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-                  >
-                    {isPaused ? 'Resume' : 'Pause'}
-                  </button>
-                  <button
-                    onClick={handleStop}
-                    className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
-                  >
-                    Reset
-                  </button>
-                </div>
-
-                {/* Time Adjustment Controls */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-white/60 text-sm mb-3 uppercase tracking-wide">Adjust Time</div>
-                  <div className="flex justify-center space-x-2">
-                    <button
-                      onClick={() => adjustTime(-5)}
-                      className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                    >
-                      -5m
-                    </button>
-                    <button
-                      onClick={() => adjustTime(-1)}
-                      className="px-4 py-2 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                    >
-                      -1m
-                    </button>
-                    <button
-                      onClick={() => adjustTime(1)}
-                      className="px-4 py-2 bg-green-500/60 hover:bg-green-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                    >
-                      +1m
-                    </button>
-                    <button
-                      onClick={() => adjustTime(5)}
-                      className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                    >
-                      +5m
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Activity Feed */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-              <h3 className="font-bold text-slate-900 text-lg mb-4">Timer Activity</h3>
-              <div className="space-y-3">
-                {timerActivity.length === 0 ? (
-                  <p className="text-slate-500 text-sm">No timer activity yet</p>
-                ) : (
-                  timerActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-sm font-medium text-slate-900">{activity.action}</span>
-                        {activity.amount > 0 && (
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
-                            {activity.amount}m
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-slate-500">
-                        {activity.timestamp.toLocaleTimeString()}
-                      </span>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Speaker Notes Panel */}
-          <div className="space-y-6">
-            {/* Add New Note */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-              <h3 className="font-bold text-slate-900 text-lg mb-4">Add Speaker Note</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Minute Mark
-                  </label>
-                  <select
-                    value={newNoteMinute}
-                    onChange={(e) => setNewNoteMinute(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                  >
-                    {Array.from({ length: 30 }, (_, i) => i + 1).map(minute => (
-                      <option key={minute} value={minute}>
-                        {minute} minute{minute !== 1 ? 's' : ''}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Note
-                  </label>
-                  <textarea
-                    value={newNoteText}
-                    onChange={(e) => setNewNoteText(e.target.value)}
-                    placeholder="Add your speaker note..."
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none"
-                    rows={3}
-                  />
-                </div>
-                <button
-                  onClick={addSpeakerNote}
-                  disabled={!newNoteText.trim()}
-                  className="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
-                >
-                  Add Note
-                </button>
-              </div>
-            </div>
-
-            {/* Speaker Notes Timeline */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-              <h3 className="font-bold text-slate-900 text-lg mb-4">Speaker Notes Timeline</h3>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {speakerNotes.length === 0 ? (
-                  <p className="text-slate-500 text-sm">No speaker notes yet</p>
-                ) : (
-                  speakerNotes.map((note) => {
-                    const status = getNoteStatus(note.minute);
-                    const currentMinute = getCurrentMinute();
-                    
-                    return (
-                      <div
-                        key={note.id}
-                        className={`p-4 rounded-lg border-l-4 transition-all duration-500 transform hover:scale-102 hover:shadow-md ${
-                          status === 'current'
-                            ? 'bg-green-50 border-green-500 animate-pulse'
-                            : status === 'past'
-                            ? 'bg-slate-50 border-slate-300'
-                            : 'bg-blue-50 border-blue-500'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-2">
-                              <span className={`text-sm font-bold ${
-                                status === 'current'
-                                  ? 'text-green-700'
-                                  : status === 'past'
-                                  ? 'text-slate-500'
-                                  : 'text-blue-700'
-                              }`}>
-                                {note.minute} minute{note.minute !== 1 ? 's' : ''}
-                              </span>
-                              {status === 'current' && (
-                                <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                                  Current
-                                </span>
-                              )}
-                              {status === 'past' && (
-                                <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-full text-xs font-medium">
-                                  Completed
-                                </span>
-                              )}
-                            </div>
-                            <p className={`text-sm ${
-                              status === 'past' ? 'text-slate-500' : 'text-slate-700'
-                            }`}>
-                              {note.note}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => removeSpeakerNote(note.id)}
-                            className="text-slate-400 hover:text-red-500 transition-all duration-200 transform hover:scale-110 hover:rotate-90 ml-2"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-
-            {/* Session Progress */}
-            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-              <h3 className="font-bold text-slate-900 text-lg mb-4">Session Progress</h3>
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-slate-900 mb-1">
-                    {getCurrentMinute()}/30
-                  </div>
-                  <div className="text-sm text-slate-600">Minutes elapsed</div>
-                </div>
-                
-                <div className="w-full bg-slate-200 rounded-full h-3">
-                  <div 
-                    className="bg-gradient-to-r from-teal-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: `${((30 * 60 - timeRemaining) / (30 * 60)) * 100}%` }}
-                  ></div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <div className="text-lg font-bold text-slate-900">
-                      {Math.floor((30 * 60 - timeRemaining) / 60)}m
-                    </div>
-                    <div className="text-xs text-slate-500">Elapsed</div>
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <div className="text-lg font-bold text-slate-900">
-                      {Math.ceil(timeRemaining / 60)}m
-                    </div>
-                    <div className="text-xs text-slate-500">Remaining</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {currentPage === 'dashboard' && renderDashboard()}
+        {currentPage === 'live-event' && renderLiveEvent()}
+        {currentPage === 'speaker-portal' && renderSpeakerPortal()}
+        {currentPage === 'event-setup' && renderEventSetup()}
       </div>
 
       {/* Slack Notification Modal */}
       {showSlackModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
                 <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5zM17.5 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5z"/>
-                  <path d="M22.5 6.908c0-.6-.4-1-.9-1-.5 0-.9.4-.9 1 0 .6.4 1 .9 1 .5 0 .9-.4.9-1z"/>
+                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5z"/>
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-slate-900 mb-2">Slack Notification Sent</h3>
@@ -482,9 +813,9 @@ export function Demo() {
       {/* Time Extension Modal */}
       {showExtendModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
