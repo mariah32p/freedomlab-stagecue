@@ -116,19 +116,20 @@ export function StageCue() {
   const [isRunning, setIsRunning] = useState(true);
   const [showSlackNotification, setShowSlackNotification] = useState(false);
   const [stageStartTime, setStageStartTime] = useState(Date.now());
+  const [autoDemoEnabled, setAutoDemoEnabled] = useState(false);
 
   const currentStage = demoStages[currentStageIndex];
 
   // Auto-progress through demo stages
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || !autoDemoEnabled) return;
 
     const interval = setInterval(() => {
       setTimeRemaining(prev => {
         const newTime = Math.max(0, prev - 1);
         
-        // When timer reaches 0, move to next stage after 2 seconds
-        if (newTime === 0) {
+        // When timer reaches 0, move to next stage after 2 seconds (only in auto mode)
+        if (newTime === 0 && autoDemoEnabled) {
           setTimeout(() => {
             const nextIndex = (currentStageIndex + 1) % demoStages.length;
             setCurrentStageIndex(nextIndex);
@@ -142,16 +143,16 @@ export function StageCue() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, currentStageIndex]);
+  }, [isRunning, currentStageIndex, autoDemoEnabled]);
 
   // Auto-demo notifications
   useEffect(() => {
     // Show Slack notification at 5 minutes remaining
-    if (timeRemaining === 5 * 60 && !showSlackNotification) {
+    if (timeRemaining === 5 * 60 && !showSlackNotification && autoDemoEnabled) {
       setShowSlackNotification(true);
       setTimeout(() => setShowSlackNotification(false), 4000);
     }
-  }, [timeRemaining, showSlackNotification]);
+  }, [timeRemaining, showSlackNotification, autoDemoEnabled]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -180,6 +181,7 @@ export function StageCue() {
   };
 
   const handleStageChange = (index: number) => {
+    setAutoDemoEnabled(false); // Disable auto-demo when manually changing stages
     setCurrentStageIndex(index);
     setTimeRemaining(demoStages[index].timeRemaining);
     setStageStartTime(Date.now());
@@ -216,8 +218,20 @@ export function StageCue() {
         {/* Demo Stage Selector */}
         <div className="mb-6 bg-white rounded-lg shadow-sm border border-slate-200 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-slate-900">Demo Stages</h3>
-            <div className="text-sm text-slate-500">Click to jump to any stage</div>
+            <h3 className="font-medium text-slate-900">Demo Control</h3>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setAutoDemoEnabled(!autoDemoEnabled)}
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                  autoDemoEnabled
+                    ? 'bg-green-100 text-green-700 border border-green-200'
+                    : 'bg-slate-100 text-slate-600 border border-slate-200'
+                }`}
+              >
+                {autoDemoEnabled ? 'Auto Demo: ON' : 'Auto Demo: OFF'}
+              </button>
+              <div className="text-sm text-slate-500">Click stages to navigate manually</div>
+            </div>
           </div>
           <div className="flex space-x-2 overflow-x-auto">
             {demoStages.map((stage, index) => (
@@ -284,6 +298,10 @@ export function StageCue() {
                 </button>
                 <button
                   onClick={() => {
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
                     setTimeRemaining(currentStage.timeRemaining);
                     setIsRunning(true);
                   }}
@@ -393,6 +411,7 @@ export function StageCue() {
 
                 <button 
                   onClick={() => {
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
                     const nextIndex = (currentStageIndex + 1) % demoStages.length;
                     handleStageChange(nextIndex);
                   }}
