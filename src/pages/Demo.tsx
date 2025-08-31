@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function Demo() {
+export function StageCue() {
   const [timeRemaining, setTimeRemaining] = useState(1200); // 20 minutes
   const [currentMinute, setCurrentMinute] = useState(1);
   const [isRunning, setIsRunning] = useState(true);
