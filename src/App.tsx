@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { RouteGuard } from './components/RouteGuard';
@@ -13,33 +14,42 @@ import { ResetPassword } from './pages/ResetPassword';
 import { GetStarted } from './pages/GetStarted.tsx';
 import { Demo } from './pages/Demo';
 
+function AppContent() {
+  const location = useLocation();
+  const isDemoPage = location.pathname === '/demo';
+
+  return (
+    <RouteGuard>
+      <div className="min-h-screen bg-gray-50">
+        {!isDemoPage && <Navbar />}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/get-started" element={<GetStarted />} />
+          <Route path="/demo" element={<Demo />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </RouteGuard>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <RouteGuard>
-        <div className="min-h-screen bg-gray-50">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route path="/demo" element={<Demo />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-        </RouteGuard>
+        <AppContent />
       </Router>
     </AuthProvider>
   );
