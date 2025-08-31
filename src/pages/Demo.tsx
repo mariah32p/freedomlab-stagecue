@@ -10,6 +10,9 @@ interface DemoStep {
 export function StageCue() {
   const [currentStep, setCurrentStep] = useState(0);
   const [stepTimer, setStepTimer] = useState(0);
+  const [showSlackModal, setShowSlackModal] = useState(false);
+  const [slackMessage, setSlackMessage] = useState('');
+  const [showSlackSuccess, setShowSlackSuccess] = useState(false);
   const [isRunning, setIsRunning] = useState(true);
 
   const demoSteps: DemoStep[] = [
@@ -74,39 +77,31 @@ export function StageCue() {
               </svg>
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">StageCue Demo</h1>
-              <p className="text-sm text-slate-500">{demoSteps[currentStep].title}</p>
+              <h1 className="text-xl font-semibold text-slate-900">StageCue</h1>
+              <p className="text-sm text-slate-500">Q1 Product Launch Planning</p>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="flex space-x-1">
-              {demoSteps.map((step, index) => (
-                <button
-                  key={step.id}
-                  onClick={() => {
-                    setCurrentStep(index);
-                    setStepTimer(0);
-                  }}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentStep
-                      ? 'bg-indigo-600'
-                      : index < currentStep
-                      ? 'bg-green-500'
-                      : 'bg-slate-300'
-                  }`}
-                />
-              ))}
+          <div className="flex items-center space-x-6">
+            <nav className="flex space-x-6">
+              <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
+                Events
+              </button>
+              <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
+                Templates
+              </button>
+              <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
+                Team
+              </button>
+              <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
+                Settings
+              </button>
+            </nav>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
+                <span className="text-slate-600 text-sm font-medium">JD</span>
+              </div>
+              <span className="text-sm text-slate-700">John Doe</span>
             </div>
-            <button
-              onClick={() => setIsRunning(!isRunning)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                isRunning
-                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-              }`}
-            >
-              {isRunning ? 'Pause Demo' : 'Resume Demo'}
-            </button>
           </div>
         </div>
       </header>
