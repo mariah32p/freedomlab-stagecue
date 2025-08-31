@@ -501,13 +501,21 @@ function LiveManagementStep() {
       setShowSlackModal(true);
     }, 2000);
 
-    // Auto-close Slack modal after showing success
-    const closeTimeout = setTimeout(() => {
-      if (showSlackSuccess) {
-        setShowSlackModal(false);
+    return () => {
+      clearTimeout(slackTimeout);
+    };
+  }, []);
+
+  // Separate effect to handle success notification auto-close
+  useEffect(() => {
+    if (showSlackSuccess) {
+      const closeTimeout = setTimeout(() => {
         setShowSlackSuccess(false);
-      }
-    }, 1000);
+      }, 1000);
+      
+      return () => clearTimeout(closeTimeout);
+    }
+  }, [showSlackSuccess]);
 
     if (!isRunning) return;
 
@@ -515,13 +523,8 @@ function LiveManagementStep() {
       setTimeRemaining(prev => Math.max(0, prev - 1));
     }, 1000);
 
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(slackTimeout);
-      clearTimeout(closeTimeout);
-    };
-  }, [isRunning, showSlackSuccess]);
+    return () => clearInterval(interval);
+  }, [isRunning]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
