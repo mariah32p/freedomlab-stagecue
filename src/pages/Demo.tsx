@@ -1,67 +1,24 @@
+              <div className="flex items-center space-x-2 mb-3">
 import { useState, useEffect } from 'react';
 
 interface DemoLayoutProps {
-  children: React.ReactNode;
+                <span className="font-medium text-green-700">Slack Connected</span>
   showControls?: boolean;
-  onToggleControls?: () => void;
+              <div className="text-slate-600 text-sm">
 }
 
 function DemoLayout({ children, showControls = true, onToggleControls }: DemoLayoutProps) {
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header Navigation */}
-      <header className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="text-xl font-bold text-slate-900">StageCue</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-6">
-              <nav className="hidden md:flex space-x-6">
-                <button className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
-                  Dashboard
-                </button>
-                <button className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
-                  Events
-                </button>
-                <button className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
-                  Speakers
-                </button>
-                <button className="text-slate-700 hover:text-teal-600 px-3 py-2 text-sm font-medium transition-colors">
-                  Settings
-                </button>
-              </nav>
-              
-              <div className="flex items-center space-x-3">
-                <div className="hidden sm:flex items-center space-x-2 bg-green-100 px-3 py-1 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-700 text-sm font-medium">Pro Plan</span>
-                </div>
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">SC</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="relative">
-      {/* Floating orbs for visual appeal */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute top-40 right-20 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
-      <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-      
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
+            <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+    <div className="max-w-6xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+        <h2 className="text-4xl font-bold text-slate-900 mb-4">Team Coordination Dashboard</h2>
+        <p className="text-slate-600 text-lg">Real-time event management and team communication</p>
+      </div>
+                <span className="font-medium text-blue-700">Email Alerts</span>
       {/* Demo watermark */}
-      <div className="absolute top-4 left-4 z-50">
+              <div className="text-slate-600 text-sm">
         <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2">
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -83,7 +40,6 @@ function DemoLayout({ children, showControls = true, onToggleControls }: DemoLay
       )}
 
       {children}
-      </div>
     </div>
   );
 }
@@ -952,59 +908,58 @@ export function Demo() {
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
+        <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-6 border border-slate-200">
                 </div>
-                <div>
-                  <h3 className="font-bold text-slate-900">Extend Session Time</h3>
+          <h3 className="text-xl font-semibold text-slate-900 mb-6">Event Overview</h3>
+            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
                   <p className="text-slate-600 text-sm">Add more time to current session</p>
-                </div>
-              </div>
-              
+              <div className="text-2xl font-bold text-green-600">3/8</div>
               <div className="space-y-4 mb-6">
-                <button
-                  onClick={() => {
-                    setTimeRemaining(prev => prev + 5 * 60);
+            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+              <div className="text-slate-600 text-sm">Sessions Complete</div>
+              <div className="text-2xl font-bold text-blue-600">247</div>
                     setShowExtendModal(false);
-                  }}
-                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
-                >
+            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+              <div className="text-slate-600 text-sm">Attendees</div>
+              <div className="text-2xl font-bold text-purple-600">5</div>
                   <div className="font-medium text-slate-900">+ 5 minutes</div>
+              <div className="text-slate-600 text-sm">Team Online</div>
                   <div className="text-slate-600 text-sm">Quick extension for Q&A</div>
                 </button>
                 
                 <button
+          <h4 className="font-semibold text-slate-900 mb-4">Today's Schedule</h4>
                   onClick={() => {
-                    setTimeRemaining(prev => prev + 10 * 60);
+            <div className="flex items-center space-x-4 p-4 bg-green-50 rounded-xl border-l-4 border-green-400">
+                <div className="font-medium text-green-800">{sessionTitle}</div>
                     setShowExtendModal(false);
-                  }}
-                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
-                >
-                  <div className="font-medium text-slate-900">+ 10 minutes</div>
+                <div className="text-green-600 text-sm">{speakerName} • 2:00 PM - 2:30 PM</div>
                   <div className="text-slate-600 text-sm">Extended discussion time</div>
+                <div className="text-green-700 text-xs bg-green-100 px-2 py-1 rounded-md inline-block mt-1">
                 </button>
               </div>
 
+            <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
               <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowExtendModal(false)}
+              <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
+                <div className="font-medium text-slate-900">Panel Discussion</div>
                   className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
+                <div className="text-slate-600 text-sm">4 speakers • 2:30 PM - 3:15 PM</div>
                 </button>
+            <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
                 <button
-                  onClick={() => {
-                    setTimeRemaining(0);
+              <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
+                <div className="font-medium text-slate-900">Coffee Break</div>
                     setIsTimerRunning(false);
-                    setShowExtendModal(false);
-                  }}
+                <div className="text-slate-600 text-sm">3:15 PM - 3:30 PM</div>
                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                 >
                   End Session
                 </button>
               </div>
+        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
             </div>
-          </div>
-        </div>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Communication</h3>
       )}
+            <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
     </>
-  );
-}
