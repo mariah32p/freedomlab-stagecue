@@ -409,6 +409,7 @@ function LiveManagementStep() {
   const [isRunning, setIsRunning] = useState(true);
   const [currentSpeaker] = useState('Sarah Martinez');
   const [showSlackAlert, setShowSlackAlert] = useState(false);
+  const [showSlackModal, setShowSlackModal] = useState(false);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -502,6 +503,12 @@ function LiveManagementStep() {
               className="px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium"
             >
               +5 min
+            </button>
+            <button
+              onClick={() => setShowSlackModal(true)}
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
+            >
+              Send Alert
             </button>
             <button
               onClick={() => {
