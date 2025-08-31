@@ -248,8 +248,8 @@ function SpeakerNotesStep() {
       essential: 'bg-blue-50 border-blue-200 text-blue-800',
       optional: 'bg-slate-50 border-slate-200 text-slate-600',
       transition: 'bg-purple-50 border-purple-200 text-purple-800'
-    };
-    return colors[type] || colors.optional;
+    } as const;
+    return colors[type as keyof typeof colors] || colors.optional;
   };
   
   return (
