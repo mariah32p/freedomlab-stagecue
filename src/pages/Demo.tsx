@@ -1,573 +1,313 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-// --- TYPES ---
-interface SpeakerNote {
-  id: string;
-  minute: number;
-  text: string;
-}
+export function Demo() {
+  const [timeRemaining, setTimeRemaining] = useState(1200); // 20 minutes
+  const [currentMinute, setCurrentMinute] = useState(1);
+  const [isRunning, setIsRunning] = useState(true);
+  const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
 
-interface TimerAdjustment {
-  id: string;
-  timestamp: string;
-  action: string;
-  amount: number;
-}
-
-// --- TIMER HOOK ---
-const useTimer = (initialDuration: number) => {
-  const [timeRemaining, setTimeRemaining] = useState(initialDuration);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const start = useCallback(() => {
-    setIsRunning(true);
-    setIsPaused(false);
-  }, []);
-
-  const pause = useCallback(() => {
-    setIsPaused(!isPaused);
-  }, [isPaused]);
-
-  const reset = useCallback(() => {
-    setIsRunning(false);
-    setIsPaused(false);
-    setTimeRemaining(initialDuration);
-  }, [initialDuration]);
-
-  const adjustTime = useCallback((seconds: number) => {
-    setTimeRemaining(prev => Math.max(0, prev + seconds));
-  }, []);
-
+  // Auto-play timer
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    
-    if (isRunning && !isPaused && timeRemaining > 0) {
-      interval = setInterval(() => {
-        setTimeRemaining(prev => prev - 1);
-      }, 1000);
-    }
+    if (!isRunning || timeRemaining <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => {
+        const newTime = prev - 1;
+        const elapsed = 1200 - newTime;
+        setCurrentMinute(Math.floor(elapsed / 60) + 1);
+        return Math.max(0, newTime);
+      });
+    }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, isPaused, timeRemaining]);
+  }, [isRunning, timeRemaining]);
 
-  const elapsedTime = initialDuration - timeRemaining;
-  const currentMinute = Math.floor(elapsedTime / 60) + 1;
+  // Auto-advance speaker notes
+  useEffect(() => {
+    const noteInterval = setInterval(() => {
+      setCurrentNoteIndex(prev => (prev + 1) % speakerNotes.length);
+    }, 8000);
 
-  return {
-    timeRemaining,
-    elapsedTime,
-    currentMinute,
-    isRunning,
-    isPaused,
-    start,
-    pause,
-    reset,
-    adjustTime,
-  };
-};
+    return () => clearInterval(noteInterval);
+  }, []);
 
-// --- UTILITY FUNCTIONS ---
-const formatTime = (seconds: number): string => {
-  const mins = Math.floor(Math.abs(seconds) / 60).toString().padStart(2, '0');
-  const secs = (Math.abs(seconds) % 60).toString().padStart(2, '0');
-  return `${seconds < 0 ? '-' : ''}${mins}:${secs}`;
-};
-
-const getTimerColor = (seconds: number): string => {
-  if (seconds <= 0) return 'text-red-500';
-  if (seconds <= 60) return 'text-red-400';
-  if (seconds <= 300) return 'text-yellow-400';
-  return 'text-slate-800';
-};
-
-// --- COMPONENTS ---
-const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-white rounded-2xl shadow-lg border border-slate-200 p-6 transition-all duration-300 hover:shadow-xl ${className}`}>
-    {children}
-  </div>
-);
-
-const Button = ({ children, className = '', ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-  <button
-    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${className}`}
-    {...props}
-  >
-    {children}
-  </button>
-);
-
-// --- MAIN DEMO COMPONENT ---
-export function StageCue() {
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'live' | 'speaker' | 'setup'>('dashboard');
-  const [speakerNotes, setSpeakerNotes] = useState<SpeakerNote[]>([
-    { id: '1', minute: 5, text: 'Introduce main concept' },
-    { id: '2', minute: 10, text: 'Show first demo' },
-    { id: '3', minute: 15, text: 'Q&A transition' },
-  ]);
-  const [timerAdjustments, setTimerAdjustments] = useState<TimerAdjustment[]>([]);
-  const [newNoteMinute, setNewNoteMinute] = useState(1);
-  const [newNoteText, setNewNoteText] = useState('');
-  const [speakerMessage, setSpeakerMessage] = useState<string | null>(null);
-
-  const timer = useTimer(1200); // 20 minutes default
-
-  const addNote = () => {
-    if (newNoteText.trim()) {
-      const newNote: SpeakerNote = {
-        id: Date.now().toString(),
-        minute: newNoteMinute,
-        text: newNoteText.trim(),
-      };
-      setSpeakerNotes(prev => [...prev, newNote].sort((a, b) => a.minute - b.minute));
-      setNewNoteText('');
-    }
-  };
-
-  const removeNote = (id: string) => {
-    setSpeakerNotes(prev => prev.filter(note => note.id !== id));
-  };
-
-  const adjustTimer = (amount: number, action: string) => {
-    timer.adjustTime(amount);
-    const adjustment: TimerAdjustment = {
-      id: Date.now().toString(),
-      timestamp: new Date().toLocaleTimeString(),
-      action,
-      amount: Math.abs(amount),
-    };
-    setTimerAdjustments(prev => [adjustment, ...prev].slice(0, 10));
-  };
-
-  const sendMessage = (message: string) => {
-    setSpeakerMessage(message);
-    setTimeout(() => setSpeakerMessage(null), 5000);
-  };
-
-  const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'live', label: 'Live Event', icon: '🎯' },
-    { id: 'speaker', label: 'Speaker Portal', icon: '🎤' },
-    { id: 'setup', label: 'Event Setup', icon: '⚙️' },
+  const speakerNotes = [
+    { minute: 2, text: "Welcome audience and introduce topic", active: currentMinute >= 2 },
+    { minute: 5, text: "Present first key concept with slides", active: currentMinute >= 5 },
+    { minute: 8, text: "Show live demonstration", active: currentMinute >= 8 },
+    { minute: 12, text: "Discuss real-world applications", active: currentMinute >= 12 },
+    { minute: 15, text: "Address common challenges", active: currentMinute >= 15 },
+    { minute: 18, text: "Prepare for Q&A transition", active: currentMinute >= 18 },
   ];
 
-  const renderDashboard = () => (
-    <div className="space-y-8">
-      <Card>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Tech Summit 2024</h1>
-        <p className="text-slate-600 mb-6">Event management dashboard</p>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
-            <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
-            <div className="text-sm text-blue-700 font-medium">Total Sessions</div>
-          </div>
-          <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-            <div className="text-3xl font-bold text-purple-600 mb-2">12</div>
-            <div className="text-sm text-purple-700 font-medium">Speakers</div>
-          </div>
-          <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl">
-            <div className="text-3xl font-bold text-teal-600 mb-2">247</div>
-            <div className="text-sm text-teal-700 font-medium">Attendees</div>
-          </div>
-        </div>
-      </Card>
-      
-      <Card>
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Activity</h2>
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-slate-700">Dr. Sarah Chen session started</span>
-            <span className="text-xs text-slate-500 ml-auto">2:00 PM</span>
-          </div>
-          <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span className="text-sm text-slate-700">Speaker notes updated</span>
-            <span className="text-xs text-slate-500 ml-auto">1:45 PM</span>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(Math.abs(seconds) / 60).toString().padStart(2, '0');
+    const secs = (Math.abs(seconds) % 60).toString().padStart(2, '0');
+    return `${seconds < 0 ? '-' : ''}${mins}:${secs}`;
+  };
 
-  const renderLiveEvent = () => (
-    <div className="grid lg:grid-cols-3 gap-8">
-      {/* Main Timer */}
-      <div className="lg:col-span-2 space-y-6">
-        <Card>
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">AI in Healthcare: Future Perspectives</h1>
-          <p className="text-slate-600">Dr. Sarah Chen • Main Auditorium</p>
-        </Card>
+  const getTimerColor = () => {
+    if (timeRemaining <= 0) return 'text-red-500';
+    if (timeRemaining <= 120) return 'text-red-400';
+    if (timeRemaining <= 300) return 'text-amber-400';
+    return 'text-emerald-400';
+  };
 
-        <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 text-center">
-          <div className={`text-8xl font-mono font-bold tracking-wider transition-all duration-500 ${getTimerColor(timer.timeRemaining)}`}>
-            {formatTime(timer.timeRemaining)}
-          </div>
-          <div className="text-white/80 text-xl font-medium mt-4 mb-8">Session Time Remaining</div>
-          
-          <div className="flex justify-center space-x-4 mb-6">
-            <Button
-              onClick={timer.start}
-              disabled={timer.isRunning && !timer.isPaused}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              ▶ Start
-            </Button>
-            <Button
-              onClick={timer.pause}
-              disabled={!timer.isRunning}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white"
-            >
-              {timer.isPaused ? '▶ Resume' : '⏸ Pause'}
-            </Button>
-            <Button
-              onClick={timer.reset}
-              className="bg-red-500 hover:bg-red-600 text-white"
-            >
-              ↻ Reset
-            </Button>
-          </div>
-
-          {/* Timer Adjustment Controls */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-            <div className="text-white/70 text-sm mb-3">Adjust Timer</div>
-            <div className="flex justify-center space-x-2">
-              <Button
-                onClick={() => adjustTimer(-300, 'Reduced by 5 minutes')}
-                className="bg-red-400/80 hover:bg-red-500 text-white text-sm"
-              >
-                -5m
-              </Button>
-              <Button
-                onClick={() => adjustTimer(-60, 'Reduced by 1 minute')}
-                className="bg-red-400/80 hover:bg-red-500 text-white text-sm"
-              >
-                -1m
-              </Button>
-              <Button
-                onClick={() => adjustTimer(60, 'Added 1 minute')}
-                className="bg-green-400/80 hover:bg-green-500 text-white text-sm"
-              >
-                +1m
-              </Button>
-              <Button
-                onClick={() => adjustTimer(300, 'Added 5 minutes')}
-                className="bg-green-400/80 hover:bg-green-500 text-white text-sm"
-              >
-                +5m
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Speaker Notes Timeline */}
-        <Card>
-          <h3 className="text-xl font-bold text-slate-900 mb-4">Speaker Notes Timeline</h3>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {speakerNotes.map(note => {
-              const isPast = timer.currentMinute > note.minute;
-              const isCurrent = timer.currentMinute === note.minute;
-              const statusClass = isCurrent 
-                ? 'bg-green-100 border-green-500 scale-102 shadow-lg animate-pulse' 
-                : isPast 
-                ? 'bg-slate-100 border-slate-300 opacity-60' 
-                : 'bg-blue-50 border-blue-500';
-
-              return (
-                <div
-                  key={note.id}
-                  className={`p-4 rounded-lg border-l-4 transition-all duration-500 hover:scale-102 hover:shadow-md ${statusClass}`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-bold text-sm text-slate-800">
-                        Minute {note.minute}
-                      </span>
-                      {isCurrent && (
-                        <span className="ml-2 text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full">
-                          Current
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => removeNote(note.id)}
-                      className="text-red-400 hover:text-red-600 hover:scale-110 hover:rotate-90 transition-all duration-200"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <p className="text-sm text-slate-700 mt-1">{note.text}</p>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </div>
-
-      {/* Sidebar */}
-      <div className="space-y-6">
-        {/* Add Speaker Note */}
-        <Card>
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Add Speaker Note</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Minute Mark
-              </label>
-              <select
-                value={newNoteMinute}
-                onChange={(e) => setNewNoteMinute(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-              >
-                {Array.from({ length: 30 }, (_, i) => i + 1).map(minute => (
-                  <option key={minute} value={minute}>
-                    Minute {minute}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Note Text
-              </label>
-              <textarea
-                value={newNoteText}
-                onChange={(e) => setNewNoteText(e.target.value)}
-                placeholder="Enter your note..."
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 resize-none"
-                rows={3}
-              />
-            </div>
-            <Button
-              onClick={addNote}
-              disabled={!newNoteText.trim()}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white"
-            >
-              Add Note
-            </Button>
-          </div>
-        </Card>
-
-        {/* Timer Activity */}
-        <Card>
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Timer Activity</h3>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {timerAdjustments.length === 0 ? (
-              <p className="text-sm text-slate-500">No timer adjustments yet</p>
-            ) : (
-              timerAdjustments.map(adj => (
-                <div key={adj.id} className="p-3 bg-slate-50 rounded-lg text-sm">
-                  <div className="font-medium text-slate-900">{adj.action}</div>
-                  <div className="text-slate-500">{adj.timestamp}</div>
-                </div>
-              ))
-            )}
-          </div>
-        </Card>
-
-        {/* Quick Messages */}
-        <Card>
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Quick Messages</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {['5 mins left', '2 mins left', 'Wrap up', 'Great pace!', 'Speak louder', 'Q&A ready'].map(msg => (
-              <Button
-                key={msg}
-                onClick={() => sendMessage(msg)}
-                className="text-sm bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200"
-              >
-                {msg}
-              </Button>
-            ))}
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-
-  const renderSpeakerPortal = () => (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <Card className="text-center">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">AI in Healthcare: Future Perspectives</h1>
-        <p className="text-slate-600">Dr. Sarah Chen • Main Auditorium</p>
-        {speakerMessage && (
-          <div className="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg animate-bounce">
-            <p className="font-semibold text-yellow-900">Message from Moderator:</p>
-            <p className="text-yellow-800">{speakerMessage}</p>
-          </div>
-        )}
-      </Card>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-slate-800 rounded-2xl p-8 text-center">
-          <div className={`text-7xl font-mono font-bold tracking-wider transition-all duration-500 ${getTimerColor(timer.timeRemaining) === 'text-slate-800' ? 'text-white' : getTimerColor(timer.timeRemaining)}`}>
-            {formatTime(timer.timeRemaining)}
-          </div>
-          <div className="text-white/70 text-lg font-medium mt-3">Time Remaining</div>
-          <div className="mt-4 text-white/60 text-sm">
-            Current: Minute {timer.currentMinute}
-          </div>
-        </div>
-
-        <Card>
-          <h3 className="text-xl font-bold text-slate-900 mb-4">Your Notes</h3>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {speakerNotes.map(note => {
-              const isPast = timer.currentMinute > note.minute;
-              const isCurrent = timer.currentMinute === note.minute;
-              const statusClass = isCurrent 
-                ? 'bg-green-100 border-green-500 scale-102 shadow-lg animate-pulse' 
-                : isPast 
-                ? 'bg-slate-100 border-slate-300 opacity-60' 
-                : 'bg-white border-slate-200';
-
-              return (
-                <div
-                  key={note.id}
-                  className={`p-4 rounded-lg border-l-4 transition-all duration-500 ${statusClass}`}
-                >
-                  <div className="font-bold text-sm text-slate-800 mb-1">
-                    Minute {note.minute}
-                    {isCurrent && (
-                      <span className="ml-2 text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full">
-                        Now
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-slate-700">{note.text}</p>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-
-  const renderSetup = () => (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <Card>
-        <h1 className="text-3xl font-bold text-slate-900 mb-6">Event Setup</h1>
-        <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Session Details</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Session Title</label>
-                <input
-                  type="text"
-                  defaultValue="AI in Healthcare: Future Perspectives"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Speaker Name</label>
-                <input
-                  type="text"
-                  defaultValue="Dr. Sarah Chen"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Duration (minutes)</label>
-                <input
-                  type="number"
-                  defaultValue="20"
-                  min="1"
-                  max="120"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Notifications</h3>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <input type="checkbox" defaultChecked className="rounded" />
-                <div>
-                  <div className="font-medium text-slate-900">Slack Notifications</div>
-                  <div className="text-sm text-slate-600">#event-team channel</div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                <input type="checkbox" defaultChecked className="rounded" />
-                <div>
-                  <div className="font-medium text-slate-900">Email Alerts</div>
-                  <div className="text-sm text-slate-600">moderators@event.com</div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-                <input type="checkbox" className="rounded" />
-                <div>
-                  <div className="font-medium text-slate-900">SMS Alerts</div>
-                  <div className="text-sm text-slate-600">Emergency only</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'live':
-        return renderLiveEvent();
-      case 'speaker':
-        return renderSpeakerPortal();
-      case 'setup':
-        return renderSetup();
-      default:
-        return renderDashboard();
-    }
+  const adjustTime = (seconds: number) => {
+    setTimeRemaining(prev => Math.max(0, prev + seconds));
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <span className="text-xl font-bold text-slate-900">StageCue</span>
-              </div>
-              <nav className="hidden md:flex space-x-1">
-                {navigationItems.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => setCurrentPage(item.id as any)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105 ${
-                      currentPage === item.id
-                        ? 'bg-teal-100 text-teal-700 shadow-md'
-                        : 'text-slate-600 hover:text-teal-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Floating Header */}
+      <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-3 shadow-2xl">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
-            <div className="flex items-center space-x-2 bg-green-100 px-3 py-1 rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-700 text-sm font-medium">Demo Mode</span>
+            <span className="text-xl font-bold text-white">StageCue</span>
+            <div className="flex items-center space-x-2 bg-emerald-500/20 px-3 py-1 rounded-full">
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+              <span className="text-emerald-300 text-sm font-medium">Live Demo</span>
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {renderCurrentPage()}
-      </main>
+      <div className="pt-24 pb-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Main Timer Display */}
+          <div className="text-center mb-12">
+            <div className="inline-block bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 shadow-2xl">
+              <div className="mb-6">
+                <h1 className="text-2xl font-semibold text-white/90 mb-2">AI in Healthcare: Future Perspectives</h1>
+                <p className="text-white/60">Dr. Sarah Chen • Main Auditorium • 247 attendees</p>
+              </div>
+              
+              <div className={`text-8xl md:text-9xl font-mono font-bold tracking-wider mb-6 transition-all duration-1000 ${getTimerColor()}`}>
+                {formatTime(timeRemaining)}
+              </div>
+              
+              <div className="text-white/70 text-xl mb-8">Session Time Remaining</div>
+              
+              {/* Timer Controls */}
+              <div className="flex justify-center space-x-4 mb-8">
+                <button
+                  onClick={() => setIsRunning(!isRunning)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-xl active:scale-95 ${
+                    isRunning 
+                      ? 'bg-amber-500 hover:bg-amber-400 text-white' 
+                      : 'bg-emerald-500 hover:bg-emerald-400 text-white'
+                  }`}
+                >
+                  {isRunning ? '⏸ Pause' : '▶ Start'}
+                </button>
+                <button
+                  onClick={() => {
+                    setTimeRemaining(1200);
+                    setCurrentMinute(1);
+                    setIsRunning(false);
+                  }}
+                  className="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-xl active:scale-95"
+                >
+                  ↻ Reset
+                </button>
+              </div>
+
+              {/* Time Adjustment Controls */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+                <div className="text-white/60 text-sm mb-4 font-medium">Quick Time Adjustments</div>
+                <div className="flex justify-center space-x-3">
+                  <button
+                    onClick={() => adjustTime(-300)}
+                    className="px-4 py-2 bg-red-500/80 hover:bg-red-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
+                  >
+                    -5m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(-60)}
+                    className="px-4 py-2 bg-red-500/80 hover:bg-red-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
+                  >
+                    -1m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(60)}
+                    className="px-4 py-2 bg-emerald-500/80 hover:bg-emerald-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
+                  >
+                    +1m
+                  </button>
+                  <button
+                    onClick={() => adjustTime(300)}
+                    className="px-4 py-2 bg-emerald-500/80 hover:bg-emerald-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
+                  >
+                    +5m
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Speaker Notes Timeline */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+              <h2 className="text-2xl font-bold text-white mb-6">Speaker Notes Timeline</h2>
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {speakerNotes.map((note, index) => {
+                  const isPast = currentMinute > note.minute;
+                  const isCurrent = currentMinute === note.minute;
+                  const isHighlighted = index === currentNoteIndex;
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`p-4 rounded-xl border-l-4 transition-all duration-700 transform hover:scale-102 hover:shadow-lg ${
+                        isCurrent 
+                          ? 'bg-emerald-500/20 border-emerald-400 shadow-lg animate-pulse' 
+                          : isPast 
+                          ? 'bg-white/5 border-slate-500 opacity-60' 
+                          : isHighlighted
+                          ? 'bg-blue-500/20 border-blue-400 shadow-lg'
+                          : 'bg-white/10 border-white/30'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-bold text-white text-sm">
+                          Minute {note.minute}
+                        </span>
+                        {isCurrent && (
+                          <span className="text-xs bg-emerald-400 text-emerald-900 px-2 py-1 rounded-full font-bold animate-bounce">
+                            NOW
+                          </span>
+                        )}
+                        {isHighlighted && !isCurrent && !isPast && (
+                          <span className="text-xs bg-blue-400 text-blue-900 px-2 py-1 rounded-full font-bold">
+                            NEXT
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-white/90 text-sm leading-relaxed">{note.text}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Live Stats & Controls */}
+            <div className="space-y-6">
+              {/* Current Status */}
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
+                <h3 className="text-xl font-bold text-white mb-4">Live Status</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-emerald-500/20 rounded-lg">
+                    <span className="text-white/90 font-medium">Current Minute</span>
+                    <span className="text-emerald-400 font-bold text-lg">{currentMinute}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-blue-500/20 rounded-lg">
+                    <span className="text-white/90 font-medium">Progress</span>
+                    <span className="text-blue-400 font-bold">{Math.round(((1200 - timeRemaining) / 1200) * 100)}%</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-purple-500/20 rounded-lg">
+                    <span className="text-white/90 font-medium">Attendees</span>
+                    <span className="text-purple-400 font-bold">247</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
+                <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
+                <div className="space-y-3">
+                  <button className="w-full p-3 bg-blue-500/80 hover:bg-blue-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    📢 Send 5-min Warning
+                  </button>
+                  <button className="w-full p-3 bg-purple-500/80 hover:bg-purple-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    💬 Message Speaker
+                  </button>
+                  <button className="w-full p-3 bg-amber-500/80 hover:bg-amber-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
+                    🔔 Notify Team
+                  </button>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
+                <h3 className="text-xl font-bold text-white mb-4">Session Progress</h3>
+                <div className="relative">
+                  <div className="w-full bg-white/20 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-emerald-400 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
+                      style={{ width: `${((1200 - timeRemaining) / 1200) * 100}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-white/60 mt-2">
+                    <span>Start</span>
+                    <span>20 min</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Info Panel */}
+          <div className="mt-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Precision Timing</h3>
+                <p className="text-white/70 text-sm">Millisecond accuracy with automatic speaker alerts</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Team Coordination</h3>
+                <p className="text-white/70 text-sm">Real-time Slack notifications and team alerts</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Speaker Portal</h3>
+                <p className="text-white/70 text-sm">Dedicated speaker interfaces with personal timers</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="mt-12 text-center">
+            <div className="bg-gradient-to-r from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Ready to run flawless events?
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                Join event professionals who trust StageCue for precision timing and seamless coordination
+              </p>
+              <button 
+                onClick={() => window.location.href = '/signup'}
+                className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300"
+              >
+                Start Free Trial
+              </button>
+              <p className="text-white/60 mt-4 text-sm">
+                7-day free trial • Cancel anytime
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
