@@ -192,26 +192,71 @@ function CreateEventStep() {
 // Step 2: Add Speakers
 function AddSpeakersStep() {
   const [speakers, setSpeakers] = useState<Array<{name: string, session: string, duration: string}>>([]);
-  const [showForm, setShowForm] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    session: '',
+    duration: ''
+  });
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
     
+    // Fill form first, then add speaker
     timeouts.push(setTimeout(() => {
-      setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
+      setFormData({ name: 'Sarah Martinez', session: '', duration: '' });
     }, 500));
     
     timeouts.push(setTimeout(() => {
-      setSpeakers(prev => [...prev, { name: 'Alex Chen', session: 'Technical Architecture', duration: '25 min' }]);
+      setFormData(prev => ({ ...prev, session: 'Project Overview' }));
+    }, 1000));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, duration: '20 min' }));
+    }, 1500));
+    
+    timeouts.push(setTimeout(() => {
+      setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
+      setFormData({ name: 'Alex Chen', session: '', duration: '' });
     }, 2000));
     
     timeouts.push(setTimeout(() => {
-      setSpeakers(prev => [...prev, { name: 'Jessica Park', session: 'Marketing Strategy', duration: '20 min' }]);
+      setFormData(prev => ({ ...prev, session: 'Technical Architecture' }));
+    }, 2500));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, duration: '25 min' }));
+    }, 3000));
+    
+    timeouts.push(setTimeout(() => {
+      setSpeakers(prev => [...prev, { name: 'Alex Chen', session: 'Technical Architecture', duration: '25 min' }]);
+      setFormData({ name: 'Jessica Park', session: '', duration: '' });
     }, 3500));
     
     timeouts.push(setTimeout(() => {
-      setSpeakers(prev => [...prev, { name: 'Team Discussion', session: 'Q&A and Next Steps', duration: '25 min' }]);
+      setFormData(prev => ({ ...prev, session: 'Marketing Strategy' }));
+    }, 4000));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, duration: '20 min' }));
+    }, 4500));
+    
+    timeouts.push(setTimeout(() => {
+      setSpeakers(prev => [...prev, { name: 'Jessica Park', session: 'Marketing Strategy', duration: '20 min' }]);
+      setFormData({ name: 'Team Discussion', session: '', duration: '' });
     }, 5000));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, session: 'Q&A and Next Steps' }));
+    }, 5500));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, duration: '25 min' }));
+    }, 6000));
+    
+    timeouts.push(setTimeout(() => {
+      setSpeakers(prev => [...prev, { name: 'Team Discussion', session: 'Q&A and Next Steps', duration: '25 min' }]);
+      setFormData({ name: '', session: '', duration: '' });
+    }, 6500));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -230,16 +275,19 @@ function AddSpeakersStep() {
             <div className="space-y-4 p-6 bg-slate-50 rounded-lg">
               <input
                 type="text"
+                value={formData.name}
                 placeholder="Speaker name..."
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg"
               />
               <input
                 type="text"
+                value={formData.session}
                 placeholder="Session title..."
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg"
               />
               <input
                 type="text"
+                value={formData.duration}
                 placeholder="Duration (e.g., 20 min)..."
                 className="w-full px-4 py-3 border border-slate-300 rounded-lg"
               />
@@ -289,30 +337,64 @@ function AddSpeakersStep() {
 function SpeakerNotesStep() {
   const [selectedSpeaker, setSelectedSpeaker] = useState('Sarah Martinez');
   const [notes, setNotes] = useState<Array<{time: string, content: string, type: string}>>([]);
-  const [showForm, setShowForm] = useState(true);
+  const [formData, setFormData] = useState({
+    time: '',
+    content: '',
+    type: 'essential'
+  });
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
     
+    // Fill form first, then add note
     timeouts.push(setTimeout(() => {
-      setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
+      setFormData({ time: '0:00', content: '', type: 'essential' });
     }, 500));
     
     timeouts.push(setTimeout(() => {
-      setNotes(prev => [...prev, { time: '5:00', content: 'Present market research findings', type: 'essential' }]);
+      setFormData(prev => ({ ...prev, content: 'Welcome team, introduce Q1 launch timeline' }));
+    }, 1000));
+    
+    timeouts.push(setTimeout(() => {
+      setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
+      setFormData({ time: '5:00', content: '', type: 'essential' });
     }, 1500));
     
     timeouts.push(setTimeout(() => {
-      setNotes(prev => [...prev, { time: '10:00', content: 'Demo new product features', type: 'essential' }]);
+      setFormData(prev => ({ ...prev, content: 'Present market research findings' }));
+    }, 2000));
+    
+    timeouts.push(setTimeout(() => {
+      setNotes(prev => [...prev, { time: '5:00', content: 'Present market research findings', type: 'essential' }]);
+      setFormData({ time: '10:00', content: '', type: 'essential' });
     }, 2500));
     
     timeouts.push(setTimeout(() => {
-      setNotes(prev => [...prev, { time: '15:00', content: 'Discuss beta program (skip if running late)', type: 'optional' }]);
+      setFormData(prev => ({ ...prev, content: 'Demo new product features' }));
+    }, 3000));
+    
+    timeouts.push(setTimeout(() => {
+      setNotes(prev => [...prev, { time: '10:00', content: 'Demo new product features', type: 'essential' }]);
+      setFormData({ time: '15:00', content: '', type: 'optional' });
     }, 3500));
     
     timeouts.push(setTimeout(() => {
-      setNotes(prev => [...prev, { time: '18:00', content: 'Wrap up, prepare for Q&A transition', type: 'transition' }]);
+      setFormData(prev => ({ ...prev, content: 'Discuss beta program (skip if running late)' }));
+    }, 4000));
+    
+    timeouts.push(setTimeout(() => {
+      setNotes(prev => [...prev, { time: '15:00', content: 'Discuss beta program (skip if running late)', type: 'optional' }]);
+      setFormData({ time: '18:00', content: '', type: 'transition' });
     }, 4500));
+    
+    timeouts.push(setTimeout(() => {
+      setFormData(prev => ({ ...prev, content: 'Wrap up, prepare for Q&A transition' }));
+    }, 5000));
+    
+    timeouts.push(setTimeout(() => {
+      setNotes(prev => [...prev, { time: '18:00', content: 'Wrap up, prepare for Q&A transition', type: 'transition' }]);
+      setFormData({ time: '', content: '', type: 'essential' });
+    }, 5500));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -354,14 +436,19 @@ function SpeakerNotesStep() {
               <div className="p-4 bg-slate-50 rounded-lg space-y-3">
                 <input
                   type="text"
+                  value={formData.time}
                   placeholder="Time marker (e.g., 5:00)..."
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
                 />
                 <textarea
+                  value={formData.content}
                   placeholder="Speaking note or cue..."
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm h-20"
                 />
-                <select className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">
+                <select 
+                  value={formData.type}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                >
                   <option>Essential</option>
                   <option>Optional</option>
                   <option>Transition</option>
@@ -412,10 +499,10 @@ function LiveManagementStep() {
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
-    // Show Slack modal immediately when live management loads
+    // Show Slack modal IMMEDIATELY when live management loads
     const showSlackTimeout = setTimeout(() => {
       setShowSlackModal(true);
-    }, 500); // Show after just 0.5 seconds
+    }, 100); // Show after just 0.1 seconds
 
     if (!isRunning) return;
 
