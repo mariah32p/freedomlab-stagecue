@@ -126,12 +126,21 @@ export function StageCue() {
       setTimeRemaining(prev => {
         const newTime = Math.max(0, prev - 1);
         
+        // Auto-advance to next stage when timer hits 0
+        if (newTime === 0 && currentStageIndex < demoStages.length - 1) {
+          setTimeout(() => {
+            const nextIndex = currentStageIndex + 1;
+            setCurrentStageIndex(nextIndex);
+            setTimeRemaining(demoStages[nextIndex].timeRemaining);
+          }, 2000); // 2 second pause between stages
+        }
+        
         return newTime;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, [isRunning, currentStageIndex]);
 
   // Slack notifications at 5 minutes
   useEffect(() => {
