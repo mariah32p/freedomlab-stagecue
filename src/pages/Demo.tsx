@@ -1307,7 +1307,6 @@ export function Demo() {
             </div>
           </div>
         </div>
-      </div>
     </>
   );
 }
