@@ -128,7 +128,7 @@ export function Demo() {
     const mins = Math.floor(Math.abs(seconds) / 60);
     const secs = Math.abs(seconds) % 60;
     const sign = seconds < 0 ? '-' : '';
-    return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return \`${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getTimerColor = () => {
@@ -433,9 +433,9 @@ export function Demo() {
                 <div className="grid lg:grid-cols-3 gap-8">
                   {/* Main Timer */}
                   <div className="lg:col-span-2">
-                    <div className={`bg-gradient-to-br ${getTimerBgColor()} backdrop-blur-sm border border-white/20 rounded-3xl p-8 text-center shadow-2xl`}>
+                    <div className={\`bg-gradient-to-br ${getTimerBgColor()} backdrop-blur-sm border border-white/20 rounded-3xl p-8 text-center shadow-2xl`}>
                       <div className="mb-6">
-                        <div className={`text-8xl font-mono font-bold ${getTimerColor()} mb-4 tracking-wider transition-colors duration-500`}>
+                        <div className={\`text-8xl font-mono font-bold ${getTimerColor()} mb-4 tracking-wider transition-colors duration-500`}>
                           {formatTime(timeRemaining)}
                         </div>
                         <div className="text-white/80 text-xl font-medium">
@@ -452,7 +452,7 @@ export function Demo() {
                       <div className="flex justify-center space-x-4">
                         <button
                           onClick={() => setIsTimerRunning(!isTimerRunning)}
-                          className={`px-8 py-3 ${isTimerRunning ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
+                          className={\`px-8 py-3 ${isTimerRunning ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
                         >
                           {isTimerRunning ? 'Pause' : 'Start'}
                         </button>
@@ -586,7 +586,7 @@ export function Demo() {
                   <div className="grid md:grid-cols-2 gap-8">
                     {/* Speaker Timer */}
                     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 text-center shadow-xl">
-                      <div className={`text-7xl font-mono font-bold ${getTimerColor()} mb-4 transition-colors duration-500`}>
+                      <div className={\`text-7xl font-mono font-bold ${getTimerColor()} mb-4 transition-colors duration-500`}>
                         {formatTime(timeRemaining)}
                       </div>
                       <div className="text-white/80 text-lg mb-6">
@@ -625,7 +625,7 @@ export function Demo() {
                           <div className="text-slate-600">{sessionNotes}</div>
                         </div>
                         
-                        <div className={`p-3 rounded-lg border ${
+                        <div className={\`p-3 rounded-lg border ${
                           timeRemaining > 300 ? 'bg-green-100 text-green-700 border border-green-200' :
                           timeRemaining > 120 ? 'bg-amber-100 text-amber-700 border border-amber-200' :
                           'bg-red-100 text-red-700 border border-red-200'
@@ -638,7 +638,7 @@ export function Demo() {
                           </div>
                         </div>
 
-                        <div className={`p-3 rounded-lg border ${
+                        <div className={\`p-3 rounded-lg border ${
                           timeRemaining > 300 ? 'bg-green-50 border-green-400 text-green-800' :
                           timeRemaining > 120 ? 'bg-amber-50 border-amber-400 text-amber-800' :
                           'bg-red-50 border-red-400 text-red-800'
