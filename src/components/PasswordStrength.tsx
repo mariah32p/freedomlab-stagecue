@@ -30,13 +30,13 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
     weak: 'text-red-600 bg-red-50 border-red-200',
     medium: 'text-yellow-600 bg-yellow-50 border-yellow-200',
     strong: 'text-green-600 bg-green-50 border-green-200'
-  };
+  } as const;
 
   const barColors = {
     weak: 'bg-red-500',
     medium: 'bg-yellow-500',
     strong: 'bg-green-500'
-  };
+  } as const;
 
   return (
     <div className="mt-3 space-y-3">
@@ -47,7 +47,7 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
             key={level}
             className={`h-2 flex-1 rounded-full transition-colors ${
               level <= score
-                ? barColors[strength]
+                ? barColors[strength as keyof typeof barColors]
                 : 'bg-gray-200'
             }`}
           />
@@ -55,7 +55,7 @@ export function PasswordStrength({ password }: PasswordStrengthProps) {
       </div>
 
       {/* Strength Label */}
-      <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${strengthColors[strength]}`}>
+      <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${strengthColors[strength as keyof typeof strengthColors]}`}>
         Password strength: {strength}
       </div>
 

@@ -1,27 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
-import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
 import { PaymentIssueBanner } from '../components/PaymentIssueBanner';
 import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
 import { isInGracePeriod } from '../utils/graceHelper';
-import { Link } from 'react-router-dom';
-
 
 export function Dashboard() {
   const { user } = useAuth();
   const subscriptionStatus = useSubscriptionStatus();
-  const [error, setError] = useState('');
+  const [error] = useState('');
 
   const showPaymentBanner = subscriptionStatus.status === 'past_due' && 
     isInGracePeriod(subscriptionStatus.paymentIssueSince);
-
-  const getProductName = (priceId: string | null) => {
-    if (!priceId) return 'No active subscription';
-    const product = products.find(p => p.priceId === priceId);
-    return product ? product.name : 'Unknown Plan';
-  };
 
   const formatDate = (timestamp: number | null) => {
     if (!timestamp) return 'N/A';
@@ -110,18 +100,18 @@ export function Dashboard() {
             <h2 className="text-xl font-semibold text-navy-900 mb-4">Quick Actions</h2>
             <div className="space-y-3">
               {subscriptionStatus.status === 'not_started' ? (
-                <Link
-                  to="/get-started"
-                  className="btn btn-primary w-full"
+                <a
+                  href="/get-started"
+                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 w-full"
                 >
                   Subscribe to StageCue
-                </Link>
+                </a>
               ) : (
                 <div className="space-y-2">
-                  <button className="btn btn-primary w-full">
+                  <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 w-full">
                     Create New Timer
                   </button>
-                  <button className="btn btn-outline w-full">
+                  <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-current bg-transparent hover:bg-current hover:text-white focus:ring-primary-500 transition-all duration-200 w-full">
                     Manage Events
                   </button>
                 </div>
