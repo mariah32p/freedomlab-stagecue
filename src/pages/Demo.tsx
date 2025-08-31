@@ -352,6 +352,10 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
             setAutoDemo(false);
             setTimeout(() => setShowSlackMessage(false), 3000);
           }}
+            setShowSlackMessage(true);
+            setAutoDemo(false);
+            setTimeout(() => setShowSlackMessage(false), 3000);
+          }}
           className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors"
         >
           <div className="font-medium text-orange-800">Alert Speaker</div>
@@ -510,7 +514,6 @@ export function StageCue() {
   const [isRunning, setIsRunning] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
   const [autoDemo, setAutoDemo] = useState(true);
-  const [demoStep, setDemoStep] = useState(0);
   const [showSlackMessage, setShowSlackMessage] = useState(false);
   const currentMinute = useMemo(() => {
     const elapsed = INITIAL_TIME_SECONDS - timeRemaining;
@@ -546,69 +549,6 @@ export function StageCue() {
         setActiveTab(DEMO_SEQUENCE[nextStep].tab);
         return nextStep;
       });
-    }, DEMO_SEQUENCE[demoStep].duration);
-    
-    return () => clearTimeout(timeout);
-  }, [autoDemo, demoStep]);
-
-  // Effect for the main countdown timer
-  useEffect(() => {
-    if (!isRunning || timeRemaining <= 0) return;
-    const interval = setInterval(() => {
-      setTimeRemaining(prev => Math.max(-300, prev - 2)); // Faster countdown for demo
-    }, 500); // Faster interval for demo
-    return () => clearInterval(interval);
-  }, [isRunning, timeRemaining]);
-  
-  // --- HANDLERS ---
-  const handleTabClick = (tab: Tab) => {
-    setActiveTab(tab);
-    setAutoDemo(false); // Stop auto demo when user interacts
-  };
-  
-  // --- RENDER LOGIC ---
-  const renderActiveTabView = () => {
-    switch (activeTab) {
-      case 'organizer': 
-        return (
-          <OrganizerView 
-            timeRemaining={timeRemaining}
-            isRunning={isRunning}
-            onToggleTimer={() => {
-              setIsRunning(!isRunning);
-              setAutoDemo(false); // Stop auto demo when user interacts
-            }}
-            onResetTimer={handleResetTimer}
-            onAdjustTime={handleAdjustTime}
-          />
-        );
-      case 'moderator': 
-        return (
-          <ModeratorView 
-            timeRemaining={timeRemaining}
-            currentMinute={currentMinute}
-            onAdjustTime={handleAdjustTime}
-            setShowSlackMessage={setShowSlackMessage}
-            setAutoDemo={setAutoDemo}
-          />
-        );
-      case 'speaker': 
-        return (
-          <SpeakerView 
-            timeRemaining={timeRemaining}
-            currentMinute={currentMinute}
-            getTimerColor={getTimerColor}
-          />
-        );
-      default: 
-        return null;
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      {/* Slack Message Popup */}
-      {showSlackMessage && (
         <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
           <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-4 max-w-sm">
             <div className="flex items-start space-x-3">
