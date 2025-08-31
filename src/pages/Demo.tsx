@@ -655,34 +655,107 @@ export function Demo() {
 
                   {/* Speaker Notes */}
                   <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200">
-                    <h3 className="font-bold text-slate-900 mb-4">Your Notes</h3>
-                    <div className="space-y-4 text-sm">
-                      <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
-                        <div className="font-medium text-slate-900 mb-1">Session Notes</div>
-                        <div className="text-slate-600">{sessionNotes}</div>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-slate-900">Speaker Notes by Minute</h3>
+                      <div className="text-xs text-slate-500">
+                        {Object.keys(speakerNotes).length} notes
                       </div>
-                      
-                      <div className={`p-3 rounded-lg border ${
-                        timeRemaining > 300 ? 'bg-green-50 text-green-700 border-green-200' :
-                        timeRemaining > 120 ? 'bg-amber-50 text-amber-700 border-amber-200' :
-                        'bg-red-50 text-red-700 border-red-200'
-                      }`}>
-                        <div className="font-medium mb-2">Timing Alerts</div>
-                        <div className="text-xs space-y-1">
-                          <div>• 5-minute warning at 20:00</div>
-                          <div>• Final warning at 23:00</div>
-                          <div>• Hard stop at 25:00</div>
-                        </div>
+                    </div>
+                    
+                    {/* Add New Note */}
+                    <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <input
+                          type="number"
+                          min="1"
+                          max="30"
+                          placeholder="Min"
+                          className="w-16 px-2 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          value={newNoteMinute}
+                          onChange={(e) => setNewNoteMinute(e.target.value)}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Add note for this minute mark..."
+                          className="flex-1 px-3 py-1 text-sm border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          value={newNoteText}
+                          onChange={(e) => setNewNoteText(e.target.value)}
+                          onKeyPress={(e) => e.key === 'Enter' && addSpeakerNote()}
+                        />
+                        <button
+                          onClick={addSpeakerNote}
+                          className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+                        >
+                          Add
+                        </button>
                       </div>
+                      <div className="text-xs text-blue-600">
+                        Add notes for specific minute marks (1-30 minutes)
+                      </div>
+                    </div>
 
-                      <div className={`p-3 rounded-lg border ${
-                        timeRemaining > 300 ? 'bg-blue-50 border-blue-200 text-blue-800' :
-                        timeRemaining > 120 ? 'bg-amber-50 border-amber-200 text-amber-800' :
-                        'bg-red-50 border-red-200 text-red-800'
-                      }`}>
-                        <div className="font-medium mb-2">Next Up</div>
-                        <div className="text-xs">Q&A Session (5 minutes)</div>
-                      </div>
+                    {/* Notes List */}
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {Object.entries(speakerNotes)
+                        .sort(([a], [b]) => parseInt(b) - parseInt(a))
+                        .map(([minute, note]) => {
+                          const minuteNum = parseInt(minute);
+                          const currentMinute = Math.ceil(timeRemaining / 60);
+                          const isCurrentMinute = currentMinute === minuteNum;
+                          const isPastMinute = currentMinute < minuteNum;
+                          
+                          return (
+                            <div 
+                              key={minute}
+                              className={`p-3 rounded-lg border-l-4 transition-all ${
+                                isCurrentMinute 
+                                  ? 'bg-green-50 border-green-400 ring-2 ring-green-200' 
+                                  : isPastMinute
+                                  ? 'bg-slate-50 border-slate-300 opacity-60'
+                                  : 'bg-amber-50 border-amber-400'
+                              }`}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className={`font-medium text-sm mb-1 ${
+                                    isCurrentMinute ? 'text-green-800' : 
+                                    isPastMinute ? 'text-slate-600' : 'text-amber-800'
+                                  }`}>
+                                    {minuteNum}-minute mark
+                                    {isCurrentMinute && (
+                                      <span className="ml-2 px-2 py-0.5 bg-green-200 text-green-800 text-xs rounded-full">
+                                        NOW
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className={`text-sm ${
+                                    isCurrentMinute ? 'text-green-700' : 
+                                    isPastMinute ? 'text-slate-500' : 'text-amber-700'
+                                  }`}>
+                                    {note}
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={() => removeSpeakerNote(minuteNum)}
+                                  className="ml-2 text-slate-400 hover:text-red-500 transition-colors"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      {Object.keys(speakerNotes).length === 0 && (
+                        <div className="text-center py-8 text-slate-500">
+                          <svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <p className="text-sm">No speaker notes yet</p>
+                          <p className="text-xs text-slate-400 mt-1">Add notes for specific minute marks above</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
