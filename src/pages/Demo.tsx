@@ -24,13 +24,13 @@ export function StageCue() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (isRunning && timeRemaining > 0 && autoDemo) {
+    if (isRunning && timeRemaining > 0) {
       interval = setInterval(() => {
         setTimeRemaining(prev => Math.max(0, prev - 1));
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isRunning, timeRemaining]);
+  }, [isRunning, timeRemaining, autoDemo]);
 
   // Auto-demo progression
   useEffect(() => {
@@ -132,12 +132,9 @@ export function StageCue() {
                 </button>
                 <button
                   onClick={() => {
-                    setAutoDemo(false);
-                    setAutoDemo(false);
-                    setAutoDemo(false);
-                    setAutoDemo(false);
                     setTimeRemaining(30 * 60);
-                    setIsRunning(false);
+                    setIsRunning(true);
+                    setAutoDemo(true);
                   }}
                   className="px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors"
                 >
