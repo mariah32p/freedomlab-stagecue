@@ -507,7 +507,7 @@ function LiveManagementStep() {
         setShowSlackModal(false);
         setShowSlackSuccess(false);
       }
-    }, 8000);
+    }, 1000);
 
     if (!isRunning) return;
 
