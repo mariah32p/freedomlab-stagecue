@@ -3,43 +3,19 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { products } from '../stripe-config';
 import { Alert } from '../components/Alert';
+import { PaymentIssueBanner } from '../components/PaymentIssueBanner';
+import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
+import { isInGracePeriod } from '../utils/graceHelper';
 import { Link } from 'react-router-dom';
 
-interface Subscription {
-  subscription_status: string;
-  price_id: string | null;
-  current_period_end: number | null;
-  cancel_at_period_end: boolean;
-}
 
 export function Dashboard() {
   const { user } = useAuth();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
+  const subscriptionStatus = useSubscriptionStatus();
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchSubscription();
-  }, []);
-
-  const fetchSubscription = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('stripe_user_subscriptions')
-        .select('subscription_status, price_id, current_period_end, cancel_at_period_end')
-        .maybeSingle();
-
-      if (error) {
-        throw error;
-      }
-
-      setSubscription(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const showPaymentBanner = subscriptionStatus.status === 'past_due' && 
+    isInGracePeriod(subscriptionStatus.paymentIssueSince);
 
   const getProductName = (priceId: string | null) => {
     if (!priceId) return 'No active subscription';
@@ -52,7 +28,7 @@ export function Dashboard() {
     return new Date(timestamp * 1000).toLocaleDateString();
   };
 
-  if (loading) {
+  if (subscriptionStatus.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
@@ -62,6 +38,15 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      {showPaymentBanner && (
+        <PaymentIssueBanner 
+          paymentIssueSince={subscriptionStatus.paymentIssueSince}
+          onManageSubscription={() => {
+            // TODO: Implement Stripe Customer Portal
+            console.log('Open Stripe Customer Portal');
+          }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-navy-900">Dashboard</h1>
@@ -77,35 +62,41 @@ export function Dashboard() {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="card">
             <h2 className="text-xl font-semibold text-navy-900 mb-4">Subscription Status</h2>
-            {subscription ? (
+            {subscriptionStatus.status !== 'not_started' ? (
               <div className="space-y-3">
                 <div>
                   <span className="text-sm font-medium text-navy-500">Plan:</span>
                   <p className="text-lg font-semibold text-navy-900">
-                    {getProductName(subscription.price_id)}
+                    {subscriptionStatus.plan === 'basic' ? 'StageCue Basic' : 
+                     subscriptionStatus.plan === 'pro' ? 'StageCue Pro' : 'No active subscription'}
                   </p>
                 </div>
                 <div>
                   <span className="text-sm font-medium text-navy-500">Status:</span>
                   <p className={`text-sm font-medium capitalize ${
-                    subscription.subscription_status === 'active' 
+                    subscriptionStatus.status === 'active' 
                       ? 'text-green-600' 
-                      : subscription.subscription_status === 'not_started'
+                      : subscriptionStatus.status === 'not_started'
                       ? 'text-navy-600'
+                      : subscriptionStatus.status === 'trialing'
+                      ? 'text-blue-600'
                       : 'text-red-600'
                   }`}>
-                    {subscription.subscription_status === 'not_started' 
-                      ? 'No Active Subscription' 
-                      : subscription.subscription_status}
+                    {subscriptionStatus.status === 'not_started' 
+                      ? 'No Active Subscription'
+                      : subscriptionStatus.status === 'trialing'
+                      ? 'Free Trial'
+                      : subscriptionStatus.status}
                   </p>
                 </div>
-                {subscription.current_period_end && (
+                {subscriptionStatus.currentPeriodEnd && (
                   <div>
                     <span className="text-sm font-medium text-navy-500">
-                      {subscription.cancel_at_period_end ? 'Expires:' : 'Renews:'}
+                      {subscriptionStatus.status === 'trialing' ? 'Trial ends:' :
+                       subscriptionStatus.cancelAtPeriodEnd ? 'Expires:' : 'Renews:'}
                     </span>
                     <p className="text-sm text-navy-900">
-                      {formatDate(subscription.current_period_end)}
+                      {formatDate(subscriptionStatus.currentPeriodEnd)}
                     </p>
                   </div>
                 )}
@@ -118,9 +109,9 @@ export function Dashboard() {
           <div className="card">
             <h2 className="text-xl font-semibold text-navy-900 mb-4">Quick Actions</h2>
             <div className="space-y-3">
-              {!subscription || subscription.subscription_status === 'not_started' ? (
+              {subscriptionStatus.status === 'not_started' ? (
                 <Link
-                  to="/pricing"
+                  to="/get-started"
                   className="btn btn-primary w-full"
                 >
                   Subscribe to StageCue
