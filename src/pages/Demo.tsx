@@ -290,8 +290,6 @@ export function StageCue() {
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">{note.text}</p>
-                </div>
               );
             })}
           </div>
