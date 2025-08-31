@@ -6,6 +6,27 @@ export function StageCue() {
   const [isRunning, setIsRunning] = useState(true);
   const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'live' | 'speaker' | 'setup'>('live');
+  const [demoStep, setDemoStep] = useState(0);
+
+  // Auto-navigate through demo steps
+  useEffect(() => {
+    const demoSequence = [
+      { tab: 'dashboard', duration: 5000 },
+      { tab: 'setup', duration: 4000 },
+      { tab: 'live', duration: 8000 },
+      { tab: 'speaker', duration: 6000 },
+    ];
+
+    const interval = setInterval(() => {
+      setDemoStep(prev => {
+        const nextStep = (prev + 1) % demoSequence.length;
+        setActiveTab(demoSequence[nextStep].tab as any);
+        return nextStep;
+      });
+    }, demoSequence[demoStep]?.duration || 5000);
+
+    return () => clearInterval(interval);
+  }, [demoStep]);
 
   // Auto-play timer
   useEffect(() => {
