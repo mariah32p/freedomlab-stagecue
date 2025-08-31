@@ -124,7 +124,7 @@ function CreateEventStep() {
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, name: 'Q1 Product Launch Planning' })), 1000));
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, date: '2024-03-15' })), 2500));
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, duration: '90 minutes' })), 4000));
-    timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, room: 'Conference Room A' })), 5500));
+    timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, room: 'https://zoom.us/j/123456789' })), 5500));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -169,12 +169,12 @@ function CreateEventStep() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Meeting Link</label>
             <input
               type="text"
               value={formData.room}
               className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Room or venue..."
+              placeholder="Zoom link or venue..."
             />
           </div>
 
@@ -499,10 +499,10 @@ function LiveManagementStep() {
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
-    // Show Slack modal IMMEDIATELY when live management loads
+    // Show Slack modal after a brief delay so timer is visible first
     const showSlackTimeout = setTimeout(() => {
       setShowSlackModal(true);
-    }, 100); // Show after just 0.1 seconds
+    }, 3000); // Show after 3 seconds so timer is visible first
 
     if (!isRunning) return;
 
@@ -695,7 +695,7 @@ function LiveManagementStep() {
                     onClick={() => {
                       setShowSlackModal(false);
                       setShowSlackSuccess(true);
-                      setTimeout(() => setShowSlackSuccess(false), 3000);
+                      setTimeout(() => setShowSlackSuccess(false), 4000);
                     }}
                     className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
                   >
