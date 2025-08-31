@@ -660,9 +660,9 @@ function LiveManagementStep() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5v-1.25h-2.5a2.528 2.528 0 0 0-2.5 2.5z"/>
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                   </div>
                   <h3 className="text-lg font-semibold text-slate-900">Send Slack Alert</h3>
@@ -700,10 +700,7 @@ function LiveManagementStep() {
                   <button
                     onClick={() => {
                       setShowSlackSuccess(true);
-                      setTimeout(() => {
-                        setShowSlackModal(false);
-                        setShowSlackSuccess(false);
-                      }, 3000);
+                      setShowSlackModal(false);
                     }}
                     className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors"
                   >
@@ -724,7 +721,7 @@ function LiveManagementStep() {
 
       {/* Slack Success Notification */}
       {showSlackSuccess && (
-        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+        <div className="fixed top-6 right-6 z-50 animate-slide-in-right">
           <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-4 max-w-sm">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -739,6 +736,14 @@ function LiveManagementStep() {
                   Message delivered to 8 team members
                 </div>
               </div>
+              <button
+                onClick={() => setShowSlackSuccess(false)}
+                className="text-slate-400 hover:text-slate-600 ml-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
