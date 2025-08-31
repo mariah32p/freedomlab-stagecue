@@ -1,862 +1,713 @@
-import { useState, useEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
+import type { FC, ReactNode } from "react";
+
+// --- TYPES & MOCK DATA (Typically in separate files) ---
+
+interface Speaker {
+  id: string;
+  name: string;
+  title: string;
+  avatar: string; // URL to avatar image
+}
 
 interface SpeakerNote {
   id: string;
-  minute: number;
+  // Time in seconds from the start of the presentation
+  timestamp: number;
   note: string;
-  timestamp: Date;
 }
 
-interface TimerActivity {
+interface Session {
   id: string;
-  action: string;
-  amount: number;
-  timestamp: Date;
+  title: string;
+  speakerId: string;
+  // Duration in seconds
+  duration: number;
+  notes: SpeakerNote[];
 }
 
-type DemoPage = 'dashboard' | 'live-event' | 'speaker-portal' | 'event-setup';
+interface EventData {
+  id: string;
+  name: string;
+  sessions: Session[];
+}
 
-export function Demo() {
-  const [currentPage, setCurrentPage] = useState<DemoPage>('dashboard');
-  const [timeRemaining, setTimeRemaining] = useState(1800); // 30 minutes in seconds
+// --- Mock Data ---
+const MOCK_SPEAKERS: Speaker[] = [
+  {
+    id: "spk_1",
+    name: "Dr. Anya Sharma",
+    title: "Lead AI Researcher",
+    avatar: "👩‍🔬",
+  },
+  {
+    id: "spk_2",
+    name: "Ben Carter",
+    title: "UX Design Lead, Orbit Inc.",
+    avatar: "👨‍🎨",
+  },
+  {
+    id: "spk_3",
+    name: "Chloe Davis",
+    title: "Quantum Computing Evangelist",
+    avatar: "👩‍💻",
+  },
+];
+
+const MOCK_EVENT: EventData = {
+  id: "evt_1",
+  name: "Future Forward Tech Summit 2025",
+  sessions: [
+    {
+      id: "ses_1",
+      title: "The Ethics of Generative AI",
+      speakerId: "spk_1",
+      duration: 1200, // 20 minutes
+      notes: [
+        { id: "n1", timestamp: 60, note: "Opening statement & hook." },
+        { id: "n2", timestamp: 300, note: "Introduce Case Study 1: Healthcare." },
+        { id: "n3", timestamp: 720, note: "Discuss societal impact data." },
+        { id: "n4", timestamp: 1080, note: "Begin wrap-up and Q&A transition." },
+      ],
+    },
+    {
+      id: "ses_2",
+      title: "Designing for the Next Billion Users",
+      speakerId: "spk_2",
+      duration: 1800, // 30 minutes
+      notes: [
+        { id: "n1", timestamp: 120, note: "Core principles of inclusive design." },
+        { id: "n2", timestamp: 600, note: "Showcase accessibility fails." },
+        { id: "n3", timestamp: 1200, note: "Live demo of new prototyping tool." },
+        { id: "n4", timestamp: 1680, note: "Final call to action." },
+      ],
+    },
+    {
+      id: "ses_3",
+      title: "Quantum Leaps in Modern Computing",
+      speakerId: "spk_3",
+      duration: 900, // 15 minutes
+      notes: [
+        { id: "n1", timestamp: 60, note: "Explain superposition with analogy." },
+        { id: "n2", timestamp: 300, note: "Future applications: cryptography." },
+        { id: "n3", timestamp: 780, note: "Concluding thoughts." },
+      ],
+    },
+  ],
+};
+
+// --- CENTRALIZED STATE (React Context API) ---
+
+interface AppContextType {
+  event: EventData;
+  speakers: Speaker[];
+  liveSessionId: string | null;
+  getSpeakerById: (id: string) => Speaker | undefined;
+  getSessionById: (id: string) => Session | undefined;
+  setLiveSession: (sessionId: string | null) => void;
+  sendSpeakerMessage: (message: string) => void;
+  speakerMessage: { text: string; id: number } | null;
+}
+
+const AppContext = createContext<AppContextType | null>(null);
+
+const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const [event] = useState<EventData>(MOCK_EVENT);
+  const [speakers] = useState<Speaker[]>(MOCK_SPEAKERS);
+  const [liveSessionId, setLiveSessionId] = useState<string | null>(null);
+  const [speakerMessage, setSpeakerMessage] = useState<{
+    text: string;
+    id: number;
+  } | null>(null);
+
+  const getSpeakerById = useCallback(
+    (id: string) => speakers.find((s) => s.id === id),
+    [speakers],
+  );
+
+  const getSessionById = useCallback(
+    (id: string) => event.sessions.find((s) => s.id === id),
+    [event.sessions],
+  );
+
+  const setLiveSession = (sessionId: string | null) => {
+    setLiveSessionId(sessionId);
+    // Clear message when session changes
+    setSpeakerMessage(null);
+  };
+
+  const sendSpeakerMessage = (text: string) => {
+    console.log(`Sending message to speaker: "${text}"`);
+    setSpeakerMessage({ text, id: Date.now() });
+  };
+
+  const value = useMemo(
+    () => ({
+      event,
+      speakers,
+      liveSessionId,
+      getSpeakerById,
+      getSessionById,
+      setLiveSession,
+      sendSpeakerMessage,
+      speakerMessage,
+    }),
+    [
+      event,
+      speakers,
+      liveSessionId,
+      getSpeakerById,
+      getSessionById,
+      speakerMessage,
+    ],
+  );
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
+
+const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
+};
+
+// --- CUSTOM TIMER HOOK ---
+
+interface UseTimerOptions {
+  duration: number;
+  onEnd?: () => void;
+}
+
+const useTimer = ({ duration, onEnd }: UseTimerOptions) => {
+  const [timeRemaining, setTimeRemaining] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [showSlackModal, setShowSlackModal] = useState(false);
-  const [showExtendModal, setShowExtendModal] = useState(false);
-  const [speakerNotes, setSpeakerNotes] = useState<SpeakerNote[]>([
-    {
-      id: '1',
-      minute: 5,
-      note: 'Introduce main thesis - AI diagnostic accuracy',
-      timestamp: new Date()
-    },
-    {
-      id: '2', 
-      minute: 15,
-      note: 'Show case study examples and data visualization',
-      timestamp: new Date()
-    },
-    {
-      id: '3',
-      minute: 25,
-      note: 'Wrap up with implementation roadmap',
-      timestamp: new Date()
-    }
-  ]);
-  const [newNoteMinute, setNewNoteMinute] = useState(10);
-  const [newNoteText, setNewNoteText] = useState('');
-  const [timerActivity, setTimerActivity] = useState<TimerActivity[]>([]);
+
+  useEffect(() => {
+    // Reset timer when the duration prop changes (e.g., new session)
+    setTimeRemaining(duration);
+    setIsRunning(false);
+    setIsPaused(false);
+  }, [duration]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    
+
     if (isRunning && !isPaused && timeRemaining > 0) {
       interval = setInterval(() => {
-        setTimeRemaining(prev => {
-          const newTime = prev - 1;
-          
-          // Trigger alerts
-          if (newTime === 300) { // 5 minutes
-            setShowSlackModal(true);
-          } else if (newTime === 120) { // 2 minutes
-            setShowSlackModal(true);
-          } else if (newTime === 0) { // Time's up
-            setShowExtendModal(true);
-          }
-          
-          return newTime;
-        });
+        setTimeRemaining((prev) => prev - 1);
       }, 1000);
+    } else if (timeRemaining === 0 && isRunning) {
+      setIsRunning(false);
+      onEnd?.();
     }
-    
+
     return () => clearInterval(interval);
-  }, [isRunning, isPaused, timeRemaining]);
+  }, [isRunning, isPaused, timeRemaining, onEnd]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(Math.abs(seconds) / 60);
-    const secs = Math.abs(seconds) % 60;
-    const sign = seconds < 0 ? '-' : '';
-    return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const start = () => {
+    if (timeRemaining > 0) {
+      setIsRunning(true);
+      setIsPaused(false);
+    }
   };
-
-  const getCurrentMinute = () => {
-    const totalMinutes = 30;
-    const remainingMinutes = Math.ceil(timeRemaining / 60);
-    return totalMinutes - remainingMinutes + 1;
-  };
-
-  const getTimerColor = () => {
-    if (timeRemaining <= 0) return 'text-red-400';
-    if (timeRemaining <= 120) return 'text-red-400';
-    if (timeRemaining <= 300) return 'text-yellow-400';
-    return 'text-white';
-  };
-
-  const handleStart = () => {
-    setIsRunning(true);
-    setIsPaused(false);
-    addActivity('Started timer', 0);
-  };
-
-  const handlePause = () => {
-    setIsPaused(!isPaused);
-    addActivity(isPaused ? 'Resumed timer' : 'Paused timer', 0);
-  };
-
-  const handleStop = () => {
+  const pause = () => setIsPaused(!isPaused);
+  const reset = () => {
     setIsRunning(false);
     setIsPaused(false);
-    setTimeRemaining(1800);
-    addActivity('Reset timer', 0);
+    setTimeRemaining(duration);
   };
+  const adjustTime = (seconds: number) =>
+    setTimeRemaining((prev) => Math.max(0, prev + seconds));
 
-  const adjustTime = (minutes: number) => {
-    setTimeRemaining(prev => Math.max(0, prev + (minutes * 60)));
-    addActivity(minutes > 0 ? 'Added time' : 'Reduced time', Math.abs(minutes));
+  return {
+    timeRemaining,
+    isRunning,
+    isPaused,
+    start,
+    pause,
+    reset,
+    adjustTime,
+    elapsedTime: duration - timeRemaining,
   };
+};
 
-  const addActivity = (action: string, amount: number) => {
-    const newActivity: TimerActivity = {
-      id: Date.now().toString(),
-      action,
-      amount,
-      timestamp: new Date()
-    };
-    setTimerActivity(prev => [newActivity, ...prev.slice(0, 4)]);
-  };
+// --- UTILITY FUNCTIONS ---
 
-  const addSpeakerNote = () => {
-    if (!newNoteText.trim()) return;
-    
-    const newNote: SpeakerNote = {
-      id: Date.now().toString(),
-      minute: newNoteMinute,
-      note: newNoteText.trim(),
-      timestamp: new Date()
-    };
-    
-    setSpeakerNotes(prev => [...prev, newNote].sort((a, b) => a.minute - b.minute));
-    setNewNoteText('');
-  };
+const formatTime = (seconds: number) => {
+  const isNegative = seconds < 0;
+  const absSeconds = Math.abs(seconds);
+  const mins = Math.floor(absSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = (absSeconds % 60).toString().padStart(2, "0");
+  return `${isNegative ? "-" : ""}${mins}:${secs}`;
+};
 
-  const removeSpeakerNote = (id: string) => {
-    setSpeakerNotes(prev => prev.filter(note => note.id !== id));
-  };
+const getTimerColor = (seconds: number, duration: number) => {
+  if (seconds <= 0) return "text-red-400";
+  if (seconds <= 60) return "text-red-500"; // 1 min
+  if (seconds <= 300) return "text-yellow-400"; // 5 mins
+  return "text-white";
+};
 
-  const getNoteStatus = (minute: number) => {
-    const currentMinute = getCurrentMinute();
-    if (minute < currentMinute) return 'past';
-    if (minute === currentMinute) return 'current';
-    return 'future';
-  };
+// --- UI COMPONENTS ---
 
-  const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'live-event', label: 'Live Event', icon: '🎯' },
-    { id: 'speaker-portal', label: 'Speaker Portal', icon: '🎤' },
-    { id: 'event-setup', label: 'Event Setup', icon: '⚙️' }
-  ];
+const Card: FC<{ children: ReactNode; className?: string }> = ({
+  children,
+  className = "",
+}) => (
+  <div
+    className={`bg-white rounded-2xl shadow-lg border border-slate-200 p-6 ${className}`}
+  >
+    {children}
+  </div>
+);
 
-  const renderDashboard = () => (
+const SectionTitle: FC<{ children: ReactNode }> = ({ children }) => (
+  <h2 className="text-xl font-bold text-slate-900 mb-6">{children}</h2>
+);
+
+const Button: FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+  children,
+  className,
+  ...props
+}) => (
+  <button
+    className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:bg-slate-300 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none ${className}`}
+    {...props}
+  >
+    {children}
+  </button>
+);
+
+// --- PAGE COMPONENTS ---
+
+const Dashboard = () => {
+  const { event, speakers } = useAppContext();
+  return (
     <div className="space-y-8">
-      {/* Dashboard Header */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
+      <Card>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Event Dashboard</h1>
-            <p className="text-slate-600 mt-1">Manage all your events from one place</p>
+            <h1 className="text-3xl font-bold text-slate-900">
+              {event.name}
+            </h1>
+            <p className="text-slate-600 mt-1">
+              Welcome to your event dashboard.
+            </p>
           </div>
-          <button className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
+          <Button className="bg-teal-600 hover:bg-teal-700 text-white">
             + New Event
-          </button>
+          </Button>
         </div>
-        
         <div className="grid md:grid-cols-3 gap-6">
           <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
-            <div className="text-3xl font-bold text-blue-600 mb-2">3</div>
-            <div className="text-sm text-blue-700 font-medium">Active Events</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">
+              {event.sessions.length}
+            </div>
+            <div className="text-sm text-blue-700 font-medium">
+              Total Sessions
+            </div>
           </div>
           <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
-            <div className="text-3xl font-bold text-purple-600 mb-2">12</div>
-            <div className="text-sm text-purple-700 font-medium">Speakers Today</div>
+            <div className="text-3xl font-bold text-purple-600 mb-2">
+              {speakers.length}
+            </div>
+            <div className="text-sm text-purple-700 font-medium">
+              Unique Speakers
+            </div>
           </div>
           <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl">
-            <div className="text-3xl font-bold text-teal-600 mb-2">247</div>
-            <div className="text-sm text-teal-700 font-medium">Total Attendees</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Active Events */}
-      <div className="grid lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Active Events</h2>
-          <div className="space-y-4">
-            <div className="p-4 bg-green-50 rounded-xl border-l-4 border-green-500 transition-all duration-300 hover:shadow-md hover:scale-102">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-slate-900">Tech Summit 2024</h3>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">Live</span>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">Main Auditorium • 247 attendees</p>
-              <div className="flex space-x-4 text-xs">
-                <span className="text-green-600 font-medium">Session 3/8 • 18:42 remaining</span>
-              </div>
+            <div className="text-3xl font-bold text-teal-600 mb-2">
+              {formatTime(
+                event.sessions.reduce((acc, s) => acc + s.duration, 0),
+              )}
             </div>
-            
-            <div className="p-4 bg-yellow-50 rounded-xl border-l-4 border-yellow-500 transition-all duration-300 hover:shadow-md hover:scale-102">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-slate-900">Design Workshop</h3>
-                <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-medium">Break</span>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">Room B • 45 attendees</p>
-              <div className="flex space-x-4 text-xs">
-                <span className="text-yellow-600 font-medium">15:00 break time</span>
-              </div>
+            <div className="text-sm text-teal-700 font-medium">
+              Total Runtime
             </div>
           </div>
         </div>
-
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-6">Quick Actions</h2>
-          <div className="space-y-3">
-            <button 
-              onClick={() => setCurrentPage('live-event')}
-              className="w-full text-left p-4 bg-blue-50 hover:bg-blue-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
-            >
-              <div className="font-medium text-blue-900">View Live Event</div>
-              <div className="text-xs text-blue-600">Tech Summit 2024</div>
-            </button>
-            <button 
-              onClick={() => setCurrentPage('speaker-portal')}
-              className="w-full text-left p-4 bg-purple-50 hover:bg-purple-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
-            >
-              <div className="font-medium text-purple-900">Speaker Portal</div>
-              <div className="text-xs text-purple-600">Dr. Sarah Chen</div>
-            </button>
-            <button 
-              onClick={() => setCurrentPage('event-setup')}
-              className="w-full text-left p-4 bg-teal-50 hover:bg-teal-100 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95"
-            >
-              <div className="font-medium text-teal-900">Event Setup</div>
-              <div className="text-xs text-teal-600">Configure new event</div>
-            </button>
-          </div>
-        </div>
-      </div>
+      </Card>
+      <Card>
+        <SectionTitle>Today's Agenda</SectionTitle>
+        <p className="text-slate-500">
+          Go to the 'Live Moderator' tab to start a session.
+        </p>
+      </Card>
     </div>
   );
+};
 
-  const renderLiveEvent = () => (
-    <div className="space-y-8">
-      {/* Event Header */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">AI in Healthcare: Future Perspectives</h1>
-            <p className="text-slate-600 mt-1">Dr. Sarah Chen • Main Auditorium • 247 attendees</p>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 bg-green-100 px-4 py-2 rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-700 text-sm font-medium">Live Session</span>
+const LiveModeratorView = () => {
+  const {
+    event,
+    getSpeakerById,
+    liveSessionId,
+    getSessionById,
+    setLiveSession,
+    sendSpeakerMessage,
+  } = useAppContext();
+  const liveSession = getSessionById(liveSessionId || "");
+  const speaker = getSpeakerById(liveSession?.speakerId || "");
+
+  const {
+    timeRemaining,
+    isRunning,
+    isPaused,
+    start,
+    pause,
+    reset,
+    adjustTime,
+    elapsedTime,
+  } = useTimer({
+    duration: liveSession?.duration || 0,
+    onEnd: () => sendSpeakerMessage("Time's up! Please wrap up."),
+  });
+
+  const getNoteStatus = (timestamp: number) => {
+    const buffer = 15; // seconds before a note becomes 'current'
+    if (elapsedTime > timestamp) return "past";
+    if (elapsedTime >= timestamp - buffer && elapsedTime <= timestamp + 60)
+      return "current"; // current for a minute
+    return "future";
+  };
+
+  const handleSendMessage = (msg: string) => {
+    if (liveSession) sendSpeakerMessage(msg);
+  };
+
+  return (
+    <div className="grid lg:grid-cols-3 gap-8">
+      {/* Timer and Controls */}
+      <div className="lg:col-span-2 space-y-6">
+        {!liveSession && (
+          <Card className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-2xl font-bold text-slate-700">
+                No Active Session
+              </p>
+              <p className="text-slate-500 mt-2">
+                Select a session from the agenda to begin.
+              </p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Main Timer */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Timer Display */}
-          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 rounded-2xl p-8 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-            <div className="relative">
-              <div className={`text-8xl font-mono font-bold mb-4 tracking-wider transition-all duration-500 ${getTimerColor()}`}>
+          </Card>
+        )}
+        {liveSession && speaker && (
+          <>
+            <Card>
+              <h1 className="text-3xl font-bold text-slate-900">
+                {liveSession.title}
+              </h1>
+              <p className="text-slate-600 mt-1">
+                {speaker.name} • {speaker.title}
+              </p>
+            </Card>
+            {/* Timer Display */}
+            <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 text-center">
+              <div
+                className={`text-8xl font-mono font-bold tracking-wider ${getTimerColor(
+                  timeRemaining,
+                  liveSession.duration,
+                )}`}
+              >
                 {formatTime(timeRemaining)}
               </div>
-              <div className="text-white/80 text-xl mb-8 font-medium">Session Time Remaining</div>
-              
-              {/* Timer Controls */}
-              <div className="flex justify-center space-x-4 mb-6">
-                <button
-                  onClick={handleStart}
-                  disabled={isRunning && !isPaused}
-                  className="px-6 py-3 bg-green-500 hover:bg-green-600 disabled:bg-green-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
-                >
-                  Start
-                </button>
-                <button
-                  onClick={handlePause}
-                  disabled={!isRunning}
-                  className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
-                >
-                  {isPaused ? 'Resume' : 'Pause'}
-                </button>
-                <button
-                  onClick={handleStop}
-                  className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-                >
-                  Reset
-                </button>
+              <div className="text-white/80 text-xl font-medium mt-4">
+                Session Time Remaining
               </div>
-
-              {/* Time Adjustment Controls */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div className="text-white/60 text-sm mb-3 uppercase tracking-wide">Adjust Time</div>
+              <div className="mt-8 flex justify-center space-x-4">
+                <Button
+                  onClick={start}
+                  disabled={isRunning && !isPaused}
+                  className="bg-green-500 hover:bg-green-600 text-white"
+                >
+                  ▶ Start
+                </Button>
+                <Button
+                  onClick={pause}
+                  disabled={!isRunning}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                >
+                  {isPaused ? "Resume" : "❚❚ Pause"}
+                </Button>
+                <Button
+                  onClick={reset}
+                  className="bg-red-500 hover:bg-red-600 text-white"
+                >
+                  ↻ Reset
+                </Button>
+              </div>
+              {/* Time Adjustment */}
+              <div className="mt-6 bg-white/10 p-4 rounded-xl">
                 <div className="flex justify-center space-x-2">
-                  <button
-                    onClick={() => adjustTime(-5)}
-                    className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                  >
-                    -5m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(-1)}
-                    className="px-4 py-2 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                  >
-                    -1m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(1)}
-                    className="px-4 py-2 bg-green-500/60 hover:bg-green-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                  >
-                    +1m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(5)}
-                    className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
-                  >
-                    +5m
-                  </button>
+                  <button onClick={() => adjustTime(-60)} className="timer-adj-btn">-1m</button>
+                  <button onClick={() => adjustTime(-10)} className="timer-adj-btn">-10s</button>
+                  <button onClick={() => adjustTime(10)} className="timer-adj-btn">+10s</button>
+                  <button onClick={() => adjustTime(60)} className="timer-adj-btn">+1m</button>
+                  <style>{`.timer-adj-btn { background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.2s; } .timer-adj-btn:hover { background: rgba(255,255,255,0.4); }`}</style>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Activity Feed */}
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-            <h3 className="font-bold text-slate-900 text-lg mb-4">Timer Activity</h3>
-            <div className="space-y-3">
-              {timerActivity.length === 0 ? (
-                <p className="text-slate-500 text-sm">No timer activity yet</p>
-              ) : (
-                timerActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg transition-all duration-300 hover:bg-slate-100 hover:shadow-sm">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium text-slate-900">{activity.action}</span>
-                      {activity.amount > 0 && (
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
-                          {activity.amount}m
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs text-slate-500">
-                      {activity.timestamp.toLocaleTimeString()}
-                    </span>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Speaker Notes Panel */}
-        <div className="space-y-6">
-          {/* Add New Note */}
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-            <h3 className="font-bold text-slate-900 text-lg mb-4">Add Speaker Note</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Minute Mark
-                </label>
-                <select
-                  value={newNoteMinute}
-                  onChange={(e) => setNewNoteMinute(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-                >
-                  {Array.from({ length: 30 }, (_, i) => i + 1).map(minute => (
-                    <option key={minute} value={minute}>
-                      {minute} minute{minute !== 1 ? 's' : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Note
-                </label>
-                <textarea
-                  value={newNoteText}
-                  onChange={(e) => setNewNoteText(e.target.value)}
-                  placeholder="Add your speaker note..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none transition-all duration-200"
-                  rows={3}
-                />
-              </div>
-              <button
-                onClick={addSpeakerNote}
-                disabled={!newNoteText.trim()}
-                className="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
-              >
-                Add Note
-              </button>
-            </div>
-          </div>
-
-          {/* Speaker Notes Timeline */}
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-            <h3 className="font-bold text-slate-900 text-lg mb-4">Speaker Notes Timeline</h3>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {speakerNotes.length === 0 ? (
-                <p className="text-slate-500 text-sm">No speaker notes yet</p>
-              ) : (
-                speakerNotes.map((note) => {
-                  const status = getNoteStatus(note.minute);
-                  
+            {/* Speaker Notes Timeline */}
+            <Card>
+              <SectionTitle>Speaker Notes Timeline</SectionTitle>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {liveSession.notes.map((note) => {
+                  const status = getNoteStatus(note.timestamp);
+                  const statusStyles = {
+                    current: "bg-green-50 border-green-500",
+                    past: "bg-slate-50 border-slate-300 opacity-60",
+                    future: "bg-blue-50 border-blue-500",
+                  };
                   return (
                     <div
                       key={note.id}
-                      className={`p-4 rounded-lg border-l-4 transition-all duration-500 transform hover:scale-102 hover:shadow-md ${
-                        status === 'current'
-                          ? 'bg-green-50 border-green-500 animate-pulse'
-                          : status === 'past'
-                          ? 'bg-slate-50 border-slate-300'
-                          : 'bg-blue-50 border-blue-500'
-                      }`}
+                      className={`p-4 rounded-lg border-l-4 transition-all duration-500 ${statusStyles[status]}`}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <span className={`text-sm font-bold ${
-                              status === 'current'
-                                ? 'text-green-700'
-                                : status === 'past'
-                                ? 'text-slate-500'
-                                : 'text-blue-700'
-                            }`}>
-                              {note.minute} minute{note.minute !== 1 ? 's' : ''}
-                            </span>
-                            {status === 'current' && (
-                              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium animate-bounce">
-                                Current
-                              </span>
-                            )}
-                            {status === 'past' && (
-                              <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded-full text-xs font-medium">
-                                Completed
-                              </span>
-                            )}
-                          </div>
-                          <p className={`text-sm ${
-                            status === 'past' ? 'text-slate-500' : 'text-slate-700'
-                          }`}>
-                            {note.note}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => removeSpeakerNote(note.id)}
-                          className="text-slate-400 hover:text-red-500 transition-all duration-200 transform hover:scale-110 hover:rotate-90 ml-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
+                      <div className="flex items-center space-x-3 mb-1">
+                        <span className="font-bold text-sm text-slate-800">
+                          @{formatTime(note.timestamp)}
+                        </span>
+                        {status === 'current' && <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full animate-pulse">Now</span>}
                       </div>
+                      <p className="text-sm text-slate-700">{note.note}</p>
                     </div>
                   );
-                })
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderSpeakerPortal = () => (
-    <div className="space-y-8">
-      {/* Speaker Welcome */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center">
-        <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-700 text-sm font-medium mb-4">
-          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
-          Your session starts in 5 minutes
-        </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome, Dr. Sarah Chen</h1>
-        <p className="text-slate-600">AI in Healthcare: Future Perspectives • Main Auditorium</p>
+                })}
+              </div>
+            </Card>
+          </>
+        )}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Speaker Timer */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 text-center">
-          <div className="text-6xl font-mono font-bold text-slate-900 mb-4 transition-all duration-500">30:00</div>
-          <div className="text-slate-600 text-lg mb-6">Your Session Time</div>
-          <div className="flex justify-center space-x-3">
-            <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
-              Ready to Start
-            </div>
-            <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
-              Q&A Follows
-            </div>
-          </div>
-        </div>
-
-        {/* Speaker Instructions */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h3 className="font-bold text-slate-900 text-lg mb-4">Session Instructions</h3>
+      {/* Agenda & Messaging */}
+      <div className="space-y-6">
+        <Card>
+          <SectionTitle>Agenda</SectionTitle>
           <div className="space-y-3">
-            <div className="flex items-center space-x-3 p-3 bg-amber-50 rounded-lg border-l-4 border-amber-400">
-              <svg className="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm font-medium text-amber-800">5-minute warning at 25:00</span>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg border-l-4 border-red-400">
-              <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm font-medium text-red-800">Hard stop at 30:00</span>
-            </div>
-            <div className="p-3 bg-slate-50 rounded-lg">
-              <span className="text-sm text-slate-600">Q&A follows immediately after presentation</span>
-            </div>
+            {event.sessions.map((session) => {
+              const speaker = getSpeakerById(session.speakerId);
+              const isLive = session.id === liveSessionId;
+              return (
+                <div
+                  key={session.id}
+                  className={`p-4 rounded-xl border-l-4 transition-all duration-300 ${
+                    isLive
+                      ? "bg-green-100 border-green-500 shadow-md"
+                      : "bg-slate-50 border-slate-300 hover:bg-slate-100 cursor-pointer"
+                  }`}
+                  onClick={() => !isLive && setLiveSession(session.id)}
+                >
+                  <h3 className="font-semibold text-slate-900">
+                    {session.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 mt-1">
+                    {speaker?.name} • {formatTime(session.duration)}
+                  </p>
+                  {isLive && (
+                    <button
+                      onClick={() => setLiveSession(null)}
+                      className="text-xs mt-2 bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600"
+                    >
+                      End Session
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </div>
-      </div>
-
-      {/* Speaker's Personal Notes */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-lg mb-4">Your Presentation Notes</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">Opening (0-10 min)</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Welcome and introduction</li>
-                <li>• Current state of AI in healthcare</li>
-                <li>• Key statistics and market overview</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-semibold text-purple-900 mb-2">Main Content (10-25 min)</h4>
-              <ul className="text-sm text-purple-800 space-y-1">
-                <li>• Case studies from Johns Hopkins</li>
-                <li>• AI diagnostic accuracy data</li>
-                <li>• Implementation challenges</li>
-              </ul>
-            </div>
+        </Card>
+        <Card>
+          <SectionTitle>Message Speaker</SectionTitle>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              "5 mins left",
+              "2 mins left",
+              "Wrap up now",
+              "Great pace!",
+              "Speak louder",
+              "Closer to mic",
+            ].map((msg) => (
+              <button
+                key={msg}
+                onClick={() => handleSendMessage(msg)}
+                disabled={!liveSession}
+                className="text-sm p-3 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-lg transition disabled:opacity-50 disabled:hover:bg-blue-50"
+              >
+                {msg}
+              </button>
+            ))}
           </div>
-          <div className="space-y-4">
-            <div className="p-4 bg-teal-50 rounded-lg">
-              <h4 className="font-semibold text-teal-900 mb-2">Conclusion (25-30 min)</h4>
-              <ul className="text-sm text-teal-800 space-y-1">
-                <li>• Future roadmap</li>
-                <li>• Call to action</li>
-                <li>• Q&A transition</li>
-              </ul>
-            </div>
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-semibold text-green-900 mb-2">Key Reminders</h4>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>• Speak slowly and clearly</li>
-                <li>• Make eye contact with audience</li>
-                <li>• Save 5 minutes for Q&A setup</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
+};
 
-  const renderEventSetup = () => (
-    <div className="space-y-8">
-      {/* Setup Header */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Create New Event</h1>
-        <p className="text-slate-600">Set up timing, speakers, and notifications for your event</p>
-      </div>
+const SpeakerPortal = () => {
+    const { getSessionById, getSpeakerById, liveSessionId, speakerMessage } = useAppContext();
+    const liveSession = getSessionById(liveSessionId || '');
+    const speaker = getSpeakerById(liveSession?.speakerId || '');
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Event Details */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h3 className="font-bold text-slate-900 text-lg mb-6">Event Details</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Event Name</label>
-              <input
-                type="text"
-                placeholder="e.g., Tech Summit 2024"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Location</label>
-              <input
-                type="text"
-                placeholder="e.g., Main Auditorium"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Expected Attendees</label>
-              <input
-                type="number"
-                placeholder="e.g., 250"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
-              />
-            </div>
-          </div>
+    // The speaker's timer is a "dumb" view. It mirrors the moderator's.
+    // In a real app, this would be synced via WebSockets. Here we simulate it.
+    const { timeRemaining, elapsedTime } = useTimer({ duration: liveSession?.duration || 0 });
+    
+    // Simulate the timer running if the session is live
+    useEffect(() => {
+        if (liveSessionId) {
+            // This is a simplified simulation. A real implementation
+            // would need a more robust synchronization mechanism.
+            const timer = setInterval(() => {
+                // Manually decrement to keep it roughly in sync
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [liveSessionId]);
+
+    const getNoteStatus = (timestamp: number) => {
+        if (elapsedTime > timestamp) return 'past';
+        if (elapsedTime >= timestamp && elapsedTime < timestamp + 60) return 'current';
+        return 'future';
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto space-y-8">
+            {!liveSession && (
+                 <Card className="text-center py-20">
+                    <h1 className="text-3xl font-bold text-slate-800">Welcome, Speaker!</h1>
+                    <p className="text-slate-500 mt-2">Your session is not live yet. Please stand by.</p>
+                 </Card>
+            )}
+            {liveSession && speaker && (
+                <>
+                    <Card className="text-center">
+                        <h1 className="text-3xl font-bold text-slate-900">Live: {liveSession.title}</h1>
+                        <p className="text-slate-600 mt-1">Good luck, {speaker.name}!</p>
+                    </Card>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {/* Timer & Messages */}
+                        <div className="space-y-6">
+                             <div className="bg-slate-800 rounded-2xl p-8 text-center sticky top-24">
+                                <div className={`text-7xl font-mono font-bold tracking-wider ${getTimerColor(timeRemaining, liveSession.duration)}`}>
+                                    {formatTime(timeRemaining)}
+                                </div>
+                                <div className="text-white/70 text-lg font-medium mt-3">Time Remaining</div>
+                             </div>
+                             <Card>
+                                 <SectionTitle>Messages from Moderator</SectionTitle>
+                                 {speakerMessage ? (
+                                    <div key={speakerMessage.id} className="p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg animate-pulse">
+                                        <p className="font-semibold text-yellow-900">{speakerMessage.text}</p>
+                                    </div>
+                                 ) : (
+                                    <p className="text-slate-500 text-sm">No new messages.</p>
+                                 )}
+                             </Card>
+                        </div>
+                        {/* Notes */}
+                        <Card>
+                            <SectionTitle>Your Notes</SectionTitle>
+                            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+                                {liveSession.notes.map(note => {
+                                    const status = getNoteStatus(note.timestamp);
+                                     const statusStyles = {
+                                        current: 'bg-green-100 border-green-500 scale-105 shadow-lg',
+                                        past: 'bg-slate-100 border-slate-300 opacity-50',
+                                        future: 'bg-white border-slate-200',
+                                    };
+                                    return (
+                                        <div key={note.id} className={`p-4 rounded-lg border-l-4 transition-all duration-700 ${statusStyles[status]}`}>
+                                            <p className="font-bold text-sm text-slate-500">@{formatTime(note.timestamp)}</p>
+                                            <p className={`mt-1 ${status === 'current' ? 'font-semibold text-slate-900' : 'text-slate-700'}`}>{note.note}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </Card>
+                    </div>
+                </>
+            )}
         </div>
+    );
+};
 
-        {/* Timer Configuration */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h3 className="font-bold text-slate-900 text-lg mb-6">Timer Settings</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Session Duration</label>
-              <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200">
-                <option>15 minutes</option>
-                <option>20 minutes</option>
-                <option>30 minutes</option>
-                <option>45 minutes</option>
-                <option>60 minutes</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Warning Alerts</label>
-              <div className="space-y-2">
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
-                  <span className="ml-2 text-sm text-slate-700">5-minute warning</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
-                  <span className="ml-2 text-sm text-slate-700">2-minute warning</span>
-                </label>
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-slate-300 text-teal-600 focus:ring-teal-500" defaultChecked />
-                  <span className="ml-2 text-sm text-slate-700">Time's up alert</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Notification Setup */}
-      <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-        <h3 className="font-bold text-slate-900 text-lg mb-6">Team Notifications</h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-4 bg-blue-50 rounded-xl">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5z"/>
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-semibold text-blue-900">Slack Integration</h4>
-                <p className="text-xs text-blue-700">Send alerts to your team</p>
-              </div>
-            </div>
-            <input
-              type="text"
-              placeholder="#event-team"
-              className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-            />
-          </div>
-          
-          <div className="p-4 bg-purple-50 rounded-xl">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <div>
-                <h4 className="font-semibold text-purple-900">Email Alerts</h4>
-                <p className="text-xs text-purple-700">Notify moderators</p>
-              </div>
-            </div>
-            <input
-              type="email"
-              placeholder="moderators@event.com"
-              className="w-full px-3 py-2 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
-            />
-          </div>
-        </div>
-      </div>
+// --- MAIN APP COMPONENT ---
 
-      {/* Action Buttons */}
-      <div className="flex justify-center space-x-4">
-        <button className="px-8 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
-          Save as Draft
-        </button>
-        <button className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95">
-          Create Event
-        </button>
-      </div>
-    </div>
-  );
+type AppPage = "dashboard" | "moderator" | "speaker";
+
+export function StageCue() {
+  const [currentPage, setCurrentPage] = useState<AppPage>("dashboard");
+
+  const navigationItems = [
+    { id: "dashboard", label: "Dashboard", icon: "📊" },
+    { id: "moderator", label: "Live Moderator", icon: "🎯" },
+    { id: "speaker", label: "Speaker Portal", icon: "🎤" },
+  ];
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case "moderator":
+        return <LiveModeratorView />;
+      case "speaker":
+        return <SpeakerPortal />;
+      case "dashboard":
+      default:
+        return <Dashboard />;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Professional Header */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+    <AppProvider>
+      <div className="min-h-screen bg-slate-50 font-sans">
+        <header className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center space-x-8">
+                <div className="flex items-center space-x-2">
+                   <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                   </div>
+                  <span className="text-xl font-bold text-slate-900">StageCue</span>
                 </div>
-                <span className="text-xl font-bold text-slate-900">StageCue</span>
-              </div>
-              
-              {/* Navigation Tabs */}
-              <nav className="hidden md:flex space-x-1">
-                {navigationItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setCurrentPage(item.id as DemoPage)}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 transform hover:scale-105 ${
-                      currentPage === item.id
-                        ? 'bg-teal-100 text-teal-700 shadow-sm'
-                        : 'text-slate-700 hover:text-teal-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-purple-600 font-semibold text-sm">SC</span>
-                </div>
-                <div className="hidden sm:block">
-                  <div className="text-sm font-medium text-slate-900">Sarah Chen</div>
-                  <div className="text-xs text-purple-600 font-medium">Pro Plan</div>
-                </div>
+                <nav className="hidden md:flex space-x-1">
+                  {navigationItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setCurrentPage(item.id as AppPage)}
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                        currentPage === item.id
+                          ? "bg-teal-100 text-teal-700"
+                          : "text-slate-600 hover:text-teal-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span className="mr-2">{item.icon}</span>
+                      {item.label}
+                    </button>
+                  ))}
+                </nav>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3">
-        <div className="flex space-x-1 overflow-x-auto">
-          {navigationItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setCurrentPage(item.id as DemoPage)}
-              className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-                currentPage === item.id
-                  ? 'bg-teal-100 text-teal-700'
-                  : 'text-slate-700 hover:text-teal-600 hover:bg-slate-100'
-              }`}
-            >
-              <span className="mr-2">{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {renderPage()}
+        </main>
       </div>
-
-      {/* Page Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentPage === 'dashboard' && renderDashboard()}
-        {currentPage === 'live-event' && renderLiveEvent()}
-        {currentPage === 'speaker-portal' && renderSpeakerPortal()}
-        {currentPage === 'event-setup' && renderEventSetup()}
-      </div>
-
-      {/* Slack Notification Modal */}
-      {showSlackModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5a2.528 2.528 0 0 0-2.5-2.5c-1.61 0-2.5.89-2.5 2.5z"/>
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Slack Notification Sent</h3>
-              <p className="text-slate-600">
-                {timeRemaining <= 120 ? '2-minute warning' : '5-minute warning'} sent to #event-team
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-lg p-4 mb-6">
-              <div className="text-sm text-slate-600 mb-2">Message sent:</div>
-              <div className="text-sm font-medium text-slate-900">
-                "⏰ {timeRemaining <= 120 ? '2 minutes' : '5 minutes'} remaining for Dr. Sarah Chen's session in Main Auditorium"
-              </div>
-            </div>
-            <button
-              onClick={() => setShowSlackModal(false)}
-              className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Time Extension Modal */}
-      {showExtendModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all duration-300 scale-100">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Time's Up!</h3>
-              <p className="text-slate-600">
-                Dr. Sarah Chen's session has reached the scheduled end time.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  adjustTime(5);
-                  setShowExtendModal(false);
-                }}
-                className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-              >
-                Extend by 5 minutes
-              </button>
-              <button
-                onClick={() => {
-                  adjustTime(2);
-                  setShowExtendModal(false);
-                }}
-                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-              >
-                Extend by 2 minutes
-              </button>
-              <button
-                onClick={() => {
-                  handleStop();
-                  setShowExtendModal(false);
-                }}
-                className="w-full px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
-              >
-                End Session
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+    </AppProvider>
   );
 }
