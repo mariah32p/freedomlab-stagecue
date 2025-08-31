@@ -264,7 +264,15 @@ function SpeakerNotesStep() {
           <div>
             <h3 className="font-semibold text-slate-900 mb-4">Speaker Notes for Sarah Martinez</h3>
             <div className="space-y-3 max-h-96 overflow-y-auto">
-              {notes.map((note, index) => (<div key={index} className={`p-4 rounded-lg border animate-fade-in ${getNoteTypeColor(note.type)}`}><div className="flex items-start justify-between mb-2"><div className="font-medium text-sm">{note.time}</div><div className="text-xs px-2 py-1 bg-white/50 rounded capitalize">{note.type}</div></div><div className="text-sm">{note.content}</div></div>))}
+              {notes.map((note, index) => (
+                <div key={index} className={`p-4 rounded-lg border animate-fade-in ${getNoteTypeColor(note.type)}`}>
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="font-medium text-sm">{note.time}</div>
+                    <div className="text-xs px-2 py-1 bg-white/50 rounded capitalize">{note.type}</div>
+                  </div>
+                  <div className="text-sm">{note.content}</div>
+                </div>
+              ))}
               {notes.length === 0 && <div className="text-center py-8 text-slate-500"><svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>Add notes for this speaker</div>}
             </div>
           </div>
