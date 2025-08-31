@@ -128,7 +128,7 @@ export function Demo() {
     const mins = Math.floor(Math.abs(seconds) / 60);
     const secs = Math.abs(seconds) % 60;
     const sign = seconds < 0 ? '-' : '';
-    return `${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return \`${sign}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const getTimerColor = () => {
@@ -433,9 +433,9 @@ export function Demo() {
                 <div className="grid lg:grid-cols-3 gap-8">
                   {/* Main Timer */}
                   <div className="lg:col-span-2">
-                    <div className={\`bg-gradient-to-br ${getTimerBgColor()} backdrop-blur-sm border border-white/20 rounded-3xl p-8 text-center shadow-2xl`}>
+                    <div className={`bg-gradient-to-br ${getTimerBgColor()} backdrop-blur-sm border border-white/20 rounded-3xl p-8 text-center shadow-2xl`}>
                       <div className="mb-6">
-                        <div className={\`text-8xl font-mono font-bold ${getTimerColor()} mb-4 tracking-wider transition-colors duration-500`}>
+                        <div className={`text-8xl font-mono font-bold ${getTimerColor()} mb-4 tracking-wider transition-colors duration-500`}>
                           {formatTime(timeRemaining)}
                         </div>
                         <div className="text-white/80 text-xl font-medium">
@@ -452,7 +452,7 @@ export function Demo() {
                       <div className="flex justify-center space-x-4">
                         <button
                           onClick={() => setIsTimerRunning(!isTimerRunning)}
-                          className={\`px-8 py-3 ${isTimerRunning ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
+                          className={`px-8 py-3 ${isTimerRunning ? 'bg-amber-500 hover:bg-amber-600' : 'bg-green-500 hover:bg-green-600'} text-white rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
                         >
                           {isTimerRunning ? 'Pause' : 'Start'}
                         </button>
@@ -586,7 +586,7 @@ export function Demo() {
                   <div className="grid md:grid-cols-2 gap-8">
                     {/* Speaker Timer */}
                     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-8 text-center shadow-xl">
-                      <div className={\`text-7xl font-mono font-bold ${getTimerColor()} mb-4 transition-colors duration-500`}>
+                      <div className={`text-7xl font-mono font-bold ${getTimerColor()} mb-4 transition-colors duration-500`}>
                         {formatTime(timeRemaining)}
                       </div>
                       <div className="text-white/80 text-lg mb-6">
@@ -625,7 +625,7 @@ export function Demo() {
                           <div className="text-slate-600">{sessionNotes}</div>
                         </div>
                         
-                        <div className={\`p-3 rounded-lg border ${
+                        <div className={`p-3 rounded-lg border ${
                           timeRemaining > 300 ? 'bg-green-100 text-green-700 border border-green-200' :
                           timeRemaining > 120 ? 'bg-amber-100 text-amber-700 border border-amber-200' :
                           'bg-red-100 text-red-700 border border-red-200'
@@ -638,7 +638,7 @@ export function Demo() {
                           </div>
                         </div>
 
-                        <div className={\`p-3 rounded-lg border ${
+                        <div className={`p-3 rounded-lg border ${
                           timeRemaining > 300 ? 'bg-green-50 border-green-400 text-green-800' :
                           timeRemaining > 120 ? 'bg-amber-50 border-amber-400 text-amber-800' :
                           'bg-red-50 border-red-400 text-red-800'
@@ -807,177 +807,4 @@ export function Demo() {
 
       {/* Demo Progress Indicator */}
       {showControls && (
-        <div className="fixed bottom-6 left-6 z-50">
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 shadow-xl">
-            <div className="text-white/90 text-sm font-medium mb-3">Demo Progress</div>
-            <div className="flex space-x-2">
-              {steps.map((step, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentStep(index)}
-                  className={\`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentStep
-                      ? 'bg-teal-400 scale-125'
-                      : index < currentStep
-                      ? 'bg-white/60'
-                      : 'bg-white/20'
-                  }`}
-                  title={step}
-                />
-              ))}
-            </div>
-            <div className="text-white/60 text-xs mt-2">{steps[currentStep]}</div>
-          </div>
-        </div>
-      )}
-
-      {/* Slack Notification Modal */}
-      {showSlackModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-in slide-in-from-bottom-4 duration-300">
-            <div className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900">Slack Alert Sent</h3>
-                  <p className="text-slate-600 text-sm">#event-team</p>
-                </div>
-              </div>
-              
-              <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                <div className="text-sm text-slate-700">
-                  <div className="font-medium mb-1">🕐 StageCue Alert</div>
-                  <div>5 minutes remaining in "{sessionTitle}"</div>
-                  <div className="text-slate-500 mt-1">Speaker: {speakerName}</div>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setShowSlackModal(false)}
-                className="w-full px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Speaker Alert Modal */}
-      {showSpeakerAlert && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-in slide-in-from-bottom-4 duration-300">
-            <div className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900">Final Warning</h3>
-                  <p className="text-slate-600 text-sm">2 minutes remaining</p>
-                </div>
-              </div>
-              
-              <div className="bg-red-50 rounded-lg p-4 mb-6">
-                <div className="text-sm text-red-800">
-                  <div className="font-medium mb-2">⏰ Time Alert</div>
-                  <div>Only 2 minutes left in your session.</div>
-                  <div className="mt-2 text-red-600">Please begin wrapping up your presentation.</div>
-                </div>
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowSpeakerAlert(false)}
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-                >
-                  Acknowledge
-                </button>
-                <button
-                  onClick={() => {
-                    setShowSpeakerAlert(false);
-                    setShowExtendModal(true);
-                  }}
-                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-                >
-                  Request Extension
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Time Extension Modal */}
-      {showExtendModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-in slide-in-from-bottom-4 duration-300">
-            <div className="p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-900">Extend Session Time</h3>
-                  <p className="text-slate-600 text-sm">Add more time to current session</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4 mb-6">
-                <button
-                  onClick={() => {
-                    setTimeRemaining(prev => prev + 5 * 60);
-                    setShowExtendModal(false);
-                  }}
-                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
-                >
-                  <div className="font-medium text-slate-900">+ 5 minutes</div>
-                  <div className="text-slate-600 text-sm">Quick extension for Q&A</div>
-                </button>
-                
-                <button
-                  onClick={() => {
-                    setTimeRemaining(prev => prev + 10 * 60);
-                    setShowExtendModal(false);
-                  }}
-                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
-                >
-                  <div className="font-medium text-slate-900">+ 10 minutes</div>
-                  <div className="text-slate-600 text-sm">Extended discussion time</div>
-                </button>
-              </div>
-
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowExtendModal(false)}
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    setTimeRemaining(0);
-                    setIsTimerRunning(false);
-                    setShowExtendModal(false);
-                  }}
-                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
-                >
-                  End Session
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-```
+        <div className="fixed bottom-6 left-6
