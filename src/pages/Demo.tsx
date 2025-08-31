@@ -192,30 +192,26 @@ function CreateEventStep() {
 // Step 2: Add Speakers
 function AddSpeakersStep() {
   const [speakers, setSpeakers] = useState<Array<{name: string, session: string, duration: string}>>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
     
     timeouts.push(setTimeout(() => {
-      setShowForm(true);
+      setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
     }, 500));
     
     timeouts.push(setTimeout(() => {
-      setSpeakers([{ name: 'Sarah Martinez', session: 'Project Overview', duration: '20 min' }]);
-    }, 1000));
-    
-    timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Alex Chen', session: 'Technical Architecture', duration: '25 min' }]);
-    }, 3000));
+    }, 2000));
     
     timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Jessica Park', session: 'Marketing Strategy', duration: '20 min' }]);
-    }, 5000));
+    }, 3500));
     
     timeouts.push(setTimeout(() => {
       setSpeakers(prev => [...prev, { name: 'Team Discussion', session: 'Q&A and Next Steps', duration: '25 min' }]);
-    }, 7000));
+    }, 5000));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -231,7 +227,7 @@ function AddSpeakersStep() {
         <div className="grid lg:grid-cols-2 gap-8">
           <div>
             <h3 className="font-semibold text-slate-900 mb-4">Add New Speaker</h3>
-            <div className={`space-y-4 p-6 bg-slate-50 rounded-lg transition-opacity duration-500 ${showForm ? 'opacity-100' : 'opacity-30'}`}>
+            <div className="space-y-4 p-6 bg-slate-50 rounded-lg">
               <input
                 type="text"
                 placeholder="Speaker name..."
@@ -293,34 +289,30 @@ function AddSpeakersStep() {
 function SpeakerNotesStep() {
   const [selectedSpeaker, setSelectedSpeaker] = useState('Sarah Martinez');
   const [notes, setNotes] = useState<Array<{time: string, content: string, type: string}>>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
     
     timeouts.push(setTimeout(() => {
-      setShowForm(true);
+      setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
     }, 500));
     
     timeouts.push(setTimeout(() => {
-      setNotes([{ time: '0:00', content: 'Welcome team, introduce Q1 launch timeline', type: 'essential' }]);
-    }, 1000));
-    
-    timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '5:00', content: 'Present market research findings', type: 'essential' }]);
-    }, 2500));
+    }, 1500));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '10:00', content: 'Demo new product features', type: 'essential' }]);
-    }, 4000));
+    }, 2500));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '15:00', content: 'Discuss beta program (skip if running late)', type: 'optional' }]);
-    }, 5500));
+    }, 3500));
     
     timeouts.push(setTimeout(() => {
       setNotes(prev => [...prev, { time: '18:00', content: 'Wrap up, prepare for Q&A transition', type: 'transition' }]);
-    }, 7000));
+    }, 4500));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -359,7 +351,7 @@ function SpeakerNotesStep() {
 
             <div className="space-y-4">
               <h3 className="font-semibold text-slate-900">Add Speaking Note</h3>
-              <div className={`p-4 bg-slate-50 rounded-lg space-y-3 transition-opacity duration-500 ${showForm ? 'opacity-100' : 'opacity-30'}`}>
+              <div className="p-4 bg-slate-50 rounded-lg space-y-3">
                 <input
                   type="text"
                   placeholder="Time marker (e.g., 5:00)..."
@@ -415,28 +407,21 @@ function LiveManagementStep() {
   const [timeRemaining, setTimeRemaining] = useState(18 * 60 + 42); // 18:42
   const [isRunning, setIsRunning] = useState(true);
   const [currentSpeaker] = useState('Sarah Martinez');
-  const [showSlackAlert, setShowSlackAlert] = useState(false);
   const [showSlackModal, setShowSlackModal] = useState(false);
   const [slackMessage, setSlackMessage] = useState('@alex I see Jennifer has had her hand raised for a bit for a question - should we take it now or wait for Q&A?');
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
-    // Show Slack modal very quickly after component loads
+    // Show Slack modal immediately when live management loads
     const showSlackTimeout = setTimeout(() => {
       setShowSlackModal(true);
-    }, 2000); // Show after 2 seconds
+    }, 500); // Show after just 0.5 seconds
 
     if (!isRunning) return;
 
     const interval = setInterval(() => {
       setTimeRemaining(prev => Math.max(0, prev - 1));
     }, 1000);
-
-    // Show Slack alert at 5 minutes
-    if (timeRemaining === 5 * 60) {
-      setShowSlackAlert(true);
-      setTimeout(() => setShowSlackAlert(false), 4000);
-    }
 
 
     return () => {
@@ -574,28 +559,6 @@ function LiveManagementStep() {
           </div>
         </div>
       </div>
-
-      {/* Slack Notification */}
-      {showSlackAlert && (
-        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
-          <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-4 max-w-sm">
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M5.042 15.165a2.528 2.528 0 0 0 2.5 2.5c1.61 0 2.5-.89 2.5-2.5v-1.25h-2.5a2.528 2.528 0 0 0-2.5 2.5z"/>
-                </svg>
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-slate-900 mb-1">Slack Alert Sent</div>
-                <div className="text-sm text-slate-600 mb-2">#launch-team</div>
-                <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
-                  "⏰ Sarah has {formatTime(timeRemaining)} remaining. Alex prep needed."
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Slack Notification Modal */}
       {showSlackModal && (
