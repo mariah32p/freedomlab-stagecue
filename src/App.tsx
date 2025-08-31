@@ -11,6 +11,7 @@ import { Pricing } from './pages/Pricing';
 import { Success } from './pages/Success';
 import { ResetPassword } from './pages/ResetPassword';
 import { GetStarted } from './pages/GetStarted.tsx';
+import { Demo } from './pages/Demo';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/success" element={<Success />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/demo" element={<Demo />} />
             <Route
               path="/dashboard"
               element={
