@@ -259,7 +259,36 @@ function SpeakerNotesStep() {
         <div className="grid lg:grid-cols-2 gap-8">
           <div>
             <div className="mb-6"><label className="block text-sm font-medium text-slate-700 mb-2">Select Speaker</label><select className="w-full px-4 py-3 border border-slate-300 rounded-lg"><option>Sarah Martinez</option><option>Alex Chen</option><option>Jessica Park</option></select></div>
-            <div className="space-y-4"><h3 className="font-semibold text-slate-900">Add Speaking Note</h3><div className="p-4 bg-slate-50 rounded-lg space-y-3"><input type="text" value={formData.time} readOnly placeholder="Time marker..." className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"/><textarea value={formData.content} readOnly placeholder="Speaking note..." className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm h-20"/><select value={formData.type} disabled className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"><option value="essential">Essential</option><option value="optional">Optional</option><option value="transition">Transition</option></select><button className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium">Add Note</button></div></div>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-slate-900">Add Speaking Note</h3>
+              <div className="p-4 bg-slate-50 rounded-lg space-y-3">
+                <input
+                  type="text"
+                  value={formData.time}
+                  readOnly
+                  placeholder="Time marker..."
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                />
+                <textarea
+                  value={formData.content}
+                  readOnly
+                  placeholder="Speaking note..."
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm h-20"
+                />
+                <select
+                  value={formData.type}
+                  disabled
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                >
+                  <option value="essential">Essential</option>
+                  <option value="optional">Optional</option>
+                  <option value="transition">Transition</option>
+                </select>
+                <button className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium">
+                  Add Note
+                </button>
+              </div>
+            </div>
           </div>
           <div>
             <h3 className="font-semibold text-slate-900 mb-4">Speaker Notes for Sarah Martinez</h3>

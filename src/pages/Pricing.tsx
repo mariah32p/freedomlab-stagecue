@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+// Pricing page component
+
 export function Pricing() {
   const navigate = useNavigate();
 
