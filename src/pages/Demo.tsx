@@ -7,37 +7,38 @@ interface DemoStep {
   component: () => JSX.Element;
 }
 
+// Define the steps data outside the component to ensure stable reference
+const demoSteps: DemoStep[] = [
+  {
+    id: 'create-event',
+    title: 'Create Event',
+    duration: 8,
+    component: CreateEventStep
+  },
+  {
+    id: 'add-speakers',
+    title: 'Add Speakers',
+    duration: 7,
+    component: AddSpeakersStep
+  },
+  {
+    id: 'speaker-notes',
+    title: 'Speaker Notes Setup',
+    duration: 8,
+    component: SpeakerNotesStep
+  },
+  {
+    id: 'live-management',
+    title: 'Live Event Management',
+    duration: 15,
+    component: LiveManagementStep
+  }
+];
+
 export function StageCue() {
   const [currentStep, setCurrentStep] = useState(0);
   const [stepTimer, setStepTimer] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
-
-  const demoSteps: DemoStep[] = [
-    {
-      id: 'create-event',
-      title: 'Create Event',
-      duration: 8,
-      component: CreateEventStep
-    },
-    {
-      id: 'add-speakers',
-      title: 'Add Speakers',
-      duration: 7,
-      component: AddSpeakersStep
-    },
-    {
-      id: 'speaker-notes',
-      title: 'Speaker Notes Setup',
-      duration: 8,
-      component: SpeakerNotesStep
-    },
-    {
-      id: 'live-management',
-      title: 'Live Event Management',
-      duration: 15,
-      component: LiveManagementStep
-    }
-  ];
 
   // Auto-advance through demo steps
   useEffect(() => {
@@ -58,7 +59,7 @@ export function StageCue() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, currentStep, demoSteps]);
+  }, [isRunning, currentStep]); // Removed demoSteps from dependency array since it's now stable
 
   const CurrentComponent = demoSteps[currentStep].component;
 
@@ -121,7 +122,7 @@ function CreateEventStep() {
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, name: 'Q1 Product Launch Planning' })), 1000));
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, date: '2024-03-15' })), 2500));
     timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, duration: '90 minutes' })), 4000));
-    timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, room: 'https://zoom.us/j/123456789' })), 5500));
+    timeouts.push(setTimeout(() => setFormData(prev => ({ ...prev, room: 'https://zoom.us/j/987654321' })), 5500));
 
     return () => timeouts.forEach(clearTimeout);
   }, []);
@@ -170,8 +171,8 @@ function CreateEventStep() {
             <input
               type="text"
               value={formData.room}
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Zoom link or venue..."
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-mono text-sm"
+              placeholder="Meeting link..."
             />
           </div>
 
@@ -499,7 +500,7 @@ function LiveManagementStep() {
     // Show Slack modal after timer is visible
     const slackTimeout = setTimeout(() => {
       setShowSlackModal(true);
-    }, 2000);
+    }, 3000); // 3 seconds to see the timer first
 
     return () => {
       clearTimeout(slackTimeout);
