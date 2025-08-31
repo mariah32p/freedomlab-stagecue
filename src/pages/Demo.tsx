@@ -1370,6 +1370,7 @@ export function Demo() {
   };
 
   return (
+    <>
     <div className="relative">
       {renderStep()}
       
@@ -1464,5 +1465,6 @@ export function Demo() {
         </button>
       )}
     </div>
+    </>
   );
 }
