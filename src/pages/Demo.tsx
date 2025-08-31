@@ -591,6 +591,30 @@ export function StageCue() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
+      {/* Slack Message Popup */}
+      {showSlackMessage && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className="bg-white rounded-lg shadow-xl border border-gray-200 p-4 max-w-sm">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-1">
+                  <span className="font-semibold text-gray-900 text-sm">Slack Message Sent</span>
+                  <span className="text-xs text-gray-500">#product-launch</span>
+                </div>
+                <div className="bg-gray-50 rounded p-2 text-xs text-gray-700 font-mono">
+                  @sarah-chen I see Alex Rivera has had their hand raised for a bit for a question
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <AppHeader 
         activeTab={activeTab} 
         setActiveTab={handleTabClick}
