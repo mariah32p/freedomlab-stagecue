@@ -243,25 +243,25 @@ export function Demo() {
                   <div className="flex justify-center space-x-2">
                     <button
                       onClick={() => adjustTime(-5)}
-                      className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
                     >
                       -5m
                     </button>
                     <button
                       onClick={() => adjustTime(-1)}
-                      className="px-4 py-2 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
                     >
                       -1m
                     </button>
                     <button
                       onClick={() => adjustTime(1)}
-                      className="px-4 py-2 bg-green-500/60 hover:bg-green-500/80 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-green-500/60 hover:bg-green-500/80 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
                     >
                       +1m
                     </button>
                     <button
                       onClick={() => adjustTime(5)}
-                      className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-110 hover:shadow-md active:scale-95"
                     >
                       +5m
                     </button>
@@ -335,7 +335,7 @@ export function Demo() {
                 <button
                   onClick={addSpeakerNote}
                   disabled={!newNoteText.trim()}
-                  className="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                  className="w-full px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 disabled:transform-none disabled:shadow-none"
                 >
                   Add Note
                 </button>
@@ -356,9 +356,9 @@ export function Demo() {
                     return (
                       <div
                         key={note.id}
-                        className={`p-4 rounded-lg border-l-4 ${
+                        className={`p-4 rounded-lg border-l-4 transition-all duration-500 transform hover:scale-102 hover:shadow-md ${
                           status === 'current'
-                            ? 'bg-green-50 border-green-500'
+                            ? 'bg-green-50 border-green-500 animate-pulse'
                             : status === 'past'
                             ? 'bg-slate-50 border-slate-300'
                             : 'bg-blue-50 border-blue-500'
@@ -395,7 +395,7 @@ export function Demo() {
                           </div>
                           <button
                             onClick={() => removeSpeakerNote(note.id)}
-                            className="text-slate-400 hover:text-red-500 transition-colors ml-2"
+                            className="text-slate-400 hover:text-red-500 transition-all duration-200 transform hover:scale-110 hover:rotate-90 ml-2"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -422,7 +422,7 @@ export function Demo() {
                 
                 <div className="w-full bg-slate-200 rounded-full h-3">
                   <div 
-                    className="bg-gradient-to-r from-teal-500 to-blue-500 h-3 rounded-full transition-all duration-1000"
+                    className="bg-gradient-to-r from-teal-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
                     style={{ width: `${((30 * 60 - timeRemaining) / (30 * 60)) * 100}%` }}
                   ></div>
                 </div>
@@ -471,7 +471,7 @@ export function Demo() {
             </div>
             <button
               onClick={() => setShowSlackModal(false)}
-              className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
             >
               Got it
             </button>
@@ -500,7 +500,7 @@ export function Demo() {
                   adjustTime(5);
                   setShowExtendModal(false);
                 }}
-                className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-colors"
+                className="w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
               >
                 Extend by 5 minutes
               </button>
@@ -509,7 +509,7 @@ export function Demo() {
                   adjustTime(2);
                   setShowExtendModal(false);
                 }}
-                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
               >
                 Extend by 2 minutes
               </button>
@@ -518,7 +518,7 @@ export function Demo() {
                   handleStop();
                   setShowExtendModal(false);
                 }}
-                className="w-full px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors"
+                className="w-full px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95"
               >
                 End Session
               </button>
