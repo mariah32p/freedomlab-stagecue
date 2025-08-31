@@ -1,45 +1,56 @@
-              <div className="flex items-center space-x-2 mb-3">
-import { useState, useEffect } from 'react';
+              import { useState, useEffect } from 'react';
 
 interface DemoLayoutProps {
-                <span className="font-medium text-green-700">Slack Connected</span>
+  children: React.ReactNode;
   showControls?: boolean;
-              <div className="text-slate-600 text-sm">
+  onToggleControls?: () => void;
 }
 
 function DemoLayout({ children, showControls = true, onToggleControls }: DemoLayoutProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
-            <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
-    <div className="max-w-6xl mx-auto bg-white rounded-3xl p-8 border border-slate-200 shadow-2xl">
+      {/* Background effects */}
+      <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
-        <h2 className="text-4xl font-bold text-slate-900 mb-4">Team Coordination Dashboard</h2>
-        <p className="text-slate-600 text-lg">Real-time event management and team communication</p>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
       </div>
-                <span className="font-medium text-blue-700">Email Alerts</span>
-      {/* Demo watermark */}
-              <div className="text-slate-600 text-sm">
-        <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-white/90 text-sm font-medium">LIVE DEMO</span>
+
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="p-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-slate-900 mb-4">Team Coordination Dashboard</h1>
+              <p className="text-slate-600 text-lg">Real-time event management and team communication</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Demo controls */}
-      {showControls && onToggleControls && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <button
-            onClick={onToggleControls}
-            className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white/90 hover:bg-white/20 transition-all duration-300"
-          >
-            Hide Controls
-          </button>
+        {/* Demo watermark */}
+        <div className="fixed top-6 left-6 z-50">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-white/90 text-sm font-medium">LIVE DEMO</span>
+            </div>
+          </div>
         </div>
-      )}
 
-      {children}
+        {/* Demo controls */}
+        {showControls && onToggleControls && (
+          <div className="fixed bottom-6 right-6 z-50">
+            <button
+              onClick={onToggleControls}
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-2 text-white/90 hover:bg-white/20 transition-all duration-300"
+            >
+              Hide Controls
+            </button>
+          </div>
+        )}
+
+        {children}
+      </div>
     </div>
   );
 }
@@ -675,8 +686,12 @@ export function Demo() {
                             </svg>
                           </div>
                           <div>
-                            <div className="text-white font-medium">Slack: #event-team</div>
-                            <div className="text-green-300 text-xs">Connected & monitoring</div>
+                            <div className="flex items-center space-x-2 mb-3">
+                              <span className="font-medium text-green-700">Slack Connected</span>
+                            </div>
+                            <div className="text-slate-600 text-sm">
+                              Connected & monitoring
+                            </div>
                           </div>
                         </div>
                         <button
@@ -696,8 +711,12 @@ export function Demo() {
                             </svg>
                           </div>
                           <div>
-                            <div className="text-white font-medium">Email Alerts</div>
-                            <div className="text-blue-300 text-xs">moderators@event.com</div>
+                            <div className="flex items-center space-x-2 mb-3">
+                              <span className="font-medium text-blue-700">Email Alerts</span>
+                            </div>
+                            <div className="text-slate-600 text-sm">
+                              moderators@event.com
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -748,6 +767,65 @@ export function Demo() {
                           <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
                           <span className="text-amber-300 text-xs font-medium">Away</span>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                    <h3 className="text-xl font-semibold text-slate-900 mb-6">Event Overview</h3>
+                    <div className="grid grid-cols-3 gap-6 mb-8">
+                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                        <div className="text-2xl font-bold text-green-600">3/8</div>
+                        <div className="text-slate-600 text-sm">Sessions Complete</div>
+                      </div>
+                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                        <div className="text-2xl font-bold text-blue-600">247</div>
+                        <div className="text-slate-600 text-sm">Attendees</div>
+                      </div>
+                      <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                        <div className="text-2xl font-bold text-purple-600">5</div>
+                        <div className="text-slate-600 text-sm">Team Online</div>
+                      </div>
+                    </div>
+
+                    <h4 className="font-semibold text-slate-900 mb-4">Today's Schedule</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-4 p-4 bg-green-50 rounded-xl border-l-4 border-green-400">
+                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <div className="flex-1">
+                          <div className="font-medium text-green-800">{sessionTitle}</div>
+                          <div className="text-green-600 text-sm">{speakerName} • 2:00 PM - 2:30 PM</div>
+                          <div className="text-green-700 text-xs bg-green-100 px-2 py-1 rounded-md inline-block mt-1">
+                            In Progress
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
+                        <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-900">Panel Discussion</div>
+                          <div className="text-slate-600 text-sm">4 speakers • 2:30 PM - 3:15 PM</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
+                        <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
+                        <div className="flex-1">
+                          <div className="font-medium text-slate-900">Coffee Break</div>
+                          <div className="text-slate-600 text-sm">3:15 PM - 3:30 PM</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Communication</h3>
+                    <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                      <div className="text-slate-600 text-sm">
+                        Real-time coordination and notifications
                       </div>
                     </div>
                   </div>
@@ -908,58 +986,59 @@ export function Demo() {
                   <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-        <div className="lg:col-span-2 bg-slate-50 rounded-2xl p-6 border border-slate-200">
                 </div>
-          <h3 className="text-xl font-semibold text-slate-900 mb-6">Event Overview</h3>
-            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
+                <div>
+                  <h3 className="font-bold text-slate-900">Extend Session Time</h3>
                   <p className="text-slate-600 text-sm">Add more time to current session</p>
-              <div className="text-2xl font-bold text-green-600">3/8</div>
+                </div>
+              </div>
+              
               <div className="space-y-4 mb-6">
-            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-              <div className="text-slate-600 text-sm">Sessions Complete</div>
-              <div className="text-2xl font-bold text-blue-600">247</div>
+                <button
+                  onClick={() => {
+                    setTimeRemaining(prev => prev + 5 * 60);
                     setShowExtendModal(false);
-            <div className="bg-white rounded-xl p-4 border border-slate-200 text-center shadow-sm">
-              <div className="text-slate-600 text-sm">Attendees</div>
-              <div className="text-2xl font-bold text-purple-600">5</div>
+                  }}
+                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
+                >
                   <div className="font-medium text-slate-900">+ 5 minutes</div>
-              <div className="text-slate-600 text-sm">Team Online</div>
                   <div className="text-slate-600 text-sm">Quick extension for Q&A</div>
                 </button>
                 
                 <button
-          <h4 className="font-semibold text-slate-900 mb-4">Today's Schedule</h4>
                   onClick={() => {
-            <div className="flex items-center space-x-4 p-4 bg-green-50 rounded-xl border-l-4 border-green-400">
-                <div className="font-medium text-green-800">{sessionTitle}</div>
+                    setTimeRemaining(prev => prev + 10 * 60);
                     setShowExtendModal(false);
-                <div className="text-green-600 text-sm">{speakerName} • 2:00 PM - 2:30 PM</div>
+                  }}
+                  className="w-full p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-colors"
+                >
+                  <div className="font-medium text-slate-900">+ 10 minutes</div>
                   <div className="text-slate-600 text-sm">Extended discussion time</div>
-                <div className="text-green-700 text-xs bg-green-100 px-2 py-1 rounded-md inline-block mt-1">
                 </button>
               </div>
 
-            <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
               <div className="flex space-x-3">
-              <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                <div className="font-medium text-slate-900">Panel Discussion</div>
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-                <div className="text-slate-600 text-sm">4 speakers • 2:30 PM - 3:15 PM</div>
-                </button>
-            <div className="flex items-center space-x-4 p-4 bg-white rounded-xl border border-slate-200">
                 <button
-              <div className="w-3 h-3 bg-slate-300 rounded-full"></div>
-                <div className="font-medium text-slate-900">Coffee Break</div>
+                  onClick={() => setShowExtendModal(false)}
+                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setTimeRemaining(0);
                     setIsTimerRunning(false);
-                <div className="text-slate-600 text-sm">3:15 PM - 3:30 PM</div>
+                    setShowExtendModal(false);
+                  }}
                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                 >
                   End Session
                 </button>
               </div>
-        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
             </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">Team Communication</h3>
+          </div>
+        </div>
       )}
-            <div className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
     </>
+  );
+}
