@@ -137,16 +137,16 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
     [event.sessions],
   );
 
-  const setLiveSession = (sessionId: string | null) => {
+  // FIX #1: Wrap state setters in useCallback to give them a stable identity
+  const setLiveSession = useCallback((sessionId: string | null) => {
     setLiveSessionId(sessionId);
-    // Clear message when session changes
-    setSpeakerMessage(null);
-  };
+    setSpeakerMessage(null); // Clear message when session changes
+  }, []);
 
-  const sendSpeakerMessage = (text: string) => {
+  const sendSpeakerMessage = useCallback((text: string) => {
     console.log(`Sending message to speaker: "${text}"`);
     setSpeakerMessage({ text, id: Date.now() });
-  };
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -155,17 +155,20 @@ const AppProvider: FC<{ children: ReactNode }> = ({ children }) => {
       liveSessionId,
       getSpeakerById,
       getSessionById,
-      setLiveSession,
-      sendSpeakerMessage,
+      setLiveSession, // This function is now stable
+      sendSpeakerMessage, // This function is now stable
       speakerMessage,
     }),
+    // FIX #1 (continued): Add the stable functions to the dependency array
     [
       event,
       speakers,
       liveSessionId,
+      speakerMessage,
       getSpeakerById,
       getSessionById,
-      speakerMessage,
+      setLiveSession,
+      sendSpeakerMessage,
     ],
   );
 
@@ -193,7 +196,6 @@ const useTimer = ({ duration, onEnd }: UseTimerOptions) => {
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    // Reset timer when the duration prop changes (e.g., new session)
     setTimeRemaining(duration);
     setIsRunning(false);
     setIsPaused(false);
@@ -206,7 +208,7 @@ const useTimer = ({ duration, onEnd }: UseTimerOptions) => {
       interval = setInterval(() => {
         setTimeRemaining((prev) => prev - 1);
       }, 1000);
-    } else if (timeRemaining === 0 && isRunning) {
+    } else if (timeRemaining <= 0 && isRunning) {
       setIsRunning(false);
       onEnd?.();
     }
@@ -214,18 +216,21 @@ const useTimer = ({ duration, onEnd }: UseTimerOptions) => {
     return () => clearInterval(interval);
   }, [isRunning, isPaused, timeRemaining, onEnd]);
 
-  const start = () => {
+  const start = useCallback(() => {
     if (timeRemaining > 0) {
       setIsRunning(true);
       setIsPaused(false);
     }
-  };
-  const pause = () => setIsPaused(!isPaused);
-  const reset = () => {
+  }, [timeRemaining]);
+
+  const pause = () => setIsPaused((p) => !p);
+
+  const reset = useCallback(() => {
     setIsRunning(false);
     setIsPaused(false);
     setTimeRemaining(duration);
-  };
+  }, [duration]);
+
   const adjustTime = (seconds: number) =>
     setTimeRemaining((prev) => Math.max(0, prev + seconds));
 
@@ -253,7 +258,7 @@ const formatTime = (seconds: number) => {
   return `${isNegative ? "-" : ""}${mins}:${secs}`;
 };
 
-const getTimerColor = (seconds: number, duration: number) => {
+const getTimerColor = (seconds: number) => {
   if (seconds <= 0) return "text-red-400";
   if (seconds <= 60) return "text-red-500"; // 1 min
   if (seconds <= 300) return "text-yellow-400"; // 5 mins
@@ -299,9 +304,7 @@ const Dashboard = () => {
       <Card>
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              {event.name}
-            </h1>
+            <h1 className="text-3xl font-bold text-slate-900">{event.name}</h1>
             <p className="text-slate-600 mt-1">
               Welcome to your event dashboard.
             </p>
@@ -383,15 +386,11 @@ const LiveModeratorView = () => {
     return "future";
   };
 
-  const handleSendMessage = (msg: string) => {
-    if (liveSession) sendSpeakerMessage(msg);
-  };
-
   return (
     <div className="grid lg:grid-cols-3 gap-8">
       {/* Timer and Controls */}
       <div className="lg:col-span-2 space-y-6">
-        {!liveSession && (
+        {!liveSession ? (
           <Card className="h-full flex items-center justify-center">
             <div className="text-center">
               <p className="text-2xl font-bold text-slate-700">
@@ -402,92 +401,93 @@ const LiveModeratorView = () => {
               </p>
             </div>
           </Card>
-        )}
-        {liveSession && speaker && (
-          <>
-            <Card>
-              <h1 className="text-3xl font-bold text-slate-900">
-                {liveSession.title}
-              </h1>
-              <p className="text-slate-600 mt-1">
-                {speaker.name} • {speaker.title}
-              </p>
-            </Card>
-            {/* Timer Display */}
-            <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 text-center">
-              <div
-                className={`text-8xl font-mono font-bold tracking-wider ${getTimerColor(
-                  timeRemaining,
-                  liveSession.duration,
-                )}`}
-              >
-                {formatTime(timeRemaining)}
-              </div>
-              <div className="text-white/80 text-xl font-medium mt-4">
-                Session Time Remaining
-              </div>
-              <div className="mt-8 flex justify-center space-x-4">
-                <Button
-                  onClick={start}
-                  disabled={isRunning && !isPaused}
-                  className="bg-green-500 hover:bg-green-600 text-white"
+        ) : (
+          speaker && (
+            <>
+              <Card>
+                <h1 className="text-3xl font-bold text-slate-900">
+                  {liveSession.title}
+                </h1>
+                <p className="text-slate-600 mt-1">
+                  {speaker.name} • {speaker.title}
+                </p>
+              </Card>
+              <div className="bg-gradient-to-br from-slate-900 to-blue-900 rounded-2xl p-8 text-center">
+                <div
+                  className={`text-8xl font-mono font-bold tracking-wider ${getTimerColor(
+                    timeRemaining,
+                  )}`}
                 >
-                  ▶ Start
-                </Button>
-                <Button
-                  onClick={pause}
-                  disabled={!isRunning}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                >
-                  {isPaused ? "Resume" : "❚❚ Pause"}
-                </Button>
-                <Button
-                  onClick={reset}
-                  className="bg-red-500 hover:bg-red-600 text-white"
-                >
-                  ↻ Reset
-                </Button>
-              </div>
-              {/* Time Adjustment */}
-              <div className="mt-6 bg-white/10 p-4 rounded-xl">
-                <div className="flex justify-center space-x-2">
-                  <button onClick={() => adjustTime(-60)} className="timer-adj-btn">-1m</button>
-                  <button onClick={() => adjustTime(-10)} className="timer-adj-btn">-10s</button>
-                  <button onClick={() => adjustTime(10)} className="timer-adj-btn">+10s</button>
-                  <button onClick={() => adjustTime(60)} className="timer-adj-btn">+1m</button>
-                  <style>{`.timer-adj-btn { background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.2s; } .timer-adj-btn:hover { background: rgba(255,255,255,0.4); }`}</style>
+                  {formatTime(timeRemaining)}
+                </div>
+                <div className="text-white/80 text-xl font-medium mt-4">
+                  Session Time Remaining
+                </div>
+                <div className="mt-8 flex justify-center space-x-4">
+                  <Button
+                    onClick={start}
+                    disabled={isRunning && !isPaused}
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    ▶ Start
+                  </Button>
+                  <Button
+                    onClick={pause}
+                    disabled={!isRunning}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                  >
+                    {isPaused ? "Resume" : "❚❚ Pause"}
+                  </Button>
+                  <Button
+                    onClick={reset}
+                    className="bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    ↻ Reset
+                  </Button>
+                </div>
+                <div className="mt-6 bg-white/10 p-4 rounded-xl">
+                  <div className="flex justify-center space-x-2">
+                    <button onClick={() => adjustTime(-60)} className="timer-adj-btn">-1m</button>
+                    <button onClick={() => adjustTime(-10)} className="timer-adj-btn">-10s</button>
+                    <button onClick={() => adjustTime(10)} className="timer-adj-btn">+10s</button>
+                    <button onClick={() => adjustTime(60)} className="timer-adj-btn">+1m</button>
+                    <style>{`.timer-adj-btn { background: rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.2s; } .timer-adj-btn:hover { background: rgba(255,255,255,0.4); }`}</style>
+                  </div>
                 </div>
               </div>
-            </div>
-            {/* Speaker Notes Timeline */}
-            <Card>
-              <SectionTitle>Speaker Notes Timeline</SectionTitle>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {liveSession.notes.map((note) => {
-                  const status = getNoteStatus(note.timestamp);
-                  const statusStyles = {
-                    current: "bg-green-50 border-green-500",
-                    past: "bg-slate-50 border-slate-300 opacity-60",
-                    future: "bg-blue-50 border-blue-500",
-                  };
-                  return (
-                    <div
-                      key={note.id}
-                      className={`p-4 rounded-lg border-l-4 transition-all duration-500 ${statusStyles[status]}`}
-                    >
-                      <div className="flex items-center space-x-3 mb-1">
-                        <span className="font-bold text-sm text-slate-800">
-                          @{formatTime(note.timestamp)}
-                        </span>
-                        {status === 'current' && <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full animate-pulse">Now</span>}
+              <Card>
+                <SectionTitle>Speaker Notes Timeline</SectionTitle>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {liveSession.notes.map((note) => {
+                    const status = getNoteStatus(note.timestamp);
+                    const statusStyles = {
+                      current: "bg-green-50 border-green-500",
+                      past: "bg-slate-50 border-slate-300 opacity-60",
+                      future: "bg-blue-50 border-blue-500",
+                    };
+                    return (
+                      <div
+                        key={note.id}
+                        className={`p-4 rounded-lg border-l-4 transition-all duration-500 ${statusStyles[status]}`}
+                      >
+                        <div className="flex items-center space-x-3 mb-1">
+                          <span className="font-bold text-sm text-slate-800">
+                            @{formatTime(note.timestamp)}
+                          </span>
+                          {status === "current" && (
+                            <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full animate-pulse">
+                              Now
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-700">{note.note}</p>
                       </div>
-                      <p className="text-sm text-slate-700">{note.note}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </>
+                    );
+                  })}
+                </div>
+              </Card>
+            </>
+          )
         )}
       </div>
 
@@ -517,7 +517,10 @@ const LiveModeratorView = () => {
                   </p>
                   {isLive && (
                     <button
-                      onClick={() => setLiveSession(null)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent click from bubbling to parent div
+                        setLiveSession(null);
+                      }}
                       className="text-xs mt-2 bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600"
                     >
                       End Session
@@ -532,16 +535,12 @@ const LiveModeratorView = () => {
           <SectionTitle>Message Speaker</SectionTitle>
           <div className="grid grid-cols-2 gap-2">
             {[
-              "5 mins left",
-              "2 mins left",
-              "Wrap up now",
-              "Great pace!",
-              "Speak louder",
-              "Closer to mic",
+              "5 mins left", "2 mins left", "Wrap up now",
+              "Great pace!", "Speak louder", "Closer to mic",
             ].map((msg) => (
               <button
                 key={msg}
-                onClick={() => handleSendMessage(msg)}
+                onClick={() => sendSpeakerMessage(msg)}
                 disabled={!liveSession}
                 className="text-sm p-3 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-lg transition disabled:opacity-50 disabled:hover:bg-blue-50"
               >
@@ -556,92 +555,113 @@ const LiveModeratorView = () => {
 };
 
 const SpeakerPortal = () => {
-    const { getSessionById, getSpeakerById, liveSessionId, speakerMessage } = useAppContext();
-    const liveSession = getSessionById(liveSessionId || '');
-    const speaker = getSpeakerById(liveSession?.speakerId || '');
+  const { getSessionById, getSpeakerById, liveSessionId, speakerMessage } = useAppContext();
+  const liveSession = getSessionById(liveSessionId || "");
+  const speaker = getSpeakerById(liveSession?.speakerId || "");
 
-    // The speaker's timer is a "dumb" view. It mirrors the moderator's.
-    // In a real app, this would be synced via WebSockets. Here we simulate it.
-    const { timeRemaining, elapsedTime } = useTimer({ duration: liveSession?.duration || 0 });
-    
-    // Simulate the timer running if the session is live
-    useEffect(() => {
-        if (liveSessionId) {
-            // This is a simplified simulation. A real implementation
-            // would need a more robust synchronization mechanism.
-            const timer = setInterval(() => {
-                // Manually decrement to keep it roughly in sync
-            }, 1000);
-            return () => clearInterval(timer);
-        }
-    }, [liveSessionId]);
+  const { timeRemaining, elapsedTime, start, isRunning } = useTimer({
+    duration: liveSession?.duration || 0,
+  });
 
-    const getNoteStatus = (timestamp: number) => {
-        if (elapsedTime > timestamp) return 'past';
-        if (elapsedTime >= timestamp && elapsedTime < timestamp + 60) return 'current';
-        return 'future';
-    };
+  // FIX #2: Correctly start the timer when the session goes live
+  useEffect(() => {
+    if (liveSessionId && !isRunning) {
+      start();
+    }
+  }, [liveSessionId, isRunning, start]);
 
+  const getNoteStatus = (timestamp: number) => {
+    if (elapsedTime > timestamp) return "past";
+    if (elapsedTime >= timestamp && elapsedTime < timestamp + 60) return "current";
+    return "future";
+  };
+
+  if (!liveSession || !speaker) {
     return (
-        <div className="max-w-4xl mx-auto space-y-8">
-            {!liveSession && (
-                 <Card className="text-center py-20">
-                    <h1 className="text-3xl font-bold text-slate-800">Welcome, Speaker!</h1>
-                    <p className="text-slate-500 mt-2">Your session is not live yet. Please stand by.</p>
-                 </Card>
-            )}
-            {liveSession && speaker && (
-                <>
-                    <Card className="text-center">
-                        <h1 className="text-3xl font-bold text-slate-900">Live: {liveSession.title}</h1>
-                        <p className="text-slate-600 mt-1">Good luck, {speaker.name}!</p>
-                    </Card>
-
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {/* Timer & Messages */}
-                        <div className="space-y-6">
-                             <div className="bg-slate-800 rounded-2xl p-8 text-center sticky top-24">
-                                <div className={`text-7xl font-mono font-bold tracking-wider ${getTimerColor(timeRemaining, liveSession.duration)}`}>
-                                    {formatTime(timeRemaining)}
-                                </div>
-                                <div className="text-white/70 text-lg font-medium mt-3">Time Remaining</div>
-                             </div>
-                             <Card>
-                                 <SectionTitle>Messages from Moderator</SectionTitle>
-                                 {speakerMessage ? (
-                                    <div key={speakerMessage.id} className="p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg animate-pulse">
-                                        <p className="font-semibold text-yellow-900">{speakerMessage.text}</p>
-                                    </div>
-                                 ) : (
-                                    <p className="text-slate-500 text-sm">No new messages.</p>
-                                 )}
-                             </Card>
-                        </div>
-                        {/* Notes */}
-                        <Card>
-                            <SectionTitle>Your Notes</SectionTitle>
-                            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
-                                {liveSession.notes.map(note => {
-                                    const status = getNoteStatus(note.timestamp);
-                                     const statusStyles = {
-                                        current: 'bg-green-100 border-green-500 scale-105 shadow-lg',
-                                        past: 'bg-slate-100 border-slate-300 opacity-50',
-                                        future: 'bg-white border-slate-200',
-                                    };
-                                    return (
-                                        <div key={note.id} className={`p-4 rounded-lg border-l-4 transition-all duration-700 ${statusStyles[status]}`}>
-                                            <p className="font-bold text-sm text-slate-500">@{formatTime(note.timestamp)}</p>
-                                            <p className={`mt-1 ${status === 'current' ? 'font-semibold text-slate-900' : 'text-slate-700'}`}>{note.note}</p>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </Card>
-                    </div>
-                </>
-            )}
-        </div>
+      <Card className="text-center py-20">
+        <h1 className="text-3xl font-bold text-slate-800">Welcome, Speaker!</h1>
+        <p className="text-slate-500 mt-2">
+          Your session is not live yet. Please stand by.
+        </p>
+      </Card>
     );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-8">
+      <Card className="text-center">
+        <h1 className="text-3xl font-bold text-slate-900">
+          Live: {liveSession.title}
+        </h1>
+        <p className="text-slate-600 mt-1">Good luck, {speaker.name}!</p>
+      </Card>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <div className="bg-slate-800 rounded-2xl p-8 text-center sticky top-24">
+            <div
+              className={`text-7xl font-mono font-bold tracking-wider ${getTimerColor(
+                timeRemaining,
+              )}`}
+            >
+              {formatTime(timeRemaining)}
+            </div>
+            <div className="text-white/70 text-lg font-medium mt-3">
+              Time Remaining
+            </div>
+          </div>
+          <Card>
+            <SectionTitle>Messages from Moderator</SectionTitle>
+            {speakerMessage ? (
+              <div
+                key={speakerMessage.id}
+                className="p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg animate-pulse"
+              >
+                <p className="font-semibold text-yellow-900">
+                  {speakerMessage.text}
+                </p>
+              </div>
+            ) : (
+              <p className="text-slate-500 text-sm">No new messages.</p>
+            )}
+          </Card>
+        </div>
+
+        <Card>
+          <SectionTitle>Your Notes</SectionTitle>
+          <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+            {liveSession.notes.map((note) => {
+              const status = getNoteStatus(note.timestamp);
+              const statusStyles = {
+                current: "bg-green-100 border-green-500 scale-105 shadow-lg",
+                past: "bg-slate-100 border-slate-300 opacity-50",
+                future: "bg-white border-slate-200",
+              };
+              return (
+                <div
+                  key={note.id}
+                  className={`p-4 rounded-lg border-l-4 transition-all duration-700 ${statusStyles[status]}`}
+                >
+                  <p className="font-bold text-sm text-slate-500">
+                    @{formatTime(note.timestamp)}
+                  </p>
+                  <p
+                    className={`mt-1 ${
+                      status === "current"
+                        ? "font-semibold text-slate-900"
+                        : "text-slate-700"
+                    }`}
+                  >
+                    {note.note}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 
@@ -678,10 +698,24 @@ export function StageCue() {
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-8">
                 <div className="flex items-center space-x-2">
-                   <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                   </div>
-                  <span className="text-xl font-bold text-slate-900">StageCue</span>
+                  <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-xl font-bold text-slate-900">
+                    StageCue
+                  </span>
                 </div>
                 <nav className="hidden md:flex space-x-1">
                   {navigationItems.map((item) => (
@@ -703,7 +737,6 @@ export function StageCue() {
             </div>
           </div>
         </header>
-
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {renderPage()}
         </main>
