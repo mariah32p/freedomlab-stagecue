@@ -407,7 +407,7 @@ function LiveManagementStep() {
   const [currentSpeaker] = useState('Sarah Martinez');
   const [showSlackAlert, setShowSlackAlert] = useState(false);
   const [showSlackModal, setShowSlackModal] = useState(false);
-  const [slackMessage, setSlackMessage] = useState('');
+  const [slackMessage, setSlackMessage] = useState('⏰ Sarah has 18:42 remaining. Alex prep needed for next session.');
   const [showSlackSuccess, setShowSlackSuccess] = useState(false);
 
   useEffect(() => {
@@ -421,6 +421,11 @@ function LiveManagementStep() {
     if (timeRemaining === 5 * 60) {
       setShowSlackAlert(true);
       setTimeout(() => setShowSlackAlert(false), 4000);
+    }
+
+    // Show Slack modal automatically at 15 minutes
+    if (timeRemaining === 15 * 60) {
+      setShowSlackModal(true);
     }
 
     return () => clearInterval(interval);
@@ -542,10 +547,6 @@ function LiveManagementStep() {
             <div className="space-y-3">
               <button
                 onClick={() => setShowSlackModal(true)}
-                onClick={() => {
-                  setShowSlackAlert(true);
-                  setTimeout(() => setShowSlackAlert(false), 4000);
-                }}
                 className="w-full p-3 bg-slate-50 hover:bg-slate-100 rounded-lg text-left transition-colors"
               >
                 <div className="font-medium text-slate-900">Send Slack Alert</div>
@@ -621,7 +622,6 @@ function LiveManagementStep() {
                   <textarea
                     value={slackMessage}
                     onChange={(e) => setSlackMessage(e.target.value)}
-                    placeholder="⏰ Sarah has 18:42 remaining. Alex prep needed for next session."
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg h-20 text-sm"
                   />
                 </div>
