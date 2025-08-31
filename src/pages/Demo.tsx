@@ -7,6 +7,7 @@ export function StageCue() {
   const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'live' | 'speaker' | 'setup'>('live');
   const [demoStep, setDemoStep] = useState(0);
+  const [autoScroll, setAutoScroll] = useState(true);
 
   // Auto-navigate through demo steps
   useEffect(() => {
@@ -27,6 +28,36 @@ export function StageCue() {
 
     return () => clearInterval(interval);
   }, [demoStep]);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (!autoScroll) return;
+
+    const scrollInterval = setInterval(() => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const maxScroll = scrollHeight - windowHeight;
+      
+      if (maxScroll > 0) {
+        const currentScroll = window.pageYOffset;
+        const scrollStep = maxScroll / 20; // Divide scroll into 20 steps
+        
+        if (currentScroll < maxScroll) {
+          window.scrollTo({
+            top: Math.min(currentScroll + scrollStep, maxScroll),
+            behavior: 'smooth'
+          });
+        } else {
+          // Reset to top after reaching bottom
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 2000);
+        }
+      }
+    }, 800);
+
+    return () => clearInterval(scrollInterval);
+  }, [autoScroll, activeTab]);
 
   // Auto-play timer
   useEffect(() => {
@@ -54,12 +85,27 @@ export function StageCue() {
   }, []);
 
   const speakerNotes = [
-    { minute: 2, text: "Welcome audience and introduce topic", active: currentMinute >= 2 },
-    { minute: 5, text: "Present first key concept with slides", active: currentMinute >= 5 },
-    { minute: 8, text: "Show live demonstration", active: currentMinute >= 8 },
-    { minute: 12, text: "Discuss real-world applications", active: currentMinute >= 12 },
-    { minute: 15, text: "Address common challenges", active: currentMinute >= 15 },
-    { minute: 18, text: "Prepare for Q&A transition", active: currentMinute >= 18 },
+    { minute: 0, text: "Welcome everyone to today's session on AI in Healthcare. Thank you for joining us.", active: currentMinute >= 0 },
+    { minute: 1, text: "Introduce yourself and your background in healthcare AI research.", active: currentMinute >= 1 },
+    { minute: 2, text: "Present agenda: Current state, breakthrough technologies, implementation challenges, and future outlook.", active: currentMinute >= 2 },
+    { minute: 3, text: "Show opening slide: 'AI is transforming healthcare at an unprecedented pace'", active: currentMinute >= 3 },
+    { minute: 4, text: "Discuss current AI applications: diagnostic imaging, drug discovery, personalized treatment plans.", active: currentMinute >= 4 },
+    { minute: 5, text: "Present case study: AI-powered radiology reducing diagnosis time by 40%", active: currentMinute >= 5 },
+    { minute: 6, text: "Transition to breakthrough technologies section", active: currentMinute >= 6 },
+    { minute: 7, text: "Introduce machine learning models in clinical decision support", active: currentMinute >= 7 },
+    { minute: 8, text: "Show live demonstration of AI diagnostic tool (have backup video ready)", active: currentMinute >= 8 },
+    { minute: 9, text: "Explain the technology behind the demonstration", active: currentMinute >= 9 },
+    { minute: 10, text: "Next paragraph: Implementation challenges in healthcare systems", active: currentMinute >= 10 },
+    { minute: 11, text: "Discuss data privacy and HIPAA compliance requirements", active: currentMinute >= 11 },
+    { minute: 12, text: "Address physician adoption and training challenges", active: currentMinute >= 12 },
+    { minute: 13, text: "Present solutions: gradual integration and physician-AI collaboration models", active: currentMinute >= 13 },
+    { minute: 14, text: "Show success metrics from early adopter hospitals", active: currentMinute >= 14 },
+    { minute: 15, text: "Transition to future outlook section", active: currentMinute >= 15 },
+    { minute: 16, text: "Discuss emerging trends: federated learning, edge computing in medical devices", active: currentMinute >= 16 },
+    { minute: 17, text: "Present timeline for next 5 years of healthcare AI development", active: currentMinute >= 17 },
+    { minute: 18, text: "Prepare for conclusion and Q&A transition", active: currentMinute >= 18 },
+    { minute: 19, text: "Summarize key takeaways and thank the audience", active: currentMinute >= 19 },
+    { minute: 20, text: "Open floor for questions - Q&A session begins", active: currentMinute >= 20 },
   ];
 
   const formatTime = (seconds: number): string => {
@@ -210,7 +256,7 @@ export function StageCue() {
       <div className="grid lg:grid-cols-2 gap-8">
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-6">Speaker Notes Timeline</h3>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-3 max-h-[600px] overflow-y-auto">
             {speakerNotes.map((note, index) => {
               const isPast = currentMinute > note.minute;
               const isCurrent = currentMinute === note.minute;
@@ -242,9 +288,9 @@ export function StageCue() {
                       <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full font-bold">
                         NEXT
                       </span>
-                    )}
+                    <p className="text-gray-700 text-sm leading-relaxed">{note.text}</p>
                   </div>
-                  <p className="text-gray-700 text-sm">{note.text}</p>
+                  <p className="text-gray-700 text-sm leading-relaxed">{note.text}</p>
                 </div>
               );
             })}
@@ -323,7 +369,7 @@ export function StageCue() {
         {/* Speaker Notes */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <h3 className="font-bold text-gray-900 mb-4">Your Notes</h3>
-          <div className="space-y-3 text-sm">
+          <div className="space-y-3 text-sm max-h-96 overflow-y-auto">
             <div className="p-3 bg-gray-50 rounded-lg">
               <div className="font-medium text-gray-900 mb-1">Key Points</div>
               <div className="text-gray-600">• AI diagnostic accuracy<br/>• Patient data privacy<br/>• Implementation challenges</div>
@@ -442,6 +488,16 @@ export function StageCue() {
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                 <span className="text-green-700 text-sm font-medium">Demo Mode</span>
               </div>
+              <button
+                onClick={() => setAutoScroll(!autoScroll)}
+                className={`ml-4 px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                  autoScroll 
+                    ? 'bg-blue-100 text-blue-700' 
+                    : 'bg-gray-100 text-gray-700'
+                }`}
+              >
+                Auto-scroll: {autoScroll ? 'ON' : 'OFF'}
+              </button>
             </div>
 
             {/* Navigation Tabs */}
