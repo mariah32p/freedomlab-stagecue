@@ -348,6 +348,9 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime, setShowSlac
         </button>
         <button 
           onClick={() => {
+            setShowSlackMessage(true);
+            setTimeout(() => setShowSlackMessage(false), 5000);
+          }}
           className="p-4 bg-orange-50 hover:bg-orange-100 rounded-lg border border-orange-200 transition-colors"
         >
           <div className="font-medium text-orange-800">Alert Speaker</div>
