@@ -5,6 +5,7 @@ export function StageCue() {
   const [currentMinute, setCurrentMinute] = useState(1);
   const [isRunning, setIsRunning] = useState(true);
   const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'live' | 'speaker' | 'setup'>('live');
 
   // Auto-play timer
   useEffect(() => {
@@ -47,267 +48,414 @@ export function StageCue() {
   };
 
   const getTimerColor = () => {
-    if (timeRemaining <= 0) return 'text-red-500';
-    if (timeRemaining <= 120) return 'text-red-400';
-    if (timeRemaining <= 300) return 'text-amber-400';
-    return 'text-emerald-400';
+    if (timeRemaining <= 0) return 'text-red-600';
+    if (timeRemaining <= 120) return 'text-red-500';
+    if (timeRemaining <= 300) return 'text-amber-500';
+    return 'text-blue-600';
   };
 
   const adjustTime = (seconds: number) => {
     setTimeRemaining(prev => Math.max(0, prev + seconds));
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Floating Header */}
-      <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl px-6 py-3 shadow-2xl">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-blue-500 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+  const renderDashboard = () => (
+    <div className="space-y-8">
+      {/* Event Overview */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Tech Summit 2024</h2>
+              <p className="text-gray-600">Main Auditorium • 247 attendees</p>
             </div>
-            <span className="text-xl font-bold text-white">StageCue</span>
-            <div className="flex items-center space-x-2 bg-emerald-500/20 px-3 py-1 rounded-full">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-emerald-300 text-sm font-medium">Live Demo</span>
+            <div className="flex items-center space-x-2 bg-green-100 px-3 py-1 rounded-full">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-green-700 text-sm font-medium">Live</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-6">
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-3xl font-bold text-blue-600 mb-1">{formatTime(timeRemaining)}</div>
+              <div className="text-sm text-gray-600">Current Session</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-3xl font-bold text-purple-600 mb-1">3/8</div>
+              <div className="text-sm text-gray-600">Sessions Complete</div>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-3xl font-bold text-green-600 mb-1">5</div>
+              <div className="text-sm text-gray-600">Team Members</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+          <h3 className="font-bold text-gray-900 mb-4">Today's Schedule</h3>
+          <div className="space-y-3">
+            <div className="p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+              <div className="text-sm font-semibold text-gray-900">Dr. Sarah Chen</div>
+              <div className="text-xs text-gray-500">2:00 PM - 2:30 PM</div>
+              <div className="text-xs text-blue-700 bg-blue-100 px-2 py-1 rounded-md inline-block mt-1">
+                In Progress
+              </div>
+            </div>
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="text-sm font-semibold text-gray-900">Panel Discussion</div>
+              <div className="text-xs text-gray-500">2:30 PM - 3:15 PM</div>
+            </div>
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="text-sm font-semibold text-gray-900">Coffee Break</div>
+              <div className="text-xs text-gray-500">3:15 PM - 3:30 PM</div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
 
-      <div className="pt-24 pb-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Main Timer Display */}
-          <div className="text-center mb-12">
-            <div className="inline-block bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-12 shadow-2xl">
-              <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-white/90 mb-2">AI in Healthcare: Future Perspectives</h1>
-                <p className="text-white/60">Dr. Sarah Chen • Main Auditorium • 247 attendees</p>
-              </div>
+  const renderLiveEvent = () => (
+    <div className="space-y-8">
+      {/* Main Timer */}
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">AI in Healthcare: Future Perspectives</h2>
+          <p className="text-gray-600">Dr. Sarah Chen • Main Auditorium</p>
+        </div>
+        
+        <div className={`text-8xl font-mono font-bold mb-6 transition-colors duration-1000 ${getTimerColor()}`}>
+          {formatTime(timeRemaining)}
+        </div>
+        
+        <div className="text-gray-600 text-xl mb-8">Session Time Remaining</div>
+        
+        {/* Timer Controls */}
+        <div className="flex justify-center space-x-4 mb-8">
+          <button
+            onClick={() => setIsRunning(!isRunning)}
+            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95 ${
+              isRunning 
+                ? 'bg-amber-500 hover:bg-amber-600 text-white' 
+                : 'bg-green-500 hover:bg-green-600 text-white'
+            }`}
+          >
+            {isRunning ? 'Pause' : 'Start'}
+          </button>
+          <button
+            onClick={() => {
+              setTimeRemaining(1200);
+              setCurrentMinute(1);
+              setIsRunning(false);
+            }}
+            className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 active:scale-95"
+          >
+            Reset
+          </button>
+        </div>
+
+        {/* Time Adjustment Controls */}
+        <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+          <div className="text-gray-700 text-sm mb-4 font-medium">Quick Time Adjustments</div>
+          <div className="flex justify-center space-x-3">
+            <button
+              onClick={() => adjustTime(-300)}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              -5m
+            </button>
+            <button
+              onClick={() => adjustTime(-60)}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              -1m
+            </button>
+            <button
+              onClick={() => adjustTime(60)}
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              +1m
+            </button>
+            <button
+              onClick={() => adjustTime(300)}
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95"
+            >
+              +5m
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Speaker Notes Timeline */}
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">Speaker Notes Timeline</h3>
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {speakerNotes.map((note, index) => {
+              const isPast = currentMinute > note.minute;
+              const isCurrent = currentMinute === note.minute;
+              const isHighlighted = index === currentNoteIndex;
               
-              <div className={`text-8xl md:text-9xl font-mono font-bold tracking-wider mb-6 transition-all duration-1000 ${getTimerColor()}`}>
-                {formatTime(timeRemaining)}
-              </div>
-              
-              <div className="text-white/70 text-xl mb-8">Session Time Remaining</div>
-              
-              {/* Timer Controls */}
-              <div className="flex justify-center space-x-4 mb-8">
-                <button
-                  onClick={() => setIsRunning(!isRunning)}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-xl active:scale-95 ${
-                    isRunning 
-                      ? 'bg-amber-500 hover:bg-amber-400 text-white' 
-                      : 'bg-emerald-500 hover:bg-emerald-400 text-white'
+              return (
+                <div
+                  key={index}
+                  className={`p-4 rounded-lg border-l-4 transition-all duration-500 ${
+                    isCurrent 
+                      ? 'bg-green-50 border-green-500 shadow-md animate-pulse' 
+                      : isPast 
+                      ? 'bg-gray-50 border-gray-300 opacity-60' 
+                      : isHighlighted
+                      ? 'bg-blue-50 border-blue-500 shadow-md'
+                      : 'bg-white border-gray-200'
                   }`}
                 >
-                  {isRunning ? '⏸ Pause' : '▶ Start'}
-                </button>
-                <button
-                  onClick={() => {
-                    setTimeRemaining(1200);
-                    setCurrentMinute(1);
-                    setIsRunning(false);
-                  }}
-                  className="px-6 py-3 bg-slate-600 hover:bg-slate-500 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-xl active:scale-95"
-                >
-                  ↻ Reset
-                </button>
-              </div>
-
-              {/* Time Adjustment Controls */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                <div className="text-white/60 text-sm mb-4 font-medium">Quick Time Adjustments</div>
-                <div className="flex justify-center space-x-3">
-                  <button
-                    onClick={() => adjustTime(-300)}
-                    className="px-4 py-2 bg-red-500/80 hover:bg-red-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
-                  >
-                    -5m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(-60)}
-                    className="px-4 py-2 bg-red-500/80 hover:bg-red-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
-                  >
-                    -1m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(60)}
-                    className="px-4 py-2 bg-emerald-500/80 hover:bg-emerald-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
-                  >
-                    +1m
-                  </button>
-                  <button
-                    onClick={() => adjustTime(300)}
-                    className="px-4 py-2 bg-emerald-500/80 hover:bg-emerald-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-110 active:scale-95"
-                  >
-                    +5m
-                  </button>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-gray-900 text-sm">
+                      Minute {note.minute}
+                    </span>
+                    {isCurrent && (
+                      <span className="text-xs bg-green-500 text-white px-2 py-1 rounded-full font-bold">
+                        NOW
+                      </span>
+                    )}
+                    {isHighlighted && !isCurrent && !isPast && (
+                      <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full font-bold">
+                        NEXT
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-gray-700 text-sm">{note.text}</p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Live Stats */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Live Status</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                <span className="text-gray-700 font-medium">Current Minute</span>
+                <span className="text-green-600 font-bold text-lg">{currentMinute}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <span className="text-gray-700 font-medium">Progress</span>
+                <span className="text-blue-600 font-bold">{Math.round(((1200 - timeRemaining) / 1200) * 100)}%</span>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <span className="text-gray-700 font-medium">Attendees</span>
+                <span className="text-purple-600 font-bold">247</span>
               </div>
             </div>
           </div>
 
-          {/* Speaker Notes Timeline */}
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Speaker Notes Timeline</h2>
-              <div className="space-y-4 max-h-96 overflow-y-auto">
-                {speakerNotes.map((note, index) => {
-                  const isPast = currentMinute > note.minute;
-                  const isCurrent = currentMinute === note.minute;
-                  const isHighlighted = index === currentNoteIndex;
-                  
-                  return (
-                    <div
-                      key={index}
-                      className={`p-4 rounded-xl border-l-4 transition-all duration-700 transform hover:scale-102 hover:shadow-lg ${
-                        isCurrent 
-                          ? 'bg-emerald-500/20 border-emerald-400 shadow-lg animate-pulse' 
-                          : isPast 
-                          ? 'bg-white/5 border-slate-500 opacity-60' 
-                          : isHighlighted
-                          ? 'bg-blue-500/20 border-blue-400 shadow-lg'
-                          : 'bg-white/10 border-white/30'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-bold text-white text-sm">
-                          Minute {note.minute}
-                        </span>
-                        {isCurrent && (
-                          <span className="text-xs bg-emerald-400 text-emerald-900 px-2 py-1 rounded-full font-bold animate-bounce">
-                            NOW
-                          </span>
-                        )}
-                        {isHighlighted && !isCurrent && !isPast && (
-                          <span className="text-xs bg-blue-400 text-blue-900 px-2 py-1 rounded-full font-bold">
-                            NEXT
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-white/90 text-sm leading-relaxed">{note.text}</p>
-                    </div>
-                  );
-                })}
+          {/* Progress Bar */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Session Progress</h3>
+            <div className="relative">
+              <div className="w-full bg-gray-200 rounded-full h-4">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full transition-all duration-1000 ease-out"
+                  style={{ width: `${((1200 - timeRemaining) / 1200) * 100}%` }}
+                ></div>
               </div>
-            </div>
-
-            {/* Live Stats & Controls */}
-            <div className="space-y-6">
-              {/* Current Status */}
-              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">Live Status</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-emerald-500/20 rounded-lg">
-                    <span className="text-white/90 font-medium">Current Minute</span>
-                    <span className="text-emerald-400 font-bold text-lg">{currentMinute}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-blue-500/20 rounded-lg">
-                    <span className="text-white/90 font-medium">Progress</span>
-                    <span className="text-blue-400 font-bold">{Math.round(((1200 - timeRemaining) / 1200) * 100)}%</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-purple-500/20 rounded-lg">
-                    <span className="text-white/90 font-medium">Attendees</span>
-                    <span className="text-purple-400 font-bold">247</span>
-                  </div>
-                </div>
+              <div className="flex justify-between text-xs text-gray-600 mt-2">
+                <span>Start</span>
+                <span>20 min</span>
               </div>
-
-              {/* Quick Actions */}
-              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
-                <div className="space-y-3">
-                  <button className="w-full p-3 bg-blue-500/80 hover:bg-blue-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
-                    📢 Send 5-min Warning
-                  </button>
-                  <button className="w-full p-3 bg-purple-500/80 hover:bg-purple-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
-                    💬 Message Speaker
-                  </button>
-                  <button className="w-full p-3 bg-amber-500/80 hover:bg-amber-400 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95">
-                    🔔 Notify Team
-                  </button>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-2xl">
-                <h3 className="text-xl font-bold text-white mb-4">Session Progress</h3>
-                <div className="relative">
-                  <div className="w-full bg-white/20 rounded-full h-3">
-                    <div 
-                      className="bg-gradient-to-r from-emerald-400 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
-                      style={{ width: `${((1200 - timeRemaining) / 1200) * 100}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-xs text-white/60 mt-2">
-                    <span>Start</span>
-                    <span>20 min</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Info Panel */}
-          <div className="mt-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Precision Timing</h3>
-                <p className="text-white/70 text-sm">Millisecond accuracy with automatic speaker alerts</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Team Coordination</h3>
-                <p className="text-white/70 text-sm">Real-time Slack notifications and team alerts</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">Speaker Portal</h3>
-                <p className="text-white/70 text-sm">Dedicated speaker interfaces with personal timers</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="mt-12 text-center">
-            <div className="bg-gradient-to-r from-emerald-500/20 to-blue-500/20 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
-              <h2 className="text-3xl font-bold text-white mb-4">
-                Ready to run flawless events?
-              </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                Join event professionals who trust StageCue for precision timing and seamless coordination
-              </p>
-              <button 
-                onClick={() => window.location.href = '/signup'}
-                className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white text-lg font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-1 active:scale-95 transition-all duration-300"
-              >
-                Start Free Trial
-              </button>
-              <p className="text-white/60 mt-4 text-sm">
-                7-day free trial • Cancel anytime
-              </p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  const renderSpeakerPortal = () => (
+    <div className="space-y-8">
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full text-green-700 text-sm font-medium mb-4">
+          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+          Your session is live
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">AI in Healthcare: Future Perspectives</h1>
+        <p className="text-gray-600">Dr. Sarah Chen • Main Auditorium</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Speaker Timer */}
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 text-center">
+          <div className={`text-6xl font-mono font-bold mb-4 transition-colors duration-1000 ${getTimerColor()}`}>
+            {formatTime(timeRemaining)}
+          </div>
+          <div className="text-gray-600 text-lg mb-6">Time Remaining</div>
+          <div className="flex justify-center space-x-3">
+            <div className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+              On Track
+            </div>
+            <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+              Q&A Ready
+            </div>
+          </div>
+        </div>
+
+        {/* Speaker Notes */}
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+          <h3 className="font-bold text-gray-900 mb-4">Your Notes</h3>
+          <div className="space-y-3 text-sm">
+            <div className="p-3 bg-gray-50 rounded-lg">
+              <div className="font-medium text-gray-900 mb-1">Key Points</div>
+              <div className="text-gray-600">• AI diagnostic accuracy<br/>• Patient data privacy<br/>• Implementation challenges</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <div className="font-medium text-amber-800 mb-1">Timing Alerts</div>
+              <div className="text-amber-700">5-min warning at 20:00<br/>Hard stop at 15:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderEventSetup = () => (
+    <div className="space-y-8">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Event Configuration</h2>
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Event Name</label>
+              <input 
+                type="text" 
+                value="Tech Summit 2024" 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                readOnly
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Session Duration</label>
+              <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option>20 minutes</option>
+                <option>30 minutes</option>
+                <option>45 minutes</option>
+                <option>60 minutes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Warning Times</label>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <input type="checkbox" checked className="mr-2" readOnly />
+                  <span className="text-gray-700">5-minute warning</span>
+                </div>
+                <div className="flex items-center">
+                  <input type="checkbox" checked className="mr-2" readOnly />
+                  <span className="text-gray-700">2-minute warning</span>
+                </div>
+                <div className="flex items-center">
+                  <input type="checkbox" checked className="mr-2" readOnly />
+                  <span className="text-gray-700">Time's up alert</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Slack Integration</label>
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex items-center mb-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                  <span className="text-green-700 font-medium">Connected to #event-team</span>
+                </div>
+                <p className="text-green-600 text-sm">Auto-notifications enabled</p>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email Alerts</label>
+              <input 
+                type="email" 
+                value="moderators@event.com" 
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                readOnly
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Display Options</label>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <input type="checkbox" checked className="mr-2" readOnly />
+                  <span className="text-gray-700">Show speaker name</span>
+                </div>
+                <div className="flex items-center">
+                  <input type="checkbox" checked className="mr-2" readOnly />
+                  <span className="text-gray-700">Show session title</span>
+                </div>
+                <div className="flex items-center">
+                  <input type="checkbox" className="mr-2" readOnly />
+                  <span className="text-gray-700">Show attendee count</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Navigation */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <span className="text-xl font-bold text-gray-900">StageCue</span>
+              <div className="flex items-center space-x-2 bg-green-100 px-3 py-1 rounded-full ml-4">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-green-700 text-sm font-medium">Demo Mode</span>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <nav className="flex space-x-1">
+              {[
+                { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+                { id: 'live', label: 'Live Event', icon: '⏱️' },
+                { id: 'speaker', label: 'Speaker Portal', icon: '🎤' },
+                { id: 'setup', label: 'Event Setup', icon: '⚙️' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
+                    activeTab === tab.id
+                      ? 'bg-blue-100 text-blue-700 shadow-md'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="mr-2">{tab.icon}</span>
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'dashboard' && renderDashboard()}
+        {activeTab === 'live' && renderLiveEvent()}
+        {activeTab === 'speaker' && renderSpeakerPortal()}
+        {activeTab === 'setup' && renderEventSetup()}
+      </main>
     </div>
   );
 }
