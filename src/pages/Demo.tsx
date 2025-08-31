@@ -649,7 +649,7 @@ const SpeakerPortal = () => {
 
 type AppPage = "dashboard" | "moderator" | "speaker";
 
-export function StageCue() {
+export function Demo() {
   const [currentPage, setCurrentPage] = useState<AppPage>("dashboard");
 
   const navigationItems = [
