@@ -1143,7 +1143,6 @@ export function Demo() {
                       <button className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
                         <div className="font-medium text-green-900">Broadcast Update</div>
                         <div className="text-sm text-green-600">All team channels</div>
-                      </div>
                     </button>
                     </div>
                   </div>
