@@ -90,9 +90,6 @@ export function StageCue() {
                 Templates
               </button>
               <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
-                Team
-              </button>
-              <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">
                 Settings
               </button>
             </nav>
@@ -544,6 +541,7 @@ function LiveManagementStep() {
             <h3 className="font-semibold text-slate-900 mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <button
+                onClick={() => setShowSlackModal(true)}
                 onClick={() => {
                   setShowSlackAlert(true);
                   setTimeout(() => setShowSlackAlert(false), 4000);
