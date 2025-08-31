@@ -517,6 +517,7 @@ function LiveManagementStep() {
     }
   }, [showSlackSuccess]);
 
+  useEffect(() => {
     if (!isRunning) return;
 
     const interval = setInterval(() => {
