@@ -299,9 +299,6 @@ export function StageCue() {
                 <button
                   onClick={() => {
                     setAutoDemoEnabled(false); // Disable auto-demo when using controls
-                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
-                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
-                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
                     setTimeRemaining(currentStage.timeRemaining);
                     setIsRunning(true);
                   }}
@@ -377,7 +374,10 @@ export function StageCue() {
               </h3>
               <div className="space-y-3">
                 <button
-                  onClick={handleSlackNotification}
+                  onClick={() => {
+                    setAutoDemoEnabled(false); // Disable auto-demo when using controls
+                    handleSlackNotification();
+                  }}
                   className="w-full p-4 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors text-left"
                 >
                   <div className="flex items-center justify-between">
