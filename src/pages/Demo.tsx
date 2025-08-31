@@ -113,7 +113,6 @@ export function StageCue() {
   const [timeRemaining, setTimeRemaining] = useState(demoStages[0].timeRemaining);
   const [isRunning, setIsRunning] = useState(true);
   const [showSlackNotification, setShowSlackNotification] = useState(false);
-  const [autoDemoEnabled, setAutoDemoEnabled] = useState(true);
   const [viewMode, setViewMode] = useState<'organizer' | 'moderator' | 'speaker'>('organizer');
 
   const currentStage = demoStages[currentStageIndex];
@@ -127,29 +126,20 @@ export function StageCue() {
       setTimeRemaining(prev => {
         const newTime = Math.max(0, prev - 1);
         
-        // Auto-advance to next stage when timer hits 0 (only if auto-demo enabled)
-        if (newTime === 0 && autoDemoEnabled) {
-          setTimeout(() => {
-            const nextIndex = (currentStageIndex + 1) % demoStages.length;
-            setCurrentStageIndex(nextIndex);
-            setTimeRemaining(demoStages[nextIndex].timeRemaining);
-          }, 2000);
-        }
-        
         return newTime;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, currentStageIndex, autoDemoEnabled]);
+  }, [isRunning]);
 
-  // Auto-demo notifications
+  // Slack notifications at 5 minutes
   useEffect(() => {
-    if (timeRemaining === 5 * 60 && !showSlackNotification && autoDemoEnabled) {
+    if (timeRemaining === 5 * 60 && !showSlackNotification) {
       setShowSlackNotification(true);
       setTimeout(() => setShowSlackNotification(false), 4000);
     }
-  }, [timeRemaining, showSlackNotification, autoDemoEnabled]);
+  }, [timeRemaining, showSlackNotification]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -179,7 +169,6 @@ export function StageCue() {
   };
 
   const handleStageChange = (index: number) => {
-    setAutoDemoEnabled(false);
     setCurrentStageIndex(index);
     setTimeRemaining(demoStages[index].timeRemaining);
     setIsRunning(true);
@@ -191,7 +180,6 @@ export function StageCue() {
   };
 
   const addTime = (minutes: number) => {
-    setAutoDemoEnabled(false);
     setTimeRemaining(prev => prev + (minutes * 60));
   };
 
@@ -265,7 +253,7 @@ export function StageCue() {
             <button
               onClick={() => {
                 setAutoDemoEnabled(false);
-                setTimeRemaining(currentStage.totalDuration * 60);
+                setTimeRemaining(30 * 60); // Reset to 30:00
                 setIsRunning(true);
               }}
               className="px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors"
@@ -556,18 +544,6 @@ export function StageCue() {
                   {mode} View
                 </button>
               ))}
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setAutoDemoEnabled(!autoDemoEnabled)}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                  autoDemoEnabled
-                    ? 'bg-green-100 text-green-700 border border-green-200'
-                    : 'bg-slate-100 text-slate-600 border border-slate-200'
-                }`}
-              >
-                Auto Demo: {autoDemoEnabled ? 'ON' : 'OFF'}
-              </button>
             </div>
           </div>
         </div>
