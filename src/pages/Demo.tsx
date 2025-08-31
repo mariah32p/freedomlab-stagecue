@@ -235,6 +235,8 @@ const ModeratorView = ({ timeRemaining, currentMinute, onAdjustTime }: {
   timeRemaining: number;
   currentMinute: number;
   onAdjustTime: (seconds: number) => void;
+  setShowSlackMessage: (show: boolean) => void;
+  setAutoDemo: (auto: boolean) => void;
 }) => (
   <div className="space-y-8 animate-fade-in">
     <div className="grid lg:grid-cols-2 gap-8">
@@ -508,6 +510,7 @@ export function StageCue() {
   const [isRunning, setIsRunning] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('organizer');
   const [autoDemo, setAutoDemo] = useState(true);
+  const [demoStep, setDemoStep] = useState(0);
   const [showSlackMessage, setShowSlackMessage] = useState(false);
   const currentMinute = useMemo(() => {
     const elapsed = INITIAL_TIME_SECONDS - timeRemaining;
@@ -521,6 +524,17 @@ export function StageCue() {
     return 'text-blue-600';
   }, [timeRemaining]);
   
+  // --- HANDLERS ---
+  const handleResetTimer = () => {
+    setTimeRemaining(INITIAL_TIME_SECONDS);
+    setAutoDemo(false);
+  };
+
+  const handleAdjustTime = (seconds: number) => {
+    setTimeRemaining(prev => Math.max(0, prev + seconds));
+    setAutoDemo(false);
+  };
+
   // --- SIDE EFFECTS ---
   // Effect for auto demo cycling
   useEffect(() => {
@@ -574,6 +588,8 @@ export function StageCue() {
             timeRemaining={timeRemaining}
             currentMinute={currentMinute}
             onAdjustTime={handleAdjustTime}
+            setShowSlackMessage={setShowSlackMessage}
+            setAutoDemo={setAutoDemo}
           />
         );
       case 'speaker': 
