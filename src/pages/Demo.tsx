@@ -51,6 +51,16 @@ export function Demo() {
   const [showSlackModal, setShowSlackModal] = useState(false);
   const [showSpeakerAlert, setShowSpeakerAlert] = useState(false);
   const [showExtendModal, setShowExtendModal] = useState(false);
+  const [speakerNotes, setSpeakerNotes] = useState<Record<number, string>>({
+    25: "Opening: Welcome everyone, introduce the topic",
+    20: "Main content: Start with current healthcare challenges",
+    15: "Case studies: Show 3 real-world examples",
+    10: "Future trends: AI diagnostic tools",
+    5: "Q&A preparation: Summarize key points",
+    2: "Wrap up: Thank audience, mention next speaker"
+  });
+  const [newNoteMinute, setNewNoteMinute] = useState('');
+  const [newNoteText, setNewNoteText] = useState('');
   const [sessionTitle, setSessionTitle] = useState('AI in Healthcare: Future Perspectives');
   const [speakerName, setSpeakerName] = useState('Dr. Sarah Chen');
   const [sessionNotes, setSessionNotes] = useState('Key points: AI diagnostic accuracy, patient data privacy, implementation challenges');
@@ -115,6 +125,38 @@ export function Demo() {
       }, 1500);
     }
   }, [currentStep]);
+
+  const addTime = (minutes: number) => {
+    setTimeRemaining(prev => prev + (minutes * 60));
+    addToActivityFeed(`Added ${minutes} minute${minutes !== 1 ? 's' : ''} to timer`);
+  };
+
+  const subtractTime = (minutes: number) => {
+    setTimeRemaining(prev => Math.max(0, prev - (minutes * 60)));
+    addToActivityFeed(`Removed ${minutes} minute${minutes !== 1 ? 's' : ''} from timer`);
+  };
+
+  const addSpeakerNote = () => {
+    const minute = parseInt(newNoteMinute);
+    if (minute && newNoteText.trim() && minute > 0 && minute <= 30) {
+      setSpeakerNotes(prev => ({
+        ...prev,
+        [minute]: newNoteText.trim()
+      }));
+      setNewNoteMinute('');
+      setNewNoteText('');
+      addToActivityFeed(`Added note for ${minute}-minute mark`);
+    }
+  };
+
+  const removeSpeakerNote = (minute: number) => {
+    setSpeakerNotes(prev => {
+      const updated = { ...prev };
+      delete updated[minute];
+      return updated;
+    });
+    addToActivityFeed(`Removed note for ${minute}-minute mark`);
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(Math.abs(seconds) / 60);
