@@ -1,58 +1,13 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { products } from '../stripe-config';
-import { Alert } from '../components/Alert';
 
 export function Pricing() {
-  const [loading, setLoading] = useState<string | null>(null);
-  const [error, setError] = useState('');
-  const { user, session } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleStartTrial = () => {
     window.scrollTo(0, 0);
     navigate('/signup');
-  };
-
-  const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
-    if (!user || !session) {
-      navigate('/login');
-      return;
-    }
-
-    setLoading(priceId);
-    setError('');
-
-    try {
-      const response = await fetch(`${import.meta.env.SUPABASE_URL}/functions/v1/stripe-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          price_id: priceId,
-          success_url: `${window.location.origin}/success`,
-          cancel_url: `${window.location.origin}/pricing`,
-          mode,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(null);
-    }
   };
 
   const basicFeatures = [
@@ -84,14 +39,6 @@ export function Pricing() {
             Professional event timing system for conferences, workshops, and live events
           </p>
         </div>
-
-        {error && (
-          <div className="mb-8 max-w-md mx-auto">
-            <Alert type="error">
-              {error}
-            </Alert>
-          </div>
-        )}
 
         <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Basic Plan */}
