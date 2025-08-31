@@ -288,7 +288,7 @@ export function StageCue() {
                       <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full font-bold">
                         NEXT
                       </span>
-                    <p className="text-gray-700 text-sm leading-relaxed">{note.text}</p>
+                    )}
                   </div>
                   <p className="text-gray-700 text-sm leading-relaxed">{note.text}</p>
                 </div>
