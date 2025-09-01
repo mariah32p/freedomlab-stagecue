@@ -11,7 +11,7 @@ export function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 lg:py-32">
+      <section className="relative overflow-hidden py-12 lg:py-16">
         <div className="absolute inset-0 bg-dots-pattern"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
