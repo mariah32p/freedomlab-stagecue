@@ -316,55 +316,15 @@ function SpeakerNotesStep() {
 // ===================================================================================
 function LiveManagementStep() {
   const [timeRemaining, setTimeRemaining] = useState(18 * 60 + 42);
-  const [showSlackModal, setShowSlackModal] = useState(false);
-  const [slackMessage, setSlackMessage] = useState('@alex I see Jennifer has had her hand raised for a bit. Take it now or wait for Q&A?');
-  
-  // FIX: A single, simple boolean to control the success alert.
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  
-  // Use a ref to hold the timer ID. This is crucial for reliable clearing.
-  const notificationTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    // Delay the modal's appearance.
-    const modalTimer = setTimeout(() => setShowSlackModal(true), 6000);
     const countdownTimer = setInterval(() => setTimeRemaining(prev => Math.max(0, prev - 1)), 1000);
     
-    // This cleanup function runs when the component unmounts, preventing memory leaks.
     return () => {
-      clearTimeout(modalTimer);
       clearInterval(countdownTimer);
-      if (notificationTimer.current) {
-        clearTimeout(notificationTimer.current); // Clear notification timer on unmount
-      }
     };
   }, []);
 
-  // FIX: This is the new, simplified logic for handling the alert.
-  const handleSendAlert = () => {
-    setShowSlackModal(false);
-
-    // 1. Always clear any previous timer before starting a new one.
-    if (notificationTimer.current) {
-      clearTimeout(notificationTimer.current);
-    }
-
-    // 2. Show the notification.
-    setShowSuccessAlert(true);
-    
-    // 3. Set a timer to hide it after 5 seconds. Store the timer ID in our ref.
-    notificationTimer.current = setTimeout(() => {
-      setShowSuccessAlert(false);
-    }, 5000); // Stays visible for 5 seconds
-  };
-
-  // FIX: A simple manual close function.
-  const handleManualClose = () => {
-    if (notificationTimer.current) {
-      clearTimeout(notificationTimer.current); // Cancel the auto-close timer
-    }
-    setShowSuccessAlert(false); // Hide the alert immediately
-  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -382,28 +342,9 @@ function LiveManagementStep() {
         </div>
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"><h3 className="font-semibold text-slate-900 mb-4">Team Status</h3><div className="space-y-3"><div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg"><div className="w-2 h-2 bg-green-500 rounded-full"></div><div><div className="text-sm font-medium">Moderator Ready</div></div></div><div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><div><div className="text-sm font-medium">Next Speaker</div></div></div></div></div>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"><h3 className="font-semibold text-slate-900 mb-4">Quick Actions</h3><div className="space-y-3"><button onClick={() => setShowSlackModal(true)} className="w-full p-3 bg-slate-50 hover:bg-slate-100 rounded-lg text-left"><div className="font-medium">Send Slack Alert</div></button><button className="w-full p-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-left"><div className="font-medium text-purple-900">Next Session</div></button></div></div>
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"><h3 className="font-semibold text-slate-900 mb-4">Quick Actions</h3><div className="space-y-3"><button className="w-full p-3 bg-slate-50 hover:bg-slate-100 rounded-lg text-left"><div className="font-medium">Send Slack Alert</div></button><button className="w-full p-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-left"><div className="font-medium text-purple-900">Next Session</div></button></div></div>
         </div>
       </div>
-      
-      {/* The Modal itself */}
-      {showSlackModal && (<div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"><div className="bg-white rounded-xl shadow-2xl max-w-md w-full"><div className="p-6"><div className="flex items-center justify-between mb-4"><div className="flex items-center space-x-3"><div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg></div><h3 className="text-lg font-semibold text-slate-900">Send Slack Alert</h3></div><button onClick={() => setShowSlackModal(false)} className="text-slate-400 hover:text-slate-600"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></button></div><div className="space-y-4"><div><label className="block text-sm font-medium text-slate-700 mb-2">Channel</label><select className="w-full px-3 py-2 border border-slate-300 rounded-lg"><option>#launch-team</option></select></div><div><label className="block text-sm font-medium text-slate-700 mb-2">Message</label><textarea value={slackMessage} onChange={(e) => setSlackMessage(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg h-20 text-sm"/></div><div className="flex space-x-3 pt-2"><button onClick={handleSendAlert} className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700">Send Alert</button><button onClick={() => setShowSlackModal(false)} className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-medium hover:bg-slate-50">Cancel</button></div></div></div></div></div>)}
-      
-      {/* The Success Notification (Simplified) */}
-      {showSuccessAlert && (
-        <div className="fixed top-6 right-6 z-50 animate-fade-in">
-          <div className="bg-white rounded-lg shadow-xl border border-slate-200 p-4 max-w-sm">
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center shrink-0"><svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg></div>
-              <div className="flex-1">
-                <div className="font-medium text-slate-900 mb-1">Alert Sent Successfully</div>
-                <div className="text-sm text-slate-600">Message delivered to #launch-team</div>
-              </div>
-              <button onClick={handleManualClose} className="text-slate-400 hover:text-slate-600 shrink-0"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
