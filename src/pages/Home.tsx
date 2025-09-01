@@ -319,45 +319,45 @@ export function Home() {
           {/* Team Notifications Mockup */}
           <div className="mt-12">
             <h3 className="text-2xl font-bold text-navy-900 mb-6 text-center">Real-time Team Notifications</h3>
-            <div className="bg-white rounded-2xl shadow-xl p-6 max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-2xl mx-auto">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center">
-                  <span className="text-white text-sm font-bold">#</span>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded flex items-center justify-center">
+                  <span className="text-white text-xs sm:text-sm font-bold">#</span>
                 </div>
-                <span className="font-semibold text-slate-900">#event-team</span>
-                <span className="text-sm text-slate-500">Slack</span>
+                <span className="text-sm sm:text-base font-semibold text-slate-900">#event-team</span>
+                <span className="text-xs sm:text-sm text-slate-500">Slack</span>
               </div>
               
               <div className="space-y-3">
-                <div className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg">
-                  <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start space-x-2 sm:space-x-3 p-3 bg-slate-50 rounded-lg">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-medium text-slate-900">StageCue</span>
+                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
+                      <span className="text-sm sm:text-base font-medium text-slate-900">StageCue</span>
                       <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded">BOT</span>
                       <span className="text-xs text-slate-500">2:34 PM</span>
                     </div>
-                    <div className="text-sm text-slate-700">⏰ <strong>5 minutes remaining</strong> for "AI in Healthcare" session</div>
+                    <div className="text-xs sm:text-sm text-slate-700">⏰ <strong>5 minutes remaining</strong> for "AI in Healthcare" session</div>
                   </div>
                 </div>
                 
-                <div className="flex items-start space-x-3 p-3 bg-amber-50 rounded-lg">
-                  <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-start space-x-2 sm:space-x-3 p-3 bg-amber-50 rounded-lg">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-medium text-slate-900">StageCue</span>
+                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
+                      <span className="text-sm sm:text-base font-medium text-slate-900">StageCue</span>
                       <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded">BOT</span>
                       <span className="text-xs text-slate-500">2:39 PM</span>
                     </div>
-                    <div className="text-sm text-slate-700">🎤 Next up: <strong>Alex Chen</strong> - "Technical Architecture" in 5 minutes</div>
+                    <div className="text-xs sm:text-sm text-slate-700">🎤 Next up: <strong>Alex Chen</strong> - "Technical Architecture" in 5 minutes</div>
                   </div>
                 </div>
               </div>
@@ -382,12 +382,12 @@ export function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">MW</span>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">MW</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">Mariah W.</div>
-                  <div className="text-sm text-navy-600">Technology Conference Director</div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Mariah W.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">Technology Conference Director</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -397,19 +397,19 @@ export function Home() {
                   </svg>
                 ))}
               </div>
-              <p className="text-navy-700 italic">
+              <p className="text-sm sm:text-base text-navy-700 italic">
                 "StageCue transformed our annual tech conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
               </p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">DR</span>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">DR</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">Diane R.</div>
-                  <div className="text-sm text-navy-600">Software Summit Organizer</div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Diane R.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">Software Summit Organizer</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -419,19 +419,19 @@ export function Home() {
                   </svg>
                 ))}
               </div>
-              <p className="text-navy-700 italic">
+              <p className="text-sm sm:text-base text-navy-700 italic">
                 "The speaker coordination features are incredible. Our software conference speakers love having their notes synced with the countdown timer."
               </p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">NR</span>
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">NR</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">Nathan R.</div>
-                  <div className="text-sm text-navy-600">IT Workshop Coordinator</div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Nathan R.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">IT Workshop Coordinator</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -441,7 +441,7 @@ export function Home() {
                   </svg>
                 ))}
               </div>
-              <p className="text-navy-700 italic">
+              <p className="text-sm sm:text-base text-navy-700 italic">
                 "Setup took 10 minutes and saved us hours of coordination headaches for our IT training workshops. The Slack integration is a game-changer."
               </p>
             </div>
@@ -465,11 +465,11 @@ export function Home() {
             {/* Basic Plan */}
             <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:shadow-2xl transition-all duration-300">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
-                <p className="text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
+                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-navy-900">$29</span>
-                  <span className="text-lg font-medium text-navy-500">/month</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$29</span>
+                  <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
                 </div>
                 <div className="inline-flex items-center px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium mb-6">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -485,7 +485,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Up to 10 active timers</span>
+                  <span className="text-sm sm:text-base text-navy-700">Up to 10 active timers</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -493,7 +493,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Timer controls via web dashboard</span>
+                  <span className="text-sm sm:text-base text-navy-700">Timer controls via web dashboard</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -501,7 +501,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Speaker notes management</span>
+                  <span className="text-sm sm:text-base text-navy-700">Speaker notes management</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -509,7 +509,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Basic Slack notifications</span>
+                  <span className="text-sm sm:text-base text-navy-700">Basic Slack notifications</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -517,7 +517,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Save/reuse timer configurations</span>
+                  <span className="text-sm sm:text-base text-navy-700">Save/reuse timer configurations</span>
                 </div>
               </div>
             </div>
@@ -530,11 +530,11 @@ export function Home() {
                 </span>
               </div>
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
-                <p className="text-navy-600 mb-6">Perfect for conferences and larger events</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
+                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for conferences and larger events</p>
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-navy-900">$49</span>
-                  <span className="text-lg font-medium text-navy-500">/month</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$49</span>
+                  <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
                 </div>
                 <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium mb-6">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -550,7 +550,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="font-semibold text-navy-900">Everything in Basic, plus:</span>
+                  <span className="text-sm sm:text-base font-semibold text-navy-900">Everything in Basic, plus:</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
@@ -558,7 +558,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Unlimited active timers</span>
+                  <span className="text-sm sm:text-base text-navy-700">Unlimited active timers</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
@@ -566,7 +566,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Custom moderator links</span>
+                  <span className="text-sm sm:text-base text-navy-700">Custom moderator links</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
@@ -574,7 +574,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Speaker self-service links</span>
+                  <span className="text-sm sm:text-base text-navy-700">Speaker self-service links</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
@@ -582,7 +582,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Advanced Slack notifications</span>
+                  <span className="text-sm sm:text-base text-navy-700">Advanced Slack notifications</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
@@ -590,7 +590,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-navy-700">Timer + speaker templates</span>
+                  <span className="text-sm sm:text-base text-navy-700">Timer + speaker templates</span>
                 </div>
               </div>
             </div>
