@@ -50,9 +50,9 @@ export function Home() {
             {/* Right Side Mockup */}
             <div className="relative">
               {/* Multi-screen Event Management Dashboard */}
-              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700">
+              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700 h-[600px]">
                 {/* Main Dashboard */}
-                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden h-[500px]">
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden h-full">
                   {/* Browser Header */}
                   <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-4 py-3 flex items-center space-x-2 border-b border-slate-300">
                     <div className="flex space-x-2">
@@ -72,7 +72,6 @@ export function Home() {
                       <div className="flex items-center space-x-3">
                         <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
                         <span className="text-sm font-semibold text-slate-900">LIVE: Tech Summit 2025</span>
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">347 attendees</span>
                       </div>
                       <div className="text-xs text-slate-500">9:42 AM PST</div>
                     </div>
@@ -134,7 +133,7 @@ export function Home() {
                     </div>
                     
                     {/* Live Actions */}
-                    <div className="flex space-x-3">
+                    <div className="flex space-x-3 mb-6">
                       <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Extend +5min
                       </button>
@@ -144,6 +143,20 @@ export function Home() {
                       <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Next Session
                       </button>
+                    </div>
+                    
+                    {/* Speaker Notes Preview */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-slate-700 mb-3">Current Speaker Notes</h4>
+                      <div className="space-y-2">
+                        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="text-xs font-medium text-blue-600">12:30</span>
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Essential</span>
+                          </div>
+                          <div className="text-sm text-blue-800">Introduce new AI diagnostic tools</div>
+                        </div>
+                      </div>
                     </div>
                     
                     {/* Team Status */}
@@ -166,8 +179,8 @@ export function Home() {
                 </div>
                 
                 <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-xl shadow-xl p-3 animate-pulse">
-                  <div className="text-xs font-bold">347 Attendees</div>
-                  <div className="text-xs opacity-90">Watching Live</div>
+                  <div className="text-xs font-bold">2 Sessions</div>
+                  <div className="text-xs opacity-90">Running Live</div>
                 </div>
                 
                 <div className="absolute top-1/2 -right-8 bg-white rounded-lg shadow-lg border border-slate-200 p-2 transform -translate-y-1/2 animate-slide-in-right">
