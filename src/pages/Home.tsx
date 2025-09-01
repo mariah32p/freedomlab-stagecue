@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { StageCue } from './Demo';
 
 export function Home() {
   const navigate = useNavigate();
@@ -213,6 +214,13 @@ export function Home() {
             <p className="text-xl text-navy-600 max-w-3xl mx-auto">
               Watch how StageCue transforms event timing from chaotic to seamless
             </p>
+          </div>
+          
+          {/* Interactive Demo */}
+          <div className="bg-slate-100 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-inner">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <StageCue />
+            </div>
           </div>
         </div>
       </section>
