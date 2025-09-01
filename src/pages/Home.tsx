@@ -49,76 +49,102 @@ export function Home() {
             
             {/* Right Side Mockup */}
             <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
-                {/* Browser Header */}
-                <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-4 py-3 flex items-center space-x-2 border-b border-slate-300">
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                  </div>
-                  <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-slate-500 ml-4 shadow-inner">
-                    stagecue.com/event/q1-launch
-                  </div>
-                </div>
-                
-                {/* Mockup Content */}
-                <div className="p-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-teal-50 relative overflow-hidden">
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-4 left-4 w-32 h-32 bg-gradient-to-br from-teal-400 to-purple-400 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-4 right-4 w-24 h-24 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full blur-2xl"></div>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="relative z-10">
-                  <div className="text-center mb-6">
-                    <div className="text-7xl font-mono font-bold bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent mb-3 tracking-tight">18:42</div>
-                    <div className="text-slate-700 font-medium">Time Remaining</div>
-                  </div>
-                  
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-5 mb-6 shadow-lg border border-white/50">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-md">
-                        <span className="text-white font-bold text-sm">SM</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-900">Sarah Martinez</div>
-                        <div className="text-sm text-slate-600">Project Overview & Timeline</div>
-                      </div>
-                      <div className="ml-auto">
-                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                      </div>
+              {/* Multi-screen Event Management Dashboard */}
+              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700">
+                {/* Main Dashboard */}
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+                  {/* Browser Header */}
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-4 py-3 flex items-center space-x-2 border-b border-slate-300">
+                    <div className="flex space-x-2">
+                      <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-slate-500 ml-4 shadow-inner">
+                      stagecue.com/live/tech-summit-2025
                     </div>
                   </div>
                   
-                  <div className="flex space-x-3">
-                    <button className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                      Pause
-                    </button>
-                    <button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                      +5 min
-                    </button>
-                    <button className="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                      Next
-                    </button>
-                  </div>
+                  {/* Dashboard Content */}
+                  <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
+                    {/* Live Event Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm font-semibold text-slate-900">LIVE: Tech Summit 2025</span>
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">347 attendees</span>
+                      </div>
+                      <div className="text-xs text-slate-500">9:42 AM PST</div>
+                    </div>
+                    
+                    {/* Multi-Session Grid */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      {/* Main Stage */}
+                      <div className="bg-white rounded-xl p-4 shadow-lg border-2 border-teal-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-semibold text-teal-600 uppercase tracking-wide">Main Stage</span>
+                          <div className="text-2xl font-mono font-bold text-teal-600">12:34</div>
+                        </div>
+                        <div className="text-sm font-medium text-slate-900 mb-1">AI in Healthcare</div>
+                        <div className="text-xs text-slate-600 mb-3">Dr. Emily Chen</div>
+                        <div className="w-full bg-teal-100 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-teal-500 to-teal-600 h-2 rounded-full" style={{width: '75%'}}></div>
+                        </div>
+                      </div>
+                      
+                      {/* Workshop Room */}
+                      <div className="bg-white rounded-xl p-4 shadow-lg border border-slate-200">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Workshop A</span>
+                          <div className="text-2xl font-mono font-bold text-purple-600">08:15</div>
+                        </div>
+                        <div className="text-sm font-medium text-slate-900 mb-1">React Best Practices</div>
+                        <div className="text-xs text-slate-600 mb-3">Alex Rodriguez</div>
+                        <div className="w-full bg-purple-100 rounded-full h-2">
+                          <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style={{width: '45%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Live Actions */}
+                    <div className="flex space-x-3">
+                      <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Extend +5min
+                      </button>
+                      <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Alert Team
+                      </button>
+                      <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Next Session
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Floating notification */}
-              <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-2xl border border-slate-200 p-4 max-w-xs animate-slide-in-right">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shrink-0 shadow-md">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-xl border border-slate-200 p-3 animate-bounce">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-semibold text-slate-900">Live Updates</span>
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">Slack Alert Sent</div>
-                    <div className="text-xs text-slate-600">#launch-team notified</div>
-                    <div className="text-xs text-green-600 font-medium">✓ Delivered</div>
+                </div>
+                
+                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-xl shadow-xl p-3 animate-pulse">
+                  <div className="text-xs font-bold">347 Attendees</div>
+                  <div className="text-xs opacity-90">Watching Live</div>
+                </div>
+                
+                <div className="absolute top-1/2 -right-8 bg-white rounded-lg shadow-lg border border-slate-200 p-2 transform -translate-y-1/2 animate-slide-in-right">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="text-xs">
+                      <div className="font-semibold text-slate-900">Slack Alert</div>
+                      <div className="text-slate-600">Sent to #event-team</div>
+                    </div>
                   </div>
                 </div>
               </div>
