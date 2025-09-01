@@ -65,9 +65,10 @@ export function GetStarted() {
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Checkout error:', err);
-      setError(err.message);
+      const message = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(message);
     } finally {
       setLoading(false);
     }

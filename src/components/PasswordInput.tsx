@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
 interface PasswordInputProps {
   id: string;
   name: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   autoComplete?: string;
   required?: boolean;
