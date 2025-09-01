@@ -99,18 +99,6 @@ export function StageCue() {
             style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
           ></div>
         </div>
-        <div className={`flex justify-between mt-2 ${isMobile ? 'text-xs' : ''}`}>
-          {demoSteps.map((step, index) => (
-            <div 
-              key={step.id}
-              className={`${isMobile ? 'text-xs' : 'text-xs'} font-medium transition-colors duration-300 ${
-                index <= currentStep ? 'text-teal-600' : 'text-slate-400'
-              }`}
-            >
-              {step.title}
-            </div>
-          ))}
-        </div>
       </div>
       
       <header className="bg-white border-b border-slate-200 px-3 sm:px-6 py-3 sm:py-4">
