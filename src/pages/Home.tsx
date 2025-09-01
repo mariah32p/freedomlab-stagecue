@@ -541,8 +541,8 @@ export function Home() {
         </div>
       </section>
 
-      {/* Demo Section */}
-      <section className="relative -mt-16 pb-24">
+      {/* Demo Introduction */}
+      <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 blur-3xl transform scale-110"></div>
@@ -1188,6 +1188,10 @@ export function Home() {
             Cancel anytime
           </p>
         </div>
+      </section>
+
+      {/* Demo Section */}
+      <section className="py-16 bg-slate-50">
       </section>
     </div>
   );
