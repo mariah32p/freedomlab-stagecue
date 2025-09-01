@@ -55,9 +55,6 @@ export function ResetPassword() {
       }
 
       setSuccess(true);
-      setTimeout(() => {
-        navigate('/login?message=Password updated successfully! Please sign in with your new password.');
-      }, 2000);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -84,61 +81,72 @@ export function ResetPassword() {
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <Alert type="error">
-              {error}
-            </Alert>
-          )}
-          {success && (
+        {success ? (
+          <div className="mt-8 space-y-6">
             <Alert type="success">
-              Password updated successfully! Redirecting to sign in...
+              Password updated successfully!
             </Alert>
-          )}
-          
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                New Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="input mt-1"
-                placeholder="Enter your new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm New Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                className="input mt-1"
-                placeholder="Confirm your new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div>
             <button
-              type="submit"
-              disabled={loading}
+              onClick={() =>
+                navigate('/login?message=Password updated successfully! Please sign in with your new password.')
+              }
               className="btn btn-primary w-full py-3"
             >
-              {loading ? 'Updating password...' : 'Update password'}
+              Go to sign in
             </button>
           </div>
-        </form>
+        ) : (
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <Alert type="error">
+                {error}
+              </Alert>
+            )}
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                  New Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  className="input mt-1"
+                  placeholder="Enter your new password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                  Confirm New Password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  className="input mt-1"
+                  placeholder="Confirm your new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full py-3"
+              >
+                {loading ? 'Updating password...' : 'Update password'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
