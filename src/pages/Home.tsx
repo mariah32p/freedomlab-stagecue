@@ -15,29 +15,123 @@ export function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/30"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6 leading-tight">
-              Professional Event Timing
-              <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mt-2">
-                Made Simple
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
-              Keep speakers on track, coordinate your team, and deliver flawless events with automated timing and real-time notifications.
-            </p>
-            <div className="mb-12">
-              <button
-                onClick={handleStartTrial}
-                className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-              >
-                <span className="relative z-10">Start Free Trial</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
-              <div className="flex items-center justify-center text-slate-500 text-sm mt-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side Content */}
+            <div className="max-w-xl">
+              {/* Badge */}
+              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                7-Day Free Trial Available
+              </div>
+              
+              {/* Header Text */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+                Professional Event Timing
+                <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 bg-clip-text text-transparent mt-2">
+                  Made Simple
+                </span>
+              </h1>
+              
+              {/* Description */}
+              <p className="text-lg md:text-xl text-slate-600 mb-8 leading-relaxed font-light">
+                Keep speakers on track, coordinate your team, and deliver flawless events with automated timing and real-time notifications.
+              </p>
+              
+              {/* CTA Button */}
+              <div className="mb-6">
+                <button
+                  onClick={handleStartTrial}
+                  className="group relative px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                >
+                  <span className="relative z-10">Start Free Trial</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+              </div>
+              
+              {/* Trial Info */}
+              <div className="flex items-center text-slate-500 text-sm">
                 <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 7-day free trial • Cancel anytime
+              </div>
+            </div>
+            
+            {/* Right Side Mockup */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 blur-3xl transform scale-110"></div>
+              <div className="relative bg-white rounded-3xl shadow-2xl border border-slate-200/50 overflow-hidden">
+                {/* Browser Chrome */}
+                <div className="bg-slate-100 px-4 py-3 border-b border-slate-200 flex items-center space-x-2">
+                  <div className="flex space-x-1.5">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                  <div className="flex-1 text-center">
+                    <div className="bg-white rounded-md px-4 py-1 text-xs text-slate-500 inline-block shadow-sm border">
+                      app.stagecue.com/live
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Timer Interface */}
+                <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 p-8 text-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+                  <div className="relative">
+                    {/* Live Indicator */}
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="flex items-center space-x-2 bg-red-500/20 backdrop-blur-sm px-3 py-1 rounded-full border border-red-400/30">
+                        <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                        <span className="text-red-200 text-sm font-medium">LIVE</span>
+                      </div>
+                    </div>
+                    
+                    {/* Main Timer */}
+                    <div className="text-5xl md:text-6xl font-mono font-bold text-white mb-3 tracking-wider">18:42</div>
+                    <div className="text-white/80 text-lg mb-6 font-medium">Session Time Remaining</div>
+                    
+                    {/* Speaker Info */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 mb-6">
+                      <div className="text-white/60 text-xs mb-1 uppercase tracking-wide">Current Speaker</div>
+                      <div className="text-white text-lg font-semibold">Dr. Sarah Chen</div>
+                      <div className="text-white/80 text-sm">AI in Healthcare</div>
+                    </div>
+                    
+                    {/* Control Buttons */}
+                    <div className="flex justify-center space-x-3">
+                      <button className="px-4 py-2 bg-green-500/80 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors backdrop-blur-sm">
+                        Start
+                      </button>
+                      <button className="px-4 py-2 bg-yellow-500/80 hover:bg-yellow-500 text-white rounded-lg text-sm font-medium transition-colors backdrop-blur-sm">
+                        Pause
+                      </button>
+                      <button className="px-4 py-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg text-sm font-medium transition-colors backdrop-blur-sm">
+                        Stop
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Quick Stats */}
+                <div className="bg-white p-6">
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">3/8</div>
+                      <div className="text-xs text-slate-500">Sessions</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600">247</div>
+                      <div className="text-xs text-slate-500">Attendees</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-teal-600">5</div>
+                      <div className="text-xs text-slate-500">Team</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
