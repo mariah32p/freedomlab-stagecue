@@ -52,7 +52,7 @@ export function Home() {
               {/* Multi-screen Event Management Dashboard */}
               <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700">
                 {/* Main Dashboard */}
-                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden h-[500px]">
                   {/* Browser Header */}
                   <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-4 py-3 flex items-center space-x-2 border-b border-slate-300">
                     <div className="flex space-x-2">
@@ -66,7 +66,7 @@ export function Home() {
                   </div>
                   
                   {/* Dashboard Content */}
-                  <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
+                  <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50/30 h-full">
                     {/* Live Event Header */}
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center space-x-3">
@@ -106,6 +106,33 @@ export function Home() {
                       </div>
                     </div>
                     
+                    {/* Upcoming Sessions */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold text-slate-700 mb-3">Next Up</h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-slate-200">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                            <div>
+                              <div className="text-sm font-medium text-slate-900">Coffee Break</div>
+                              <div className="text-xs text-slate-600">15 minutes</div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-500">10:30 AM</div>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-slate-200">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <div>
+                              <div className="text-sm font-medium text-slate-900">Keynote: Future of AI</div>
+                              <div className="text-xs text-slate-600">45 minutes</div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-500">10:45 AM</div>
+                        </div>
+                      </div>
+                    </div>
+                    
                     {/* Live Actions */}
                     <div className="flex space-x-3">
                       <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
@@ -117,6 +144,15 @@ export function Home() {
                       <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Next Session
                       </button>
+                    </div>
+                    
+                    {/* Team Status */}
+                    <div className="mt-6">
+                      <div className="flex items-center space-x-4 text-xs">
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-green-500 rounded-full"></div><span className="text-slate-600">Moderator Ready</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><span className="text-slate-600">Speakers Online</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-purple-500 rounded-full"></div><span className="text-slate-600">Tech Support</span></div>
+                      </div>
                     </div>
                   </div>
                 </div>
