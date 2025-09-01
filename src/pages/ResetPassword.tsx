@@ -1,7 +1,6 @@
 import { useState, useEffect, type FormEvent } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
 import { PasswordInput } from '../components/PasswordInput';
 
@@ -11,33 +10,19 @@ export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [isValidResetSession, setIsValidResetSession] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { user } = useAuth();
 
   useEffect(() => {
     // Check if we have a valid user session for password reset
-    if (user) {
-      // Check if this is a password recovery session
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          setIsValidResetSession(true);
-        } else {
-          setError('Invalid reset session. Please request a new password reset.');
-        }
-      });
-    } else {
-      // Wait a moment for auth state to potentially update from URL fragments
-      const timer = setTimeout(() => {
-        if (!user) {
-          setError('Invalid reset link. Please request a new password reset.');
-        }
-      }, 2000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [user]);
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        setError('Invalid reset session. Please request a new password reset.');
+      }
+    };
+
+    checkSession();
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
