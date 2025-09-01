@@ -51,6 +51,7 @@ export function Login() {
       setError(error.message);
     } else {
       setResetSuccess(true);
+      setShowForgotPassword(false);
     }
 
     setResetLoading(false);

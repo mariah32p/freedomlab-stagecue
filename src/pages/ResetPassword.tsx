@@ -13,11 +13,18 @@ export function ResetPassword() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    // Check if we have the required tokens
+    // Set the session from URL parameters for password reset
     const accessToken = searchParams.get('access_token');
     const refreshToken = searchParams.get('refresh_token');
+    const type = searchParams.get('type');
 
-    if (!accessToken || !refreshToken) {
+    if (type === 'recovery' && accessToken && refreshToken) {
+      // Set the session for password reset
+      supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+    } else if (!accessToken || !refreshToken) {
       setError('Invalid reset link. Please request a new password reset.');
     }
   }, [searchParams]);
