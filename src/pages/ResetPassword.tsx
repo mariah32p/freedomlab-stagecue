@@ -13,14 +13,22 @@ export function ResetPassword() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
+    // Debug the full URL
+    console.log('Full URL:', window.location.href);
+    console.log('Hash:', window.location.hash);
+    console.log('Search params:', window.location.search);
+    
     // Parse URL fragments for password reset tokens
     const parseHashParams = () => {
       const hash = window.location.hash;
+      console.log('Raw hash:', hash);
       if (!hash) return {};
       
       const params: Record<string, string> = {};
       const hashString = hash.substring(1); // Remove the #
+      console.log('Hash string after removing #:', hashString);
       const pairs = hashString.split('&');
+      console.log('Hash pairs:', pairs);
       
       pairs.forEach(pair => {
         const [key, value] = pair.split('=');
