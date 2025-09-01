@@ -18,7 +18,7 @@ export const products: Product[] = [
   },
   {
     id: 'prod_StageCuePro',
-    priceId: 'price_StageCueProMonthly',
+    priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
     name: 'StageCue Pro',
     description: 'Perfect for conferences and larger events. Unlimited timers, custom moderator links, speaker self-service, and advanced Slack notifications.',
     mode: 'subscription',

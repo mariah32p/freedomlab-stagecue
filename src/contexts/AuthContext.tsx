@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ error: any }>;
+  resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,9 +55,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-      },
     });
     return { error };
   };
@@ -71,7 +68,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      let errorMessage = '';
+      const err = error as { message?: string; body?: unknown };
+
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.body) {
+        try {
+          const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
+          errorMessage = (parsedBody as { message?: string })?.message || '';
+        } catch {
+          errorMessage = String(err.body);
+        }
+      }
+
+      if (
+        errorMessage.includes('session_not_found') ||
+        errorMessage.includes('Session from session_id claim in JWT does not exist')
+      ) {
+        return;
+      }
+
+      throw error;
+    }
   };
 
   const resetPassword = async (email: string) => {

@@ -1,381 +1,199 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { StageCue } from './Demo';
 
 export function Home() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStartTrial = () => {
+    navigate('/signup');
+  };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 min-h-screen flex items-center">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2301b79e' fill-opacity='0.1'%3E%3Ccircle cx='40' cy='40' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-        </div>
-        
-        {/* Floating geometric shapes */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary-500/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-3/4 right-1/4 w-48 h-48 bg-purple-500/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute top-1/2 left-3/4 w-24 h-24 bg-primary-500/10 rounded-full blur-lg animate-pulse" style={{ animationDelay: '4s' }}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Column - Hero Content */}
-            <div className="text-left">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-medium mb-8">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              Professional Event Timing Platform
-            </div>
-            
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-8 leading-tight">
-              <span className="block">Stop the</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-300 to-primary-500 block">
-                Event Chaos
-              </span>
-            </h1>
-            
-            <p className="text-xl lg:text-2xl text-navy-200 mb-12 max-w-2xl leading-relaxed">
-              Replace chaotic stopwatches and scattered speaker notes with organized timer management 
-              and automatic Slack notifications that keep your team informed.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 mb-16">
-              {user ? (
-                <Link to="/dashboard" className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary-500 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative">
-                  Go to Dashboard
-                  </span>
-                </Link>
-              ) : (
-                <>
-                  <Link to="/signup" className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-primary-500 rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <span className="relative flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    Start 7-Day Free Trial
-                    </span>
-                  </Link>
-                  <Link to="/pricing" className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white hover:text-navy-900 transition-all duration-300">
-                    View Pricing
-                  </Link>
-                </>
-              )}
-            </div>
-            
-            {/* Trust indicators */}
-            <div className="flex items-center space-x-8 text-navy-300">
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span className="text-sm font-medium">Enterprise Security</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span className="text-sm font-medium">99.9% Uptime</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-sm font-medium">24/7 Support</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Hero Mockup */}
-          <div className="relative">
-            <div className="relative">
-              {/* Main Dashboard Mockup */}
-              <div className="bg-white rounded-3xl shadow-2xl p-8 border border-navy-100 transform hover:scale-105 transition-transform duration-500">
-                {/* Dashboard Header */}
-                <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-navy-900">Tech Conference 2025</h3>
-                      <p className="text-sm text-gray-500">Main Auditorium • 3 active timers</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center space-x-2 bg-green-50 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs font-medium text-green-700">LIVE</span>
-                    </div>
-                    <button className="px-4 py-2 bg-primary-500 text-white rounded-xl text-sm font-medium hover:bg-primary-600 transition-colors shadow-lg">
-                      + New Timer
-                    </button>
-                  </div>
-                </div>
-
-                {/* Active Timers */}
-                <div className="grid gap-6">
-                  {/* Running Timer */}
-                  <div className="bg-gradient-to-r from-primary-50 to-primary-100 border-2 border-primary-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                          <div className="w-3 h-3 bg-teal-500 rounded-full animate-pulse"></div>
-                          <span className="text-xs font-bold text-teal-700 uppercase tracking-wide">RUNNING</span>
-                        </div>
-                        <h4 className="text-2xl font-bold text-navy-900 mb-2">Opening Keynote</h4>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <span>Dr. Sarah Chen</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <span>AI in Healthcare</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-5xl font-bold text-primary-600 mb-2 font-mono">12:45</div>
-                        <div className="text-sm text-gray-500">Started 17:15 ago</div>
-                        <div className="flex space-x-2 mt-4">
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
-                            Pause
-                          </button>
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
-                            +5 min
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Upcoming Timer */}
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                          <span className="text-xs font-bold text-purple-700 uppercase tracking-wide">NEXT UP</span>
-                        </div>
-                        <h4 className="text-2xl font-bold text-navy-900 mb-2">Panel Discussion</h4>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            <span>4 Speakers</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            <span>Future of Tech</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-5xl font-bold text-purple-600 mb-2 font-mono">45:00</div>
-                        <div className="text-sm text-gray-500">Starts after current</div>
-                        <div className="flex space-x-2 mt-4">
-                          <button className="px-3 py-1 bg-white border border-gray-300 rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors">
-                            Edit
-                          </button>
-                          <button className="px-3 py-1 bg-purple-500 text-white rounded-lg text-xs font-medium hover:bg-purple-600 transition-colors">
-                            Start Now
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Scheduled Timer */}
-                  <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                          <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                          <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">SCHEDULED</span>
-                        </div>
-                        <h4 className="text-xl font-bold text-navy-900 mb-2">Networking Break</h4>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>15 minutes</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            </svg>
-                            <span>Lobby Area</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-3xl font-bold text-gray-600 mb-2 font-mono">15:00</div>
-                        <div className="text-sm text-gray-500">Starts at 3:30 PM</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Slack Notification */}
-              <div className="absolute -right-8 top-1/3 transform -translate-y-1/2 w-80 bg-navy-900 rounded-2xl shadow-2xl p-6 border border-navy-700 hover:scale-105 transition-transform duration-300">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">#</span>
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold">#event-team</p>
-                    <p className="text-gray-400 text-xs">StageCue Bot</p>
-                  </div>
-                  <div className="ml-auto text-xs text-gray-400">2:34 PM</div>
-                </div>
-                <div className="space-y-3 text-white text-sm">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-yellow-400">⚠️</span>
-                    <span>Opening Keynote - 5 minutes remaining</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-blue-400">📝</span>
-                    <span>Next: Panel Discussion (4 speakers)</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-green-400">👤</span>
-                    <span>Dr. Sarah Chen finishing soon</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Public Display */}
-              <div className="absolute -left-8 bottom-8 w-64 bg-white rounded-2xl shadow-2xl p-6 border border-gray-200 hover:scale-105 transition-transform duration-300">
-                <div className="text-center">
-                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">PUBLIC DISPLAY</div>
-                  <h4 className="text-lg font-bold text-navy-900 mb-4">Opening Keynote</h4>
-                  <div className="text-6xl font-bold text-primary-500 mb-2 font-mono">12:45</div>
-                  <div className="text-sm text-gray-500 mb-4">Dr. Sarah Chen</div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-teal-500 h-2 rounded-full" style={{ width: '58%' }}></div>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-2">58% complete</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Problem/Solution Section */}
-      <div className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="relative overflow-hidden py-8 sm:py-12 lg:py-16">
+        <div className="absolute inset-0 bg-dots-pattern"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Side Content */}
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-red-50 border border-red-200 rounded-full text-red-600 text-sm font-medium mb-8">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-teal-100 text-teal-800 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                The Current Problem
+                7-Day Free Trial Available
               </div>
-              <h2 className="text-4xl font-bold text-navy-900 mb-8">
-                Event Timing is Still Stuck in the Stone Age
-              </h2>
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-1">
-                    <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-navy-900 text-lg mb-2">Multiple stopwatches and phones</h4>
-                    <p className="text-gray-600 leading-relaxed">Event teams juggle different timing devices, leading to confusion, missed cues, and speakers running over time.</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-1">
-                    <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-navy-900 text-lg mb-2">Scattered speaker information</h4>
-                    <p className="text-gray-600 leading-relaxed">Speaker notes, bios, and presentation details scattered across emails, documents, and sticky notes.</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mt-1">
-                    <svg className="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-navy-900 text-lg mb-2">Manual team coordination</h4>
-                    <p className="text-gray-600 leading-relaxed">Team members miss critical timing updates, speaker changes, and transition cues during live events.</p>
-                  </div>
-                </div>
-              </div>
+              
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-navy-900 mb-3 sm:mb-4 leading-tight">
+                Professional Event
+                <span className="block bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent mt-1 pb-2">
+                  Timing System
+                </span>
+              </h1>
+              
+              <p className="text-base sm:text-lg lg:text-xl text-navy-600 mb-6 sm:mb-8 leading-relaxed">
+                Keep conferences, workshops, and live events perfectly on schedule with real-time countdown displays, speaker coordination, and team notifications.
+              </p>
+              
+              <button
+                onClick={handleStartTrial}
+                className="btn btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 mb-3 sm:mb-4 w-full sm:w-auto"
+              >
+                Start Free Trial
+              </button>
+              
+              <p className="text-xs sm:text-sm text-navy-500 text-center sm:text-left">
+                7-day free trial • Cancel anytime
+              </p>
             </div>
             
-            <div className="relative">
-              {/* Solution Preview */}
-              <div className="bg-gradient-to-br from-teal-50 to-white rounded-3xl shadow-2xl p-8 border-2 border-teal-100">
-                <div className="inline-flex items-center px-4 py-2 bg-teal-500 text-white rounded-full text-sm font-medium mb-6">
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  The StageCue Solution
+            {/* Right Side Mockup */}
+            <div className="relative mt-8 lg:mt-0">
+              {/* Multi-screen Event Management Dashboard */}
+              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700 h-[500px] sm:h-[600px]">
+                {/* Main Dashboard */}
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden h-full">
+                  {/* Browser Header */}
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-3 sm:px-4 py-2 sm:py-3 flex items-center space-x-2 border-b border-slate-300">
+                    <div className="flex space-x-2">
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-400 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
+                    </div>
+                    <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs text-slate-500 ml-2 sm:ml-4 shadow-inner overflow-hidden">
+                      stagecue.com/live/tech-summit-2025
+                    </div>
+                  </div>
+                  
+                  {/* Dashboard Content */}
+                  <div className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-blue-50/30 h-full overflow-hidden">
+                    {/* Live Event Header */}
+                    <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs sm:text-sm font-semibold text-slate-900">LIVE: Tech Summit 2025</span>
+                      </div>
+                      <div className="text-xs text-slate-500 hidden sm:block">9:42 AM PST</div>
+                    </div>
+                    
+                    {/* Multi-Session Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                      {/* Main Stage */}
+                      <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-lg border-2 border-teal-200">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
+                          <span className="text-xs font-semibold text-teal-600 uppercase tracking-wide">Main Stage</span>
+                          <div className="text-xl sm:text-2xl font-mono font-bold text-teal-600">12:34</div>
+                        </div>
+                        <div className="text-xs sm:text-sm font-medium text-slate-900 mb-1">AI in Healthcare</div>
+                        <div className="text-xs text-slate-600 mb-3">Dr. Emily Chen</div>
+                        <div className="w-full bg-teal-100 rounded-full h-1.5 sm:h-2">
+                          <div className="bg-gradient-to-r from-teal-500 to-teal-600 h-1.5 sm:h-2 rounded-full" style={{width: '75%'}}></div>
+                        </div>
+                      </div>
+                      
+                      {/* Workshop Room */}
+                      <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-lg border border-slate-200">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
+                          <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Workshop A</span>
+                          <div className="text-xl sm:text-2xl font-mono font-bold text-purple-600">08:15</div>
+                        </div>
+                        <div className="text-xs sm:text-sm font-medium text-slate-900 mb-1">React Best Practices</div>
+                        <div className="text-xs text-slate-600 mb-3">Alex Rodriguez</div>
+                        <div className="w-full bg-purple-100 rounded-full h-1.5 sm:h-2">
+                          <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 sm:h-2 rounded-full" style={{width: '45%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Upcoming Sessions */}
+                    <div className="mb-4 sm:mb-6">
+                      <h4 className="text-xs sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3">Next Up</h4>
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <div className="flex items-center justify-between p-2 sm:p-3 bg-white/70 rounded-md sm:rounded-lg border border-slate-200">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-slate-400 rounded-full"></div>
+                            <div>
+                              <div className="text-xs sm:text-sm font-medium text-slate-900">Coffee Break</div>
+                              <div className="text-xs text-slate-600">15 minutes</div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-500">10:30 AM</div>
+                        </div>
+                        <div className="flex items-center justify-between p-2 sm:p-3 bg-white/70 rounded-md sm:rounded-lg border border-slate-200">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full"></div>
+                            <div>
+                              <div className="text-xs sm:text-sm font-medium text-slate-900">Keynote: Future of AI</div>
+                              <div className="text-xs text-slate-600">45 minutes</div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-slate-500">10:45 AM</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Live Actions */}
+                    <div className="flex space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+                      <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Extend +5min
+                      </button>
+                      <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Alert Team
+                      </button>
+                      <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                        Next Session
+                      </button>
+                    </div>
+                    
+                    {/* Speaker Notes Preview */}
+                    <div className="mb-3 sm:mb-4">
+                      <h4 className="text-xs sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3">Current Speaker Notes</h4>
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <div className="p-2 sm:p-3 bg-blue-50 rounded-md sm:rounded-lg border border-blue-200">
+                          <div className="flex justify-between items-start mb-1">
+                            <span className="text-xs font-medium text-blue-600">12:30</span>
+                            <span className="text-xs bg-blue-100 text-blue-700 px-1.5 sm:px-2 py-0.5 rounded">Essential</span>
+                          </div>
+                          <div className="text-xs sm:text-sm text-blue-800">Introduce new AI diagnostic tools</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Team Status */}
+                    <div className="mt-4">
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs">
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-green-500 rounded-full"></div><span className="text-slate-600">Moderator Ready</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><span className="text-slate-600 hidden sm:inline">Speakers Online</span><span className="text-slate-600 sm:hidden">Speakers</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-purple-500 rounded-full"></div><span className="text-slate-600 hidden sm:inline">Tech Support</span><span className="text-slate-600 sm:hidden">Tech</span></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-3xl font-bold text-navy-900 mb-8">One Platform, Perfect Timing</h3>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mt-1">
-                      <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-navy-900 text-lg mb-2">Centralized timer dashboard</h4>
-                      <p className="text-gray-600 leading-relaxed">All event timers in one place with shareable countdown displays for speakers and audience.</p>
-                    </div>
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-2 sm:-top-4 -left-2 sm:-left-4 bg-white rounded-lg sm:rounded-xl shadow-xl border border-slate-200 p-2 sm:p-3 animate-bounce">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-semibold text-slate-900">Live Updates</span>
                   </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mt-1">
-                      <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                </div>
+                
+                <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-lg sm:rounded-xl shadow-xl p-2 sm:p-3 animate-pulse">
+                  <div className="text-xs font-bold">2 Sessions</div>
+                  <div className="text-xs opacity-90">Running Live</div>
+                </div>
+                
+                <div className="absolute top-1/2 -right-4 sm:-right-8 bg-white rounded-md sm:rounded-lg shadow-lg border border-slate-200 p-2 transform -translate-y-1/2 animate-slide-in-right">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center">
+                      <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-navy-900 text-lg mb-2">Integrated speaker management</h4>
-                      <p className="text-gray-600 leading-relaxed">Speaker information, notes, and presentation details organized with each timer session.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mt-1">
-                      <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-navy-900 text-lg mb-2">Automatic team notifications</h4>
-                      <p className="text-gray-600 leading-relaxed">Slack integration keeps everyone informed with timing alerts and speaker transition updates.</p>
+                    <div className="text-xs">
+                      <div className="font-semibold text-slate-900">Slack Alert</div>
+                      <div className="text-slate-600 hidden sm:block">Sent to #event-team</div>
+                      <div className="text-slate-600 sm:hidden">Delivered</div>
                     </div>
                   </div>
                 </div>
@@ -383,359 +201,523 @@ export function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Demo Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              See <span className="bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">StageCue</span> in Action
+            </h2>
+            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+              Watch how StageCue transforms event timing from chaotic to seamless
+            </p>
+          </div>
+          
+          {/* Interactive Demo */}
+          <div className="bg-slate-100 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-inner">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <StageCue />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Features Section */}
-      <div className="py-24 bg-gradient-to-br from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-50 border border-teal-200 rounded-full text-teal-600 text-sm font-medium mb-8">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
-              </svg>
-              Core Features
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-navy-900 mb-6">
-              Everything You Need for Perfect Event Timing
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              From small workshops to large conferences, StageCue provides professional timer management and speaker coordination
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
-            <div className="group">
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-navy-900 mb-4">Web-Based Timers</h3>
-                <p className="text-gray-600 leading-relaxed mb-6">Create named countdown timers with shareable public displays. No more juggling multiple stopwatches or phone timers.</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Shareable countdown URLs</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Start/stop/pause controls</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Clean, professional displays</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-navy-900 mb-4">Speaker Management</h3>
-                <p className="text-gray-600 leading-relaxed mb-6">Organize speaker notes and transitions. Keep track of who's speaking when and what's coming next.</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Speaker notes per timer</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Session templates</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Self-service speaker links</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-navy-900 mb-4">Slack Notifications</h3>
-                <p className="text-gray-600 leading-relaxed mb-6">Automatic alerts keep your team informed with time warnings and speaker transition notifications.</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Time warnings</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Speaker transitions</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-500">
-                    <svg className="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Custom messages</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Feature Mockup */}
-          <div className="relative">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h3 className="text-3xl font-bold text-navy-900 mb-6">Real-Time Event Coordination</h3>
-                  <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                    See exactly what's happening across all your event sessions. Get instant visibility into timing, speakers, and upcoming transitions.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Live timer status across all sessions</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Instant speaker and session information</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700 font-medium">Automatic team notifications</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="relative">
-                  {/* Mobile App Mockup */}
-                  <div className="bg-navy-900 rounded-3xl p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                    <div className="bg-white rounded-2xl p-6">
-                      <div className="flex items-center justify-between mb-6">
-                        <h4 className="font-bold text-navy-900">Event Control</h4>
-                        <div className="flex space-x-1">
-                          <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                          <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                          <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="bg-teal-50 border border-teal-200 rounded-xl p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-navy-900 text-sm">Main Stage</p>
-                              <p className="text-xs text-gray-500">Dr. Sarah Chen</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-2xl font-bold text-teal-600">08:32</p>
-                              <p className="text-xs text-teal-600">ACTIVE</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-navy-900 text-sm">Workshop A</p>
-                              <p className="text-xs text-gray-500">Panel Discussion</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-2xl font-bold text-purple-600">25:00</p>
-                              <p className="text-xs text-purple-600">READY</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-navy-900 text-sm">Break Time</p>
-                              <p className="text-xs text-gray-500">Networking</p>
-                            </div>
-                            <div className="text-right">
-                              <p className="text-xl font-bold text-gray-500">15:00</p>
-                              <p className="text-xs text-gray-500">SCHEDULED</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Use Cases Section */}
-      <div className="py-24 bg-navy-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-medium mb-8">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              Perfect For Every Event
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Trusted by Event Professionals
-            </h2>
-            <p className="text-xl text-navy-200 max-w-3xl mx-auto leading-relaxed">
-              From intimate workshops to large-scale conferences, StageCue adapts to your event needs
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Conferences</h3>
-                <p className="text-navy-200 text-sm leading-relaxed">Multi-track events with complex scheduling and speaker coordination</p>
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Workshops</h3>
-                <p className="text-navy-200 text-sm leading-relaxed">Interactive sessions with timed activities and breakout groups</p>
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Corporate Events</h3>
-                <p className="text-navy-200 text-sm leading-relaxed">Professional presentations, meetings, and company gatherings</p>
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="current Color" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Live Productions</h3>
-                <p className="text-navy-200 text-sm leading-relaxed">Real-time coordination for broadcasts, webinars, and live shows</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Social Proof Alternative - Feature Stats */}
-      <div className="py-24 bg-gradient-to-br from-teal-50 to-white">
+      <section className="py-20 bg-navy-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-navy-900 mb-6">
-              Built for Professional Event Management
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Everything You Need for Perfect Event Timing
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Designed with input from event organizers who manage everything from 50-person workshops to 5,000-person conferences
+            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+              Professional tools designed for event organizers, moderators, and speakers
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Countdown Display Mockup */}
+            <div className="group">
+              <h3 className="text-2xl font-bold text-navy-900 mb-6 text-center">Live Countdown Display</h3>
+              <div className="bg-white rounded-2xl shadow-xl p-8 group-hover:shadow-2xl transition-all duration-300">
+                <div className="text-center">
+                  <div className="text-6xl font-mono font-bold text-teal-600 mb-4">12:34</div>
+                  <div className="text-lg font-semibold text-slate-900 mb-2">AI in Healthcare</div>
+                  <div className="text-slate-600 mb-6">Dr. Emily Chen</div>
+                  <div className="w-full bg-teal-100 rounded-full h-3 mb-6">
+                    <div className="bg-gradient-to-r from-teal-500 to-teal-600 h-3 rounded-full transition-all duration-1000" style={{width: '75%'}}></div>
+                  </div>
+                  <div className="flex justify-center space-x-3">
+                    <button className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium">+5 min</button>
+                    <button className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium">Alert Team</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Speaker Notes Mockup */}
+            <div className="group">
+              <h3 className="text-2xl font-bold text-navy-900 mb-6 text-center">Speaker Notes & Coordination</h3>
+              <div className="bg-white rounded-2xl shadow-xl p-6 group-hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <span className="text-purple-600 font-semibold text-sm">EC</span>
+                    </div>
+                    <div>
+                      <div className="font-medium text-slate-900">Dr. Emily Chen</div>
+                      <div className="text-sm text-slate-600">AI in Healthcare</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-slate-500">20 min</div>
+                </div>
+                
+                <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-blue-600">0:00</span>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Essential</span>
+                    </div>
+                    <div className="text-sm text-blue-800">Welcome and introduce AI diagnostic tools</div>
+                  </div>
+                  
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-slate-600">5:00</span>
+                      <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded">Optional</span>
+                    </div>
+                    <div className="text-sm text-slate-600">Share personal research background</div>
+                  </div>
+                  
+                  <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-purple-600">18:00</span>
+                      <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">Transition</span>
+                    </div>
+                    <div className="text-sm text-purple-800">Wrap up, prepare for Q&A</div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center space-x-2 text-xs">
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-slate-600">Speaker Ready</span>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-slate-600">Moderator Online</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Team Notifications Mockup */}
+          <div className="mt-12">
+            <h3 className="text-2xl font-bold text-navy-900 mb-6 text-center">Real-time Team Notifications</h3>
+            <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 max-w-2xl mx-auto">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded flex items-center justify-center">
+                  <span className="text-white text-xs sm:text-sm font-bold">#</span>
+                </div>
+                <span className="text-sm sm:text-base font-semibold text-slate-900">#event-team</span>
+                <span className="text-xs sm:text-sm text-slate-500">Slack</span>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-start space-x-2 sm:space-x-3 p-3 bg-slate-50 rounded-lg">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
+                      <span className="text-sm sm:text-base font-medium text-slate-900">StageCue</span>
+                      <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded">BOT</span>
+                      <span className="text-xs text-slate-500">2:34 PM</span>
+                    </div>
+                    <div className="text-xs sm:text-sm text-slate-700">⏰ <strong>5 minutes remaining</strong> for "AI in Healthcare" session</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-2 sm:space-x-3 p-3 bg-amber-50 rounded-lg">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
+                      <span className="text-sm sm:text-base font-medium text-slate-900">StageCue</span>
+                      <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded">BOT</span>
+                      <span className="text-xs text-slate-500">2:39 PM</span>
+                    </div>
+                    <div className="text-xs sm:text-sm text-slate-700">🎤 Next up: <strong>Alex Chen</strong> - "Technical Architecture" in 5 minutes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Trusted by Event Professionals Worldwide
+            </h2>
+            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+              From tech conferences to corporate workshops, StageCue keeps events running smoothly
             </p>
           </div>
 
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-5xl font-bold text-teal-600 mb-2">99.9%</div>
-              <div className="text-lg font-semibold text-navy-900 mb-2">Uptime</div>
-              <p className="text-gray-600 text-sm">Reliable timing when it matters most</p>
+          {/* Testimonials */}
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">MW</span>
+                </div>
+                <div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Mariah W.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">Technology Conference Director</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-sm sm:text-base text-navy-700 italic">
+                "StageCue transformed our annual tech conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-5xl font-bold text-purple-600 mb-2">{"<2s"}</div>
-              <div className="text-lg font-semibold text-navy-900 mb-2">Response Time</div>
-              <p className="text-gray-600 text-sm">Lightning-fast timer updates</p>
+
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">DR</span>
+                </div>
+                <div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Diane R.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">Software Summit Organizer</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-sm sm:text-base text-navy-700 italic">
+                "The speaker coordination features are incredible. Our software conference speakers love having their notes synced with the countdown timer."
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-5xl font-bold text-teal-600 mb-2">24/7</div>
-              <div className="text-lg font-semibold text-navy-900 mb-2">Support</div>
-              <p className="text-gray-600 text-sm">Help when you need it most</p>
-            </div>
-            <div className="text-center">
-              <div className="text-5xl font-bold text-purple-600 mb-2">∞</div>
-              <div className="text-lg font-semibold text-navy-900 mb-2">Scalability</div>
-              <p className="text-gray-600 text-sm">From small meetings to large conferences</p>
+
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                  <span className="text-white text-sm sm:text-base font-semibold">NR</span>
+                </div>
+                <div>
+                  <div className="text-sm sm:text-base font-semibold text-navy-900">Nathan R.</div>
+                  <div className="text-xs sm:text-sm text-navy-600">IT Workshop Coordinator</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-sm sm:text-base text-navy-700 italic">
+                "Setup took 10 minutes and saved us hours of coordination headaches for our IT training workshops. The Slack integration is a game-changer."
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Final CTA */}
-      <div className="py-24 bg-gradient-to-br from-navy-900 via-navy-800 to-teal-900 relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-teal-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl"></div>
+      {/* Pricing Section */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+              Choose the plan that fits your event needs. Start with a 7-day free trial.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Basic Plan */}
+            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:shadow-2xl transition-all duration-300">
+              <div className="text-center mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
+                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
+                <div className="mb-6">
+                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$29</span>
+                  <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
+                </div>
+                <div className="inline-flex items-center px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium mb-6">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  7-day free trial
+                </div>
+              </div>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Up to 10 active timers</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Timer controls via web dashboard</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Speaker notes management</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Basic Slack notifications</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Save/reuse timer configurations</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-500 p-8 hover:shadow-2xl transition-all duration-300 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-purple-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                  MOST POPULAR
+                </span>
+              </div>
+              <div className="text-center mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
+                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for conferences and larger events</p>
+                <div className="mb-6">
+                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$49</span>
+                  <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
+                </div>
+                <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium mb-6">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  7-day free trial
+                </div>
+              </div>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base font-semibold text-navy-900">Everything in Basic, plus:</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Unlimited active timers</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Custom moderator links</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Speaker self-service links</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Advanced Slack notifications</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-navy-700">Timer + speaker templates</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Single CTA */}
+          <div className="mt-12 text-center">
+            <button
+              onClick={handleStartTrial}
+              className="btn btn-primary px-8 py-4 text-lg bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            >
+              Start Free Trial
+            </button>
+            <p className="text-sm text-navy-600 mt-4">
+              7-day free trial • Choose your plan after signup • Cancel anytime
+            </p>
+          </div>
         </div>
-        
-        <div className="relative max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-navy-600">
+              Everything you need to know about StageCue
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                How quickly can I set up my first event?
+              </h3>
+              <p className="text-navy-700">
+                Most users have their first event running in under 15 minutes. Simply create your event, add speakers, and share the countdown display link. No technical setup required.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                What happens during the 7-day free trial?
+              </h3>
+              <p className="text-navy-700">
+                You get full access to all features of your chosen plan. No restrictions, no watermarks. After 7 days, your card is automatically charged unless you cancel. You can cancel anytime during the trial with no fees.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Do I need to install any software?
+              </h3>
+              <p className="text-navy-700">
+                No downloads required. StageCue runs entirely in your web browser. Share countdown displays via simple links that work on any device - phones, tablets, laptops, or projection screens.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Can I switch between Basic and Pro plans?
+              </h3>
+              <p className="text-navy-700">
+                Yes! You can upgrade or downgrade anytime from your account settings. Changes take effect immediately, and billing is prorated automatically.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                How does the Slack integration work?
+              </h3>
+              <p className="text-navy-700">
+                Connect your Slack workspace in one click. StageCue automatically sends time warnings, session transitions, and custom alerts to your chosen channels. Perfect for keeping your entire team coordinated.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                What if my event runs over time?
+              </h3>
+              <p className="text-navy-700">
+                No problem! Extend any session with one click (+5 min, +10 min, or custom time). All countdown displays and notifications update automatically. Your team stays informed without any manual coordination.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Is my event data secure?
+              </h3>
+              <p className="text-navy-700">
+                Absolutely. All data is encrypted in transit and at rest. We use enterprise-grade security with 99.9% uptime. Your event information is private and never shared with third parties.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Can I use StageCue for virtual events?
+              </h3>
+              <p className="text-navy-700">
+                Yes! StageCue works perfectly for virtual, hybrid, and in-person events. Share countdown displays in Zoom, Teams, or any video platform. Speakers can access their notes from any device.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-teal-600 to-purple-600">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Transform Your Events?
           </h2>
-          <p className="text-xl text-navy-200 mb-12 leading-relaxed">
-            Join event professionals who trust StageCue for reliable timing and seamless speaker coordination
+          <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
+            Join event organizers who trust StageCue to keep their events perfectly timed and professionally managed.
           </p>
-          {!user && (
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Link to="/signup" className="btn text-lg px-10 py-4 bg-teal-500 hover:bg-teal-600 text-white rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-200">
-                Start 7-Day Free Trial
-              </Link>
-              <Link to="/pricing" className="btn text-lg px-10 py-4 border-2 border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-navy-900 rounded-xl transition-all duration-200">
-                View Pricing Plans
-              </Link>
-            </div>
-          )}
-          
-          <div className="mt-12 text-center">
-            <p className="text-navy-300 text-sm">
-              No setup required • Cancel anytime • 7-day free trial
-            </p>
-          </div>
+          <button
+            onClick={handleStartTrial}
+            className="btn bg-white text-teal-600 hover:bg-teal-50 px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+          >
+            Start Your Free Trial
+          </button>
+          <p className="text-sm text-teal-200 mt-4">
+            7 days free • Full access • No commitment
+          </p>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
