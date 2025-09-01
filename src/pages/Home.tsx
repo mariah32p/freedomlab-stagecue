@@ -1189,3 +1189,6 @@ export function Home() {
           </p>
         </div>
       </section>
+    </div>
+  );
+}
