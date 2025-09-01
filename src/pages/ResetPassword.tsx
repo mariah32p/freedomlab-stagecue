@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
+import { PasswordInput } from '../components/PasswordInput';
 
 export function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -118,12 +119,12 @@ export function ResetPassword() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   New Password
                 </label>
-                <input
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
-                  required
-                  className="input mt-1"
+                  autoComplete="new-password"
+                  required={true}
+                  className="input"
                   placeholder="Enter your new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -133,12 +134,12 @@ export function ResetPassword() {
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                   Confirm New Password
                 </label>
-                <input
+                <PasswordInput
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
-                  required
-                  className="input mt-1"
+                  autoComplete="new-password"
+                  required={true}
+                  className="input"
                   placeholder="Confirm your new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
