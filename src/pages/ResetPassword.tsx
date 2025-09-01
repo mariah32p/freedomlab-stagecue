@@ -13,10 +13,11 @@ export function ResetPassword() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    // Set the session from URL parameters for password reset
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    const type = searchParams.get('type');
+    // Set the session from URL fragments for password reset
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
+    const type = hashParams.get('type');
 
     if (type === 'recovery' && accessToken && refreshToken) {
       // Set the session for password reset
@@ -27,7 +28,7 @@ export function ResetPassword() {
     } else if (!accessToken || !refreshToken) {
       setError('Invalid reset link. Please request a new password reset.');
     }
-  }, [searchParams]);
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
