@@ -1004,7 +1004,7 @@ export function Home() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
               Manage entire events
               <span className="block text-blue-600">from one dashboard</span>
             </h2>
@@ -1165,7 +1165,7 @@ export function Home() {
 
       {/* Final CTA */}
       <section className="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-6 right-6 z-50 animate-fade-in">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
         </div>
