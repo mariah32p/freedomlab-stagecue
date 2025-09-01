@@ -62,7 +62,7 @@ export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) 
       }
 
       if (data.url) {
-        window.location.href = data.url;
+        window.open(data.url, '_blank');
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unknown error occurred';
