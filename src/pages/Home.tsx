@@ -611,6 +611,118 @@ export function Home() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-navy-600">
+              Everything you need to know about StageCue
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                How quickly can I set up my first event?
+              </h3>
+              <p className="text-navy-700">
+                Most users have their first event running in under 15 minutes. Simply create your event, add speakers, and share the countdown display link. No technical setup required.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                What happens during the 7-day free trial?
+              </h3>
+              <p className="text-navy-700">
+                You get full access to all features of your chosen plan. No restrictions, no watermarks. After 7 days, your card is automatically charged unless you cancel. You can cancel anytime during the trial with no fees.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Do I need to install any software?
+              </h3>
+              <p className="text-navy-700">
+                No downloads required. StageCue runs entirely in your web browser. Share countdown displays via simple links that work on any device - phones, tablets, laptops, or projection screens.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Can I switch between Basic and Pro plans?
+              </h3>
+              <p className="text-navy-700">
+                Yes! You can upgrade or downgrade anytime from your account settings. Changes take effect immediately, and billing is prorated automatically.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                How does the Slack integration work?
+              </h3>
+              <p className="text-navy-700">
+                Connect your Slack workspace in one click. StageCue automatically sends time warnings, session transitions, and custom alerts to your chosen channels. Perfect for keeping your entire team coordinated.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                What if my event runs over time?
+              </h3>
+              <p className="text-navy-700">
+                No problem! Extend any session with one click (+5 min, +10 min, or custom time). All countdown displays and notifications update automatically. Your team stays informed without any manual coordination.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Is my event data secure?
+              </h3>
+              <p className="text-navy-700">
+                Absolutely. All data is encrypted in transit and at rest. We use enterprise-grade security with 99.9% uptime. Your event information is private and never shared with third parties.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+              <h3 className="text-lg font-semibold text-navy-900 mb-3">
+                Can I use StageCue for virtual events?
+              </h3>
+              <p className="text-navy-700">
+                Yes! StageCue works perfectly for virtual, hybrid, and in-person events. Share countdown displays in Zoom, Teams, or any video platform. Speakers can access their notes from any device.
+              </p>
+            </div>
+          </div>
+
+          {/* Still have questions CTA */}
+          <div className="mt-16 text-center bg-gradient-to-r from-teal-50 to-purple-50 rounded-2xl p-8 border border-slate-200">
+            <h3 className="text-xl font-bold text-navy-900 mb-3">
+              Still have questions?
+            </h3>
+            <p className="text-navy-600 mb-6">
+              Our team is here to help you succeed with your events
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handleStartTrial}
+                className="btn btn-primary px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold"
+              >
+                Start Free Trial
+              </button>
+              <a
+                href="mailto:support@stagecue.com"
+                className="btn btn-outline px-6 py-3 border-2 border-navy-300 text-navy-700 hover:bg-navy-700 hover:text-white rounded-xl font-semibold transition-all duration-200"
+              >
+                Contact Support
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
