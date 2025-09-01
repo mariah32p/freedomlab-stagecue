@@ -520,12 +520,6 @@ export function Home() {
                   <span className="text-navy-700">Save/reuse timer configurations</span>
                 </div>
               </div>
-              <button
-                onClick={handleStartTrial}
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-              >
-                Start Basic Trial
-              </button>
             </div>
 
             {/* Pro Plan */}
@@ -599,49 +593,20 @@ export function Home() {
                   <span className="text-navy-700">Timer + speaker templates</span>
                 </div>
               </div>
-              <button
-                onClick={handleStartTrial}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-              >
-                Start Pro Trial
-              </button>
             </div>
           </div>
 
-          {/* Trust Elements */}
-          <div className="mt-16 text-center">
-            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto border border-slate-200">
-              <h3 className="text-2xl font-bold text-navy-900 mb-6">All Plans Include</h3>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-navy-900 mb-2">7-Day Free Trial</h4>
-                  <p className="text-sm text-navy-600">Full access, no commitment</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-navy-900 mb-2">24/7 Support</h4>
-                  <p className="text-sm text-navy-600">Get help when you need it</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-navy-900 mb-2">Cancel Anytime</h4>
-                  <p className="text-sm text-navy-600">No long-term contracts</p>
-                </div>
-              </div>
-            </div>
+          {/* Single CTA */}
+          <div className="mt-12 text-center">
+            <button
+              onClick={handleStartTrial}
+              className="btn btn-primary px-8 py-4 text-lg bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            >
+              Start Free Trial
+            </button>
+            <p className="text-sm text-navy-600 mt-4">
+              7-day free trial • Choose your plan after signup • Cancel anytime
+            </p>
           </div>
         </div>
       </section>
