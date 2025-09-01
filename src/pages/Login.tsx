@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
@@ -19,7 +19,7 @@ export function Login() {
   // Check if there's a success message from password reset
   const resetMessage = searchParams.get('message');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -35,7 +35,7 @@ export function Login() {
     setLoading(false);
   };
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleForgotPassword = async (e: FormEvent) => {
     e.preventDefault();
     if (!email) {
       setError('Please enter your email address');
@@ -51,6 +51,7 @@ export function Login() {
       setError(error.message);
     } else {
       setResetSuccess(true);
+      setShowForgotPassword(false);
     }
 
     setResetLoading(false);

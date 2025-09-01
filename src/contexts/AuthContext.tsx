@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ error: any }>;
+  resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,9 +55,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/get-started`,
-      },
     });
     return { error };
   };
@@ -73,30 +70,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
-    } catch (error: any) {
-      // Extract error message from various possible error formats
+    } catch (error) {
       let errorMessage = '';
-      
-      if (error?.message) {
-        errorMessage = error.message;
-      } else if (error?.body) {
+      const err = error as { message?: string; body?: unknown };
+
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.body) {
         try {
-          const parsedBody = typeof error.body === 'string' ? JSON.parse(error.body) : error.body;
-          errorMessage = parsedBody?.message || '';
+          const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
+          errorMessage = (parsedBody as { message?: string })?.message || '';
         } catch {
-          // If parsing fails, use the body as is
-          errorMessage = error.body;
+          errorMessage = String(err.body);
         }
       }
-      
-      // Gracefully handle session_not_found errors - user is already logged out
-      if (errorMessage.includes('session_not_found') || 
-          errorMessage.includes('Session from session_id claim in JWT does not exist')) {
-        // Session doesn't exist, but that's fine - user is effectively logged out
+
+      if (
+        errorMessage.includes('session_not_found') ||
+        errorMessage.includes('Session from session_id claim in JWT does not exist')
+      ) {
         return;
       }
-      
-      // Re-throw other errors
+
       throw error;
     }
   };

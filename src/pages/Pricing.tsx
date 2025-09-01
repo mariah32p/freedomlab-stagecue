@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+
+// Pricing page component
 
 export function Pricing() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleStartTrial = () => {
