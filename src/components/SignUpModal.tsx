@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from './Alert';
@@ -17,7 +17,7 @@ export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) 
   const [error, setError] = useState('');
   const { signUp } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -64,8 +64,9 @@ export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) 
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(message);
     } finally {
       setLoading(false);
     }

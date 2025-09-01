@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, type JSX } from 'react';
 
 // ===================================================================================
 // INTERFACES & STYLES
@@ -37,14 +37,6 @@ const AnimationStyles = () => (
 
 export function StageCue() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const demoSteps: DemoStep[] = useMemo(() => [
     {
@@ -139,7 +131,7 @@ function CreateEventStep() {
   const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
     
     // Faster typing animation
     timeouts.push(setTimeout(() => {
@@ -202,7 +194,7 @@ function AddSpeakersStep() {
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
     
     // Speaker 1
     timeouts.push(setTimeout(() => {
@@ -298,7 +290,7 @@ function SpeakerNotesStep() {
   const [isAddingNote, setIsAddingNote] = useState(false);
 
   useEffect(() => {
-    const timeouts: NodeJS.Timeout[] = [];
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
     const notesToAdd: SpeakerNote[] = [
       { time: '0:00', content: 'Welcome team, introduce Q1 launch timeline.', type: 'essential' },
       { time: '5:00', content: 'Present market research findings.', type: 'essential' },
