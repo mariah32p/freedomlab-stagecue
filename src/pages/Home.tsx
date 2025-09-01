@@ -366,6 +366,123 @@ export function Home() {
         </div>
       </section>
 
+      {/* Social Proof Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy-900 mb-4">
+              Trusted by Event Professionals Worldwide
+            </h2>
+            <p className="text-xl text-navy-600 max-w-3xl mx-auto">
+              From tech conferences to corporate workshops, StageCue keeps events running smoothly
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-teal-600 mb-2">2,500+</div>
+              <div className="text-sm md:text-base text-navy-600">Events Managed</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">98%</div>
+              <div className="text-sm md:text-base text-navy-600">On-Time Rate</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">15min</div>
+              <div className="text-sm md:text-base text-navy-600">Avg. Setup Time</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2">4.9★</div>
+              <div className="text-sm md:text-base text-navy-600">User Rating</div>
+            </div>
+          </div>
+
+          {/* Testimonials */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-semibold">MK</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-navy-900">Maria Kim</div>
+                  <div className="text-sm text-navy-600">Event Director, TechCorp</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-navy-700 italic">
+                "StageCue transformed our annual conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-semibold">JR</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-navy-900">James Rodriguez</div>
+                  <div className="text-sm text-navy-600">Conference Organizer</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-navy-700 italic">
+                "The speaker coordination features are incredible. Our speakers love having their notes synced with the countdown timer."
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-semibold">AL</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-navy-900">Amanda Liu</div>
+                  <div className="text-sm text-navy-600">Workshop Facilitator</div>
+                </div>
+              </div>
+              <div className="flex mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-navy-700 italic">
+                "Setup took 10 minutes and saved us hours of coordination headaches. The Slack integration is a game-changer."
+              </p>
+            </div>
+          </div>
+
+          {/* Company Logos */}
+          <div className="text-center">
+            <p className="text-sm font-medium text-navy-500 mb-8 uppercase tracking-wide">
+              Trusted by teams at
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60">
+              <div className="text-2xl font-bold text-navy-400">TechCorp</div>
+              <div className="text-2xl font-bold text-navy-400">InnovateLab</div>
+              <div className="text-2xl font-bold text-navy-400">StartupHub</div>
+              <div className="text-2xl font-bold text-navy-400">EventPro</div>
+              <div className="text-2xl font-bold text-navy-400">ConferenceMax</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
