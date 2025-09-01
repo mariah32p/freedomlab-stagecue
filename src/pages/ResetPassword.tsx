@@ -13,20 +13,54 @@ export function ResetPassword() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    // Set the session from URL fragments for password reset
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const refreshToken = hashParams.get('refresh_token');
-    const type = hashParams.get('type');
+    // Parse URL fragments for password reset tokens
+    const parseHashParams = () => {
+      const hash = window.location.hash;
+      if (!hash) return {};
+      
+      const params: Record<string, string> = {};
+      const hashString = hash.substring(1); // Remove the #
+      const pairs = hashString.split('&');
+      
+      pairs.forEach(pair => {
+        const [key, value] = pair.split('=');
+        if (key && value) {
+          params[decodeURIComponent(key)] = decodeURIComponent(value);
+        }
+      });
+      
+      return params;
+    };
+
+    const hashParams = parseHashParams();
+    const accessToken = hashParams.access_token;
+    const refreshToken = hashParams.refresh_token;
+    const type = hashParams.type;
+
+    console.log('Hash params:', hashParams); // Debug log
+    console.log('Access token:', accessToken); // Debug log
+    console.log('Type:', type); // Debug log
 
     if (type === 'recovery' && accessToken && refreshToken) {
-      // Set the session for password reset
+      console.log('Setting session for password reset'); // Debug log
       supabase.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken,
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Error setting session:', error);
+          setError('Failed to authenticate reset link. Please try again.');
+        } else {
+          console.log('Session set successfully');
+        }
       });
-    } else if (!accessToken || !refreshToken) {
-      setError('Invalid reset link. Please request a new password reset.');
+    } else {
+      console.log('Missing required parameters for password reset');
+      if (!type || type !== 'recovery') {
+        setError('Invalid reset link type. Please request a new password reset.');
+      } else if (!accessToken || !refreshToken) {
+        setError('Missing authentication tokens. Please request a new password reset.');
+      }
     }
   }, []);
 
