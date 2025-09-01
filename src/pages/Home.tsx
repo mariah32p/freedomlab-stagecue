@@ -378,36 +378,16 @@ export function Home() {
             </p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-teal-600 mb-2">2,500+</div>
-              <div className="text-sm md:text-base text-navy-600">Events Managed</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">98%</div>
-              <div className="text-sm md:text-base text-navy-600">On-Time Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">15min</div>
-              <div className="text-sm md:text-base text-navy-600">Avg. Setup Time</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2">4.9★</div>
-              <div className="text-sm md:text-base text-navy-600">User Rating</div>
-            </div>
-          </div>
-
           {/* Testimonials */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">MK</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-semibold">MW</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">Maria Kim</div>
-                  <div className="text-sm text-navy-600">Event Director, TechCorp</div>
+                  <div className="font-semibold text-navy-900">Mariah W.</div>
+                  <div className="text-sm text-navy-600">Technology Conference Director</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -418,18 +398,18 @@ export function Home() {
                 ))}
               </div>
               <p className="text-navy-700 italic">
-                "StageCue transformed our annual conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
+                "StageCue transformed our annual tech conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
               </p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">JR</span>
+                  <span className="text-white font-semibold">DR</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">James Rodriguez</div>
-                  <div className="text-sm text-navy-600">Conference Organizer</div>
+                  <div className="font-semibold text-navy-900">Diane R.</div>
+                  <div className="text-sm text-navy-600">Software Summit Organizer</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -440,18 +420,18 @@ export function Home() {
                 ))}
               </div>
               <p className="text-navy-700 italic">
-                "The speaker coordination features are incredible. Our speakers love having their notes synced with the countdown timer."
+                "The speaker coordination features are incredible. Our software conference speakers love having their notes synced with the countdown timer."
               </p>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-semibold">AL</span>
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-white font-semibold">NR</span>
                 </div>
                 <div>
-                  <div className="font-semibold text-navy-900">Amanda Liu</div>
-                  <div className="text-sm text-navy-600">Workshop Facilitator</div>
+                  <div className="font-semibold text-navy-900">Nathan R.</div>
+                  <div className="text-sm text-navy-600">IT Workshop Coordinator</div>
                 </div>
               </div>
               <div className="flex mb-3">
@@ -462,22 +442,8 @@ export function Home() {
                 ))}
               </div>
               <p className="text-navy-700 italic">
-                "Setup took 10 minutes and saved us hours of coordination headaches. The Slack integration is a game-changer."
+                "Setup took 10 minutes and saved us hours of coordination headaches for our IT training workshops. The Slack integration is a game-changer."
               </p>
-            </div>
-          </div>
-
-          {/* Company Logos */}
-          <div className="text-center">
-            <p className="text-sm font-medium text-navy-500 mb-8 uppercase tracking-wide">
-              Trusted by teams at
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 opacity-60">
-              <div className="text-2xl font-bold text-navy-400">TechCorp</div>
-              <div className="text-2xl font-bold text-navy-400">InnovateLab</div>
-              <div className="text-2xl font-bold text-navy-400">StartupHub</div>
-              <div className="text-2xl font-bold text-navy-400">EventPro</div>
-              <div className="text-2xl font-bold text-navy-400">ConferenceMax</div>
             </div>
           </div>
         </div>
