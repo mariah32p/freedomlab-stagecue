@@ -67,7 +67,7 @@ export function StageCue() {
 
   useEffect(() => {
     const advanceStep = () => {
-        setCurrentStep(prev => (prev < demoSteps.length - 1 ? prev + 1 : prev));
+        setCurrentStep(prev => (prev + 1) % demoSteps.length);
     };
     const timer = setTimeout(advanceStep, demoSteps[currentStep].duration * 1000);
     return () => clearTimeout(timer);
