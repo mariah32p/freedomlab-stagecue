@@ -23,11 +23,16 @@ export function RouteGuard({ children }: RouteGuardProps) {
     // If not signed in → send to /signup
     if (!user) {
       // Allow certain public routes without authentication
-      const publicRoutes = ['/login', '/signup', '/reset-password', '/pricing', '/', '/demo'];
+      const publicRoutes = ['/login', '/signup', '/pricing', '/', '/demo'];
       if (publicRoutes.includes(location.pathname)) {
         return;
       }
       navigate('/signup');
+      return;
+    }
+
+    // Special handling for password reset - allow access even when authenticated
+    if (location.pathname === '/reset-password') {
       return;
     }
 
