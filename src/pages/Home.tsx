@@ -11,119 +11,119 @@ export function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-12 lg:py-16">
+      <section className="relative overflow-hidden py-8 sm:py-12 lg:py-16">
         <div className="absolute inset-0 bg-dots-pattern"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left Side Content */}
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-800 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-teal-100 text-teal-800 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 7-Day Free Trial Available
               </div>
               
-              <h1 className="text-5xl md:text-6xl font-bold text-navy-900 mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-navy-900 mb-3 sm:mb-4 leading-tight">
                 Professional Event
-                <span className="block bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent mt-1">
                   Timing System
                 </span>
               </h1>
               
-              <p className="text-xl text-navy-600 mb-6 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-navy-600 mb-6 sm:mb-8 leading-relaxed">
                 Keep conferences, workshops, and live events perfectly on schedule with real-time countdown displays, speaker coordination, and team notifications.
               </p>
               
               <button
                 onClick={handleStartTrial}
-                className="btn btn-primary px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 mb-4"
+                className="btn btn-primary px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 mb-3 sm:mb-4 w-full sm:w-auto"
               >
                 Start Free Trial
               </button>
               
-              <p className="text-sm text-navy-500">
+              <p className="text-xs sm:text-sm text-navy-500 text-center sm:text-left">
                 7-day free trial • Cancel anytime
               </p>
             </div>
             
             {/* Right Side Mockup */}
-            <div className="relative">
+            <div className="relative mt-8 lg:mt-0">
               {/* Multi-screen Event Management Dashboard */}
-              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700 h-[600px]">
+              <div className="relative transform rotate-1 hover:rotate-0 transition-transform duration-700 h-[500px] sm:h-[600px]">
                 {/* Main Dashboard */}
                 <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden h-full">
                   {/* Browser Header */}
-                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-4 py-3 flex items-center space-x-2 border-b border-slate-300">
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 px-3 sm:px-4 py-2 sm:py-3 flex items-center space-x-2 border-b border-slate-300">
                     <div className="flex space-x-2">
-                      <div className="w-3 h-3 bg-red-400 rounded-full"></div>
-                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-400 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 rounded-full"></div>
                     </div>
-                    <div className="flex-1 bg-white rounded-md px-3 py-1 text-xs text-slate-500 ml-4 shadow-inner">
+                    <div className="flex-1 bg-white rounded-md px-2 sm:px-3 py-1 text-xs text-slate-500 ml-2 sm:ml-4 shadow-inner overflow-hidden">
                       stagecue.com/live/tech-summit-2025
                     </div>
                   </div>
                   
                   {/* Dashboard Content */}
-                  <div className="p-6 bg-gradient-to-br from-slate-50 to-blue-50/30 h-full">
+                  <div className="p-3 sm:p-4 lg:p-6 bg-gradient-to-br from-slate-50 to-blue-50/30 h-full overflow-hidden">
                     {/* Live Event Header */}
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm font-semibold text-slate-900">LIVE: Tech Summit 2025</span>
+                        <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <span className="text-xs sm:text-sm font-semibold text-slate-900">LIVE: Tech Summit 2025</span>
                       </div>
-                      <div className="text-xs text-slate-500">9:42 AM PST</div>
+                      <div className="text-xs text-slate-500 hidden sm:block">9:42 AM PST</div>
                     </div>
                     
                     {/* Multi-Session Grid */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                       {/* Main Stage */}
-                      <div className="bg-white rounded-xl p-4 shadow-lg border-2 border-teal-200">
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-lg border-2 border-teal-200">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
                           <span className="text-xs font-semibold text-teal-600 uppercase tracking-wide">Main Stage</span>
-                          <div className="text-2xl font-mono font-bold text-teal-600">12:34</div>
+                          <div className="text-xl sm:text-2xl font-mono font-bold text-teal-600">12:34</div>
                         </div>
-                        <div className="text-sm font-medium text-slate-900 mb-1">AI in Healthcare</div>
+                        <div className="text-xs sm:text-sm font-medium text-slate-900 mb-1">AI in Healthcare</div>
                         <div className="text-xs text-slate-600 mb-3">Dr. Emily Chen</div>
-                        <div className="w-full bg-teal-100 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-teal-500 to-teal-600 h-2 rounded-full" style={{width: '75%'}}></div>
+                        <div className="w-full bg-teal-100 rounded-full h-1.5 sm:h-2">
+                          <div className="bg-gradient-to-r from-teal-500 to-teal-600 h-1.5 sm:h-2 rounded-full" style={{width: '75%'}}></div>
                         </div>
                       </div>
                       
                       {/* Workshop Room */}
-                      <div className="bg-white rounded-xl p-4 shadow-lg border border-slate-200">
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-lg border border-slate-200">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
                           <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Workshop A</span>
-                          <div className="text-2xl font-mono font-bold text-purple-600">08:15</div>
+                          <div className="text-xl sm:text-2xl font-mono font-bold text-purple-600">08:15</div>
                         </div>
-                        <div className="text-sm font-medium text-slate-900 mb-1">React Best Practices</div>
+                        <div className="text-xs sm:text-sm font-medium text-slate-900 mb-1">React Best Practices</div>
                         <div className="text-xs text-slate-600 mb-3">Alex Rodriguez</div>
-                        <div className="w-full bg-purple-100 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style={{width: '45%'}}></div>
+                        <div className="w-full bg-purple-100 rounded-full h-1.5 sm:h-2">
+                          <div className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 sm:h-2 rounded-full" style={{width: '45%'}}></div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Upcoming Sessions */}
-                    <div className="mb-6">
-                      <h4 className="text-sm font-semibold text-slate-700 mb-3">Next Up</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-slate-200">
+                    <div className="mb-4 sm:mb-6">
+                      <h4 className="text-xs sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3">Next Up</h4>
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <div className="flex items-center justify-between p-2 sm:p-3 bg-white/70 rounded-md sm:rounded-lg border border-slate-200">
                           <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-slate-400 rounded-full"></div>
                             <div>
-                              <div className="text-sm font-medium text-slate-900">Coffee Break</div>
+                              <div className="text-xs sm:text-sm font-medium text-slate-900">Coffee Break</div>
                               <div className="text-xs text-slate-600">15 minutes</div>
                             </div>
                           </div>
                           <div className="text-xs text-slate-500">10:30 AM</div>
                         </div>
-                        <div className="flex items-center justify-between p-3 bg-white/70 rounded-lg border border-slate-200">
+                        <div className="flex items-center justify-between p-2 sm:p-3 bg-white/70 rounded-md sm:rounded-lg border border-slate-200">
                           <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full"></div>
                             <div>
-                              <div className="text-sm font-medium text-slate-900">Keynote: Future of AI</div>
+                              <div className="text-xs sm:text-sm font-medium text-slate-900">Keynote: Future of AI</div>
                               <div className="text-xs text-slate-600">45 minutes</div>
                             </div>
                           </div>
@@ -133,66 +133,67 @@ export function Home() {
                     </div>
                     
                     {/* Live Actions */}
-                    <div className="flex space-x-3 mb-6">
-                      <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div className="flex space-x-2 sm:space-x-3 mb-4 sm:mb-6">
+                      <button className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Extend +5min
                       </button>
-                      <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                      <button className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Alert Team
                       </button>
-                      <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-3 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                      <button className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 px-2 sm:px-3 rounded-md sm:rounded-lg text-xs sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                         Next Session
                       </button>
                     </div>
                     
                     {/* Speaker Notes Preview */}
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-slate-700 mb-3">Current Speaker Notes</h4>
-                      <div className="space-y-2">
-                        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="mb-3 sm:mb-4">
+                      <h4 className="text-xs sm:text-sm font-semibold text-slate-700 mb-2 sm:mb-3">Current Speaker Notes</h4>
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <div className="p-2 sm:p-3 bg-blue-50 rounded-md sm:rounded-lg border border-blue-200">
                           <div className="flex justify-between items-start mb-1">
                             <span className="text-xs font-medium text-blue-600">12:30</span>
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Essential</span>
+                            <span className="text-xs bg-blue-100 text-blue-700 px-1.5 sm:px-2 py-0.5 rounded">Essential</span>
                           </div>
-                          <div className="text-sm text-blue-800">Introduce new AI diagnostic tools</div>
+                          <div className="text-xs sm:text-sm text-blue-800">Introduce new AI diagnostic tools</div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Team Status */}
-                    <div className="mt-6">
-                      <div className="flex items-center space-x-4 text-xs">
+                    <div className="mt-4">
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs">
                         <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-green-500 rounded-full"></div><span className="text-slate-600">Moderator Ready</span></div>
-                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><span className="text-slate-600">Speakers Online</span></div>
-                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-purple-500 rounded-full"></div><span className="text-slate-600">Tech Support</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><span className="text-slate-600 hidden sm:inline">Speakers Online</span><span className="text-slate-600 sm:hidden">Speakers</span></div>
+                        <div className="flex items-center space-x-1"><div className="w-2 h-2 bg-purple-500 rounded-full"></div><span className="text-slate-600 hidden sm:inline">Tech Support</span><span className="text-slate-600 sm:hidden">Tech</span></div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Floating Elements */}
-                <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-xl border border-slate-200 p-3 animate-bounce">
+                <div className="absolute -top-2 sm:-top-4 -left-2 sm:-left-4 bg-white rounded-lg sm:rounded-xl shadow-xl border border-slate-200 p-2 sm:p-3 animate-bounce">
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-xs font-semibold text-slate-900">Live Updates</span>
                   </div>
                 </div>
                 
-                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-xl shadow-xl p-3 animate-pulse">
+                <div className="absolute -bottom-2 sm:-bottom-4 -right-2 sm:-right-4 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-lg sm:rounded-xl shadow-xl p-2 sm:p-3 animate-pulse">
                   <div className="text-xs font-bold">2 Sessions</div>
                   <div className="text-xs opacity-90">Running Live</div>
                 </div>
                 
-                <div className="absolute top-1/2 -right-8 bg-white rounded-lg shadow-lg border border-slate-200 p-2 transform -translate-y-1/2 animate-slide-in-right">
+                <div className="absolute top-1/2 -right-4 sm:-right-8 bg-white rounded-md sm:rounded-lg shadow-lg border border-slate-200 p-2 transform -translate-y-1/2 animate-slide-in-right">
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center">
+                      <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
                     <div className="text-xs">
                       <div className="font-semibold text-slate-900">Slack Alert</div>
-                      <div className="text-slate-600">Sent to #event-team</div>
+                      <div className="text-slate-600 hidden sm:block">Sent to #event-team</div>
+                      <div className="text-slate-600 sm:hidden">Delivered</div>
                     </div>
                   </div>
                 </div>
