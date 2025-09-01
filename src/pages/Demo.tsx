@@ -37,6 +37,14 @@ const AnimationStyles = () => (
 
 export function StageCue() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const demoSteps: DemoStep[] = useMemo(() => [
     {
@@ -80,10 +88,10 @@ export function StageCue() {
       <AnimationStyles />
       
       {/* Demo Progress Bar */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3">
+      <div className="bg-white border-b border-slate-200 px-3 sm:px-6 py-2 sm:py-3">
         <div className="flex items-center justify-between mb-2">
-          <div className="text-sm font-medium text-slate-700">Live Demo Progress</div>
-          <div className="text-sm text-slate-500">{currentStep + 1} of {demoSteps.length}</div>
+          <div className="text-xs sm:text-sm font-medium text-slate-700">Live Demo Progress</div>
+          <div className="text-xs sm:text-sm text-slate-500">{currentStep + 1} of {demoSteps.length}</div>
         </div>
         <div className="w-full bg-slate-200 rounded-full h-2">
           <div 
@@ -91,11 +99,11 @@ export function StageCue() {
             style={{ width: `${((currentStep + 1) / demoSteps.length) * 100}%` }}
           ></div>
         </div>
-        <div className="flex justify-between mt-2">
+        <div className={`flex justify-between mt-2 ${isMobile ? 'text-xs' : ''}`}>
           {demoSteps.map((step, index) => (
             <div 
               key={step.id}
-              className={`text-xs font-medium transition-colors duration-300 ${
+              className={`${isMobile ? 'text-xs' : 'text-xs'} font-medium transition-colors duration-300 ${
                 index <= currentStep ? 'text-teal-600' : 'text-slate-400'
               }`}
             >
@@ -105,26 +113,26 @@ export function StageCue() {
         </div>
       </div>
       
-      <header className="bg-white border-b border-slate-200 px-6 py-4">
+      <header className="bg-white border-b border-slate-200 px-3 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <svg className="w-3 h-3 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">StageCue</h1>
-              <p className="text-sm text-slate-500">Q1 Product Launch Planning</p>
+              <h1 className="text-lg sm:text-xl font-semibold text-slate-900">StageCue</h1>
+              <p className="text-xs sm:text-sm text-slate-500 hidden sm:block">Q1 Product Launch Planning</p>
             </div>
           </div>
-          <div className="flex items-center space-x-6">
-            <nav className="flex space-x-2">
+          <div className="flex items-center space-x-2 sm:space-x-6">
+            <nav className="hidden sm:flex space-x-2">
               <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-slate-100">Events</button>
               <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-slate-100">Templates</button>
               <button className="text-slate-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium rounded-md hover:bg-slate-100">Settings</button>
             </nav>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center"><span className="text-slate-600 text-sm font-medium">JD</span></div>
-              <span className="text-sm text-slate-700">John Doe</span>
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-slate-200 rounded-full flex items-center justify-center"><span className="text-slate-600 text-xs sm:text-sm font-medium">JD</span></div>
+              <span className="text-xs sm:text-sm text-slate-700 hidden sm:block">John Doe</span>
             </div>
           </div>
         </div>
@@ -161,36 +169,36 @@ function CreateEventStep() {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto p-3 sm:p-6 animate-fade-in">
       {/* Attention-grabbing header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-full text-sm font-semibold mb-4 animate-pulse">
+        <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-teal-500 to-purple-500 text-white rounded-full text-xs sm:text-sm font-semibold mb-4 animate-pulse">
           <div className="w-2 h-2 bg-white rounded-full mr-2 animate-ping"></div>
           LIVE DEMO: Watch StageCue Setup
         </div>
       </div>
       
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-2">Create New Event</h2>
-          <p className="text-slate-600">Set up your event timing and coordination</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Create New Event</h2>
+          <p className="text-sm sm:text-base text-slate-600">Set up your event timing and coordination</p>
         </div>
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">Event Name</label>
             <input 
               type="text" 
               value={formData.name} 
               readOnly 
-              className={`w-full px-4 py-3 border border-slate-300 rounded-lg ${isTyping ? 'ring-2 ring-teal-500 border-teal-500' : ''}`}
+              className={`w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base ${isTyping ? 'ring-2 ring-teal-500 border-teal-500' : ''}`}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium text-slate-700 mb-2">Date</label><input type="date" value={formData.date} readOnly className="w-full px-4 py-3 border border-slate-300 rounded-lg"/></div>
-            <div><label className="block text-sm font-medium text-slate-700 mb-2">Duration</label><input type="text" value={formData.duration} readOnly className="w-full px-4 py-3 border border-slate-300 rounded-lg"/></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label className="block text-sm font-medium text-slate-700 mb-2">Date</label><input type="date" value={formData.date} readOnly className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/></div>
+            <div><label className="block text-sm font-medium text-slate-700 mb-2">Duration</label><input type="text" value={formData.duration} readOnly className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/></div>
           </div>
-          <div><label className="block text-sm font-medium text-slate-700 mb-2">Meeting Link</label><input type="text" value={formData.room} readOnly className="w-full px-4 py-3 border border-slate-300 rounded-lg"/></div>
-          <div className="pt-4"><button className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-indigo-700">Create Event</button></div>
+          <div><label className="block text-sm font-medium text-slate-700 mb-2">Meeting Link</label><input type="text" value={formData.room} readOnly className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/></div>
+          <div className="pt-4"><button className="w-full bg-indigo-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg text-sm sm:text-base font-medium hover:bg-indigo-700">Create Event</button></div>
         </div>
       </div>
     </div>
@@ -247,44 +255,44 @@ function AddSpeakersStep() {
   const getInitials = (name: string) => name.split(' ').map(n => n[0]).join('');
 
   return (
-    <div className="max-w-6xl mx-auto p-6 animate-fade-in">
+    <div className="max-w-6xl mx-auto p-3 sm:p-6 animate-fade-in">
       {/* Eye-catching animated header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-sm font-semibold mb-4">
-          <svg className="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-full text-xs sm:text-sm font-semibold mb-4">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
           Adding Speakers Automatically
         </div>
       </div>
       
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-8">
         <div className="text-center mb-8"><h2 className="text-3xl font-bold text-slate-900 mb-2">Add Speakers & Sessions</h2><p className="text-slate-600">Configure your event agenda and timing</p></div>
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Add New Speaker</h3>
-            <div className={`space-y-4 p-6 rounded-lg transition-all duration-300 ${isAdding ? 'bg-purple-50 ring-2 ring-purple-500' : 'bg-slate-50'}`}>
-              <input type="text" value={formData.name} readOnly placeholder="Speaker name..." className="w-full px-4 py-3 border border-slate-300 rounded-lg"/>
-              <input type="text" value={formData.session} readOnly placeholder="Session title..." className="w-full px-4 py-3 border border-slate-300 rounded-lg"/>
-              <input type="text" value={formData.duration} readOnly placeholder="Duration..." className="w-full px-4 py-3 border border-slate-300 rounded-lg"/>
-              <button className={`w-full py-3 rounded-lg font-medium transition-all duration-300 ${isAdding ? 'bg-purple-600 text-white animate-pulse' : 'bg-indigo-600 text-white'}`}>
+            <h3 className="text-sm sm:text-base font-semibold text-slate-900 mb-4">Add New Speaker</h3>
+            <div className={`space-y-3 sm:space-y-4 p-4 sm:p-6 rounded-lg transition-all duration-300 ${isAdding ? 'bg-purple-50 ring-2 ring-purple-500' : 'bg-slate-50'}`}>
+              <input type="text" value={formData.name} readOnly placeholder="Speaker name..." className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/>
+              <input type="text" value={formData.session} readOnly placeholder="Session title..." className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/>
+              <input type="text" value={formData.duration} readOnly placeholder="Duration..." className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"/>
+              <button className={`w-full py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${isAdding ? 'bg-purple-600 text-white animate-pulse' : 'bg-indigo-600 text-white'}`}>
                 {isAdding ? 'Adding Speaker...' : 'Add Speaker'}
               </button>
             </div>
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Event Agenda</h3>
+            <h3 className="text-sm sm:text-base font-semibold text-slate-900 mb-4">Event Agenda</h3>
             <div className="space-y-3">
               {speakers.map((speaker, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg shadow-sm animate-fade-in">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center"><span className="text-indigo-600 font-semibold text-sm">{getInitials(speaker.name)}</span></div>
-                    <div><div className="font-medium text-slate-900">{speaker.name}</div><div className="text-sm text-slate-600">{speaker.session}</div></div>
+                <div key={index} className="flex items-center justify-between p-3 sm:p-4 bg-white border border-slate-200 rounded-lg shadow-sm animate-fade-in">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-100 rounded-lg flex items-center justify-center"><span className="text-indigo-600 font-semibold text-xs sm:text-sm">{getInitials(speaker.name)}</span></div>
+                    <div><div className="text-sm sm:text-base font-medium text-slate-900">{speaker.name}</div><div className="text-xs sm:text-sm text-slate-600">{speaker.session}</div></div>
                   </div>
-                  <div className="text-sm font-medium text-slate-500">{speaker.duration}</div>
+                  <div className="text-xs sm:text-sm font-medium text-slate-500">{speaker.duration}</div>
                 </div>
               ))}
-              {speakers.length === 0 && <div className="text-center py-8 text-slate-500"><svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>Add speakers to build your agenda</div>}
+              {speakers.length === 0 && <div className="text-center py-6 sm:py-8 text-slate-500"><svg className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg><span className="text-sm sm:text-base">Add speakers to build your agenda</span></div>}
             </div>
           </div>
         </div>
@@ -336,66 +344,66 @@ function SpeakerNotesStep() {
   };
   
   return (
-    <div className="max-w-6xl mx-auto p-6 animate-fade-in">
+    <div className="max-w-6xl mx-auto p-3 sm:p-6 animate-fade-in">
       {/* Eye-catching animated header */}
       <div className="text-center mb-6">
-        <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full text-sm font-semibold mb-4">
-          <svg className="w-4 h-4 mr-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full text-xs sm:text-sm font-semibold mb-4">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           Creating Speaker Notes
         </div>
       </div>
       
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-        <div className="text-center mb-8"><h2 className="text-3xl font-bold text-slate-900 mb-2">Setup Speaker Notes</h2><p className="text-slate-600">Add time-synced speaking notes and cues</p></div>
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-8">
+        <div className="text-center mb-6 sm:mb-8"><h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Setup Speaker Notes</h2><p className="text-sm sm:text-base text-slate-600">Add time-synced speaking notes and cues</p></div>
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           <div>
-            <div className="mb-6"><label className="block text-sm font-medium text-slate-700 mb-2">Select Speaker</label><select className="w-full px-4 py-3 border border-slate-300 rounded-lg"><option>Sarah Martinez</option><option>Alex Chen</option><option>Jessica Park</option></select></div>
+            <div className="mb-4 sm:mb-6"><label className="block text-sm font-medium text-slate-700 mb-2">Select Speaker</label><select className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-slate-300 rounded-lg text-sm sm:text-base"><option>Sarah Martinez</option><option>Alex Chen</option><option>Jessica Park</option></select></div>
             <div className="space-y-4">
-              <h3 className="font-semibold text-slate-900">Add Speaking Note</h3>
-              <div className={`p-4 rounded-lg space-y-3 transition-all duration-300 ${isAddingNote ? 'bg-blue-50 ring-2 ring-blue-500' : 'bg-slate-50'}`}>
+              <h3 className="text-sm sm:text-base font-semibold text-slate-900">Add Speaking Note</h3>
+              <div className={`p-3 sm:p-4 rounded-lg space-y-3 transition-all duration-300 ${isAddingNote ? 'bg-blue-50 ring-2 ring-blue-500' : 'bg-slate-50'}`}>
                 <input
                   type="text"
                   value={formData.time}
                   readOnly
                   placeholder="Time marker..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm"
                 />
                 <textarea
                   value={formData.content}
                   readOnly
                   placeholder="Speaking note..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm h-20"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm h-16 sm:h-20"
                 />
                 <select
                   value={formData.type}
                   disabled
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs sm:text-sm"
                 >
                   <option value="essential">Essential</option>
                   <option value="optional">Optional</option>
                   <option value="transition">Transition</option>
                 </select>
-                <button className={`w-full py-2 rounded-lg text-sm font-medium transition-all duration-300 ${isAddingNote ? 'bg-blue-600 text-white animate-pulse' : 'bg-indigo-600 text-white'}`}>
+                <button className={`w-full py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${isAddingNote ? 'bg-blue-600 text-white animate-pulse' : 'bg-indigo-600 text-white'}`}>
                   {isAddingNote ? 'Adding Note...' : 'Add Note'}
                 </button>
               </div>
             </div>
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900 mb-4">Speaker Notes for Sarah Martinez</h3>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
+            <h3 className="text-sm sm:text-base font-semibold text-slate-900 mb-4">Speaker Notes for Sarah Martinez</h3>
+            <div className="space-y-2 sm:space-y-3 max-h-64 sm:max-h-96 overflow-y-auto">
               {notes.map((note, index) => (
-                <div key={index} className={`p-4 rounded-lg border animate-fade-in ${getNoteTypeColor(note.type)}`}>
+                <div key={index} className={`p-3 sm:p-4 rounded-lg border animate-fade-in ${getNoteTypeColor(note.type)}`}>
                   <div className="flex items-start justify-between mb-2">
-                    <div className="font-medium text-sm">{note.time}</div>
+                    <div className="font-medium text-xs sm:text-sm">{note.time}</div>
                     <div className="text-xs px-2 py-1 bg-white/50 rounded capitalize">{note.type}</div>
                   </div>
-                  <div className="text-sm">{note.content}</div>
+                  <div className="text-xs sm:text-sm">{note.content}</div>
                 </div>
               ))}
-              {notes.length === 0 && <div className="text-center py-8 text-slate-500"><svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>Add notes for this speaker</div>}
+              {notes.length === 0 && <div className="text-center py-6 sm:py-8 text-slate-500"><svg className="w-8 h-8 sm:w-12 sm:h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg><span className="text-sm sm:text-base">Add notes for this speaker</span></div>}
             </div>
           </div>
         </div>
@@ -431,43 +439,43 @@ function LiveManagementStep() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 animate-fade-in">
+    <div className="max-w-7xl mx-auto p-3 sm:p-6 animate-fade-in">
       {/* Eye-catching live indicator */}
       <div className="text-center mb-6">
-        <div className={`inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full text-sm font-semibold mb-4 transition-all duration-500 ${isLive ? 'animate-pulse' : ''}`}>
+        <div className={`inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full text-xs sm:text-sm font-semibold mb-4 transition-all duration-500 ${isLive ? 'animate-pulse' : ''}`}>
           <div className="w-2 h-2 bg-white rounded-full mr-2 animate-ping"></div>
           🔴 LIVE EVENT IN PROGRESS
         </div>
       </div>
       
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-8">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-8">
           <div className="text-center mb-8">
-            <div className={`text-8xl font-mono font-bold mb-4 transition-colors duration-500 ${timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-slate-900'}`}>
+            <div className={`text-5xl sm:text-8xl font-mono font-bold mb-4 transition-colors duration-500 ${timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-slate-900'}`}>
               {formatTime(timeRemaining)}
             </div>
-            <div className="text-slate-600 text-lg">Time Remaining</div>
+            <div className="text-slate-600 text-sm sm:text-lg">Time Remaining</div>
           </div>
-          <div className="bg-slate-50 rounded-lg p-6 mb-6 text-center"><h3 className="text-xl font-semibold text-slate-900">Sarah Martinez</h3><p className="text-slate-600">Project Overview & Timeline</p></div>
-          <div className="flex justify-center space-x-4">
-            <button className="px-6 py-3 rounded-lg font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-lg">Pause</button>
+          <div className="bg-slate-50 rounded-lg p-4 sm:p-6 mb-6 text-center"><h3 className="text-lg sm:text-xl font-semibold text-slate-900">Sarah Martinez</h3><p className="text-sm sm:text-base text-slate-600">Project Overview & Timeline</p></div>
+          <div className="flex justify-center space-x-2 sm:space-x-4">
+            <button className="px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-sm sm:text-base font-medium bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-lg">Pause</button>
             <button 
               onClick={() => setTimeRemaining(prev => prev + 300)} 
-              className="px-4 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="px-3 sm:px-4 py-2 sm:py-3 bg-blue-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               +5 min
             </button>
             <button 
               onClick={() => setTimeRemaining(20 * 60)} 
-              className="px-6 py-3 bg-slate-500 text-white rounded-lg font-medium hover:bg-slate-600 transition-colors shadow-lg"
+              className="px-3 sm:px-6 py-2 sm:py-3 bg-slate-500 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-slate-600 transition-colors shadow-lg"
             >
               Reset
             </button>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"><h3 className="font-semibold text-slate-900 mb-4">Team Status</h3><div className="space-y-3"><div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg"><div className="w-2 h-2 bg-green-500 rounded-full"></div><div><div className="text-sm font-medium">Moderator Ready</div></div></div><div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><div><div className="text-sm font-medium">Next Speaker</div></div></div></div></div>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6"><h3 className="font-semibold text-slate-900 mb-4">Quick Actions</h3><div className="space-y-3"><button className="w-full p-3 bg-slate-50 hover:bg-slate-100 rounded-lg text-left"><div className="font-medium">Send Slack Alert</div></button><button className="w-full p-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-left"><div className="font-medium text-purple-900">Next Session</div></button></div></div>
+        <div className="space-y-4 sm:space-y-6 mt-6 lg:mt-0">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6"><h3 className="text-sm sm:text-base font-semibold text-slate-900 mb-3 sm:mb-4">Team Status</h3><div className="space-y-2 sm:space-y-3"><div className="flex items-center space-x-3 p-2 sm:p-3 bg-green-50 rounded-lg"><div className="w-2 h-2 bg-green-500 rounded-full"></div><div><div className="text-xs sm:text-sm font-medium">Moderator Ready</div></div></div><div className="flex items-center space-x-3 p-2 sm:p-3 bg-blue-50 rounded-lg"><div className="w-2 h-2 bg-blue-500 rounded-full"></div><div><div className="text-xs sm:text-sm font-medium">Next Speaker</div></div></div></div></div>
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6"><h3 className="text-sm sm:text-base font-semibold text-slate-900 mb-3 sm:mb-4">Quick Actions</h3><div className="space-y-2 sm:space-y-3"><button className="w-full p-2 sm:p-3 bg-slate-50 hover:bg-slate-100 rounded-lg text-left"><div className="text-xs sm:text-sm font-medium">Send Slack Alert</div></button><button className="w-full p-2 sm:p-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-left"><div className="text-xs sm:text-sm font-medium text-purple-900">Next Session</div></button></div></div>
         </div>
       </div>
     </div>
