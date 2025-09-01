@@ -1,6 +1,7 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import { Alert } from '../components/Alert';
 
 export function ResetPassword() {
@@ -9,68 +10,33 @@ export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isValidResetSession, setIsValidResetSession] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Debug the full URL
-    console.log('Full URL:', window.location.href);
-    console.log('Hash:', window.location.hash);
-    console.log('Search params:', window.location.search);
-    
-    // Parse URL fragments for password reset tokens
-    const parseHashParams = () => {
-      const hash = window.location.hash;
-      console.log('Raw hash:', hash);
-      if (!hash) return {};
-      
-      const params: Record<string, string> = {};
-      const hashString = hash.substring(1); // Remove the #
-      console.log('Hash string after removing #:', hashString);
-      const pairs = hashString.split('&');
-      console.log('Hash pairs:', pairs);
-      
-      pairs.forEach(pair => {
-        const [key, value] = pair.split('=');
-        if (key && value) {
-          params[decodeURIComponent(key)] = decodeURIComponent(value);
-        }
-      });
-      
-      return params;
-    };
-
-    const hashParams = parseHashParams();
-    const accessToken = hashParams.access_token;
-    const refreshToken = hashParams.refresh_token;
-    const type = hashParams.type;
-
-    console.log('Hash params:', hashParams); // Debug log
-    console.log('Access token:', accessToken); // Debug log
-    console.log('Type:', type); // Debug log
-
-    if (type === 'recovery' && accessToken && refreshToken) {
-      console.log('Setting session for password reset'); // Debug log
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      }).then(({ error }) => {
-        if (error) {
-          console.error('Error setting session:', error);
-          setError('Failed to authenticate reset link. Please try again.');
+    // Check if we have a valid user session for password reset
+    if (user) {
+      // Check if this is a password recovery session
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          setIsValidResetSession(true);
         } else {
-          console.log('Session set successfully');
+          setError('Invalid reset session. Please request a new password reset.');
         }
       });
     } else {
-      console.log('Missing required parameters for password reset');
-      if (!type || type !== 'recovery') {
-        setError('Invalid reset link type. Please request a new password reset.');
-      } else if (!accessToken || !refreshToken) {
-        setError('Missing authentication tokens. Please request a new password reset.');
-      }
+      // Wait a moment for auth state to potentially update from URL fragments
+      const timer = setTimeout(() => {
+        if (!user) {
+          setError('Invalid reset link. Please request a new password reset.');
+        }
+      }, 2000);
+      
+      return () => clearTimeout(timer);
     }
-  }, []);
+  }, [user]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

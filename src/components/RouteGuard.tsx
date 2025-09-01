@@ -15,6 +15,11 @@ export function RouteGuard({ children }: RouteGuardProps) {
   const location = useLocation();
 
   useEffect(() => {
+    // Don't interfere with Supabase auth redirects (they contain # fragments)
+    if (window.location.hash && window.location.hash.includes('access_token')) {
+      return;
+    }
+
     // Don't redirect while still loading
     if (authLoading || subscriptionStatus.loading) {
       return;
