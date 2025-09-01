@@ -65,8 +65,8 @@ export function Navbar() {
                 </Link>
                 <button
                   onClick={handleStartTrial}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-md text-base font-semibold transition-colors shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
-                  style={{ width: '160px', height: '48px' }}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-md text-sm font-semibold transition-colors shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200 whitespace-nowrap"
+                  style={{ minWidth: '140px', height: '48px' }}
                 >
                   Start Free Trial
                 </button>
@@ -79,7 +79,7 @@ export function Navbar() {
             {!user && (
               <button
                 onClick={handleStartTrial}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2.5 rounded-md text-sm font-semibold transition-colors shadow-sm"
+                className="bg-teal-600 hover:bg-teal-700 text-white px-3 py-2.5 rounded-md text-sm font-semibold transition-colors shadow-sm whitespace-nowrap"
                 style={{ minHeight: '44px' }}
               >
                 Try Free
