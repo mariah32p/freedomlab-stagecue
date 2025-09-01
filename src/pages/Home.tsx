@@ -1189,10 +1189,3 @@ export function Home() {
           </p>
         </div>
       </section>
-
-      {/* Demo Section */}
-      <section className="py-16 bg-slate-50">
-      </section>
-    </div>
-  );
-}
