@@ -696,30 +696,6 @@ export function Home() {
               </p>
             </div>
           </div>
-
-          {/* Still have questions CTA */}
-          <div className="mt-16 text-center bg-gradient-to-r from-teal-50 to-purple-50 rounded-2xl p-8 border border-slate-200">
-            <h3 className="text-xl font-bold text-navy-900 mb-3">
-              Still have questions?
-            </h3>
-            <p className="text-navy-600 mb-6">
-              Our team is here to help you succeed with your events
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleStartTrial}
-                className="btn btn-primary px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold"
-              >
-                Start Free Trial
-              </button>
-              <a
-                href="mailto:support@stagecue.com"
-                className="btn btn-outline px-6 py-3 border-2 border-navy-300 text-navy-700 hover:bg-navy-700 hover:text-white rounded-xl font-semibold transition-all duration-200"
-              >
-                Contact Support
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 
