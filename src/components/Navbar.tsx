@@ -34,8 +34,8 @@ export function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2 max-w-[120px]">
-              <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
+            <Link to="/" className="flex items-center space-x-3 max-w-[140px]">
+              <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center shadow-lg">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -60,15 +60,12 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link to="/pricing" className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                  Pricing
-                </Link>
                 <Link to="/login" className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                   Login
                 </Link>
                 <button
                   onClick={handleStartTrial}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-md text-sm font-semibold transition-colors shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-md text-base font-semibold transition-colors shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
                   style={{ width: '160px', height: '48px' }}
                 >
                   Start Free Trial
@@ -121,13 +118,6 @@ export function Navbar() {
                 </>
               ) : (
                 <>
-                  <Link
-                    to="/pricing"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-teal-600 hover:bg-slate-50 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Pricing
-                  </Link>
                   <Link
                     to="/login"
                     className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-teal-600 hover:bg-slate-50 transition-colors"
