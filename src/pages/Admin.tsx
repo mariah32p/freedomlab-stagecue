@@ -12,6 +12,8 @@ interface TestCase {
   status: 'pending' | 'in-progress' | 'completed' | 'failed';
   notes?: string;
   timeEstimate: string;
+  riskLevel: 'low' | 'medium' | 'high';
+  cost: string;
 }
 
 interface SubscriptionData {
@@ -33,12 +35,15 @@ export function Admin() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [refreshing, setRefreshing] = useState(false);
 
-  const adminPassword = 'stagecue2025'; // Temporary password
+  const adminPassword = 'stagecue2025';
 
   useEffect(() => {
     if (isAuthenticated) {
       initializeTestCases();
       fetchSubscriptions();
+      // Auto-refresh every 30 seconds to catch webhook updates
+      const interval = setInterval(fetchSubscriptions, 30000);
+      return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
 
@@ -53,192 +58,201 @@ export function Admin() {
 
   const initializeTestCases = () => {
     const cases: TestCase[] = [
-      // CORE SUBSCRIPTION LIFECYCLE
+      // CRITICAL PATH TESTS (Do these first)
       {
         id: 'basic-trial-success',
-        category: 'Core Lifecycle',
-        title: 'Basic Trial → Active Success',
+        category: 'Critical Path',
+        title: '🎯 Basic Trial → Active (SUCCESS)',
         description: 'Test successful trial to active conversion for Basic plan',
         instructions: [
-          '1. Create new user account with unique email',
+          '1. Create new user account with unique email (test1@example.com)',
           '2. Sign up for Basic plan (1-day trial)',
-          '3. Use test card: 4242424242424242',
-          '4. Wait 24+ hours for trial to expire',
-          '5. Check webhook logs for subscription.updated event'
+          '3. Use REAL CARD: Your actual credit card',
+          '4. Complete checkout successfully',
+          '5. Wait 24+ hours for trial to expire',
+          '6. Check webhook logs in Supabase for subscription.updated event',
+          '7. IMMEDIATELY CANCEL after verification to avoid charges'
         ],
         verification: [
           'Status changes from "trialing" to "active"',
           'current_period_end updates to next month',
           'User retains dashboard access',
-          'No payment issue banner appears'
+          'No payment issue banner appears',
+          'Webhook received: customer.subscription.updated'
         ],
         expectedOutcome: 'Subscription automatically converts to active after trial',
         status: 'pending',
-        timeEstimate: '24+ hours'
+        timeEstimate: '24+ hours',
+        riskLevel: 'medium',
+        cost: '$29 (cancel immediately)'
       },
       {
         id: 'pro-trial-success',
-        category: 'Core Lifecycle',
-        title: 'Pro Trial → Active Success',
+        category: 'Critical Path',
+        title: '🎯 Pro Trial → Active (SUCCESS)',
         description: 'Test successful trial to active conversion for Pro plan',
         instructions: [
-          '1. Create new user account with unique email',
+          '1. Create new user account with unique email (test2@example.com)',
           '2. Sign up for Pro plan (1-day trial)',
-          '3. Use test card: 4242424242424242',
-          '4. Wait 24+ hours for trial to expire',
-          '5. Check webhook logs for subscription.updated event'
+          '3. Use REAL CARD: Your actual credit card',
+          '4. Complete checkout successfully',
+          '5. Wait 24+ hours for trial to expire',
+          '6. Check webhook logs for subscription.updated event',
+          '7. IMMEDIATELY CANCEL after verification to avoid charges'
         ],
         verification: [
           'Status changes from "trialing" to "active"',
           'current_period_end updates to next month',
+          'Plan shows as "StageCue Pro"',
           'User retains dashboard access',
-          'Plan shows as "StageCue Pro"'
+          'Webhook received: customer.subscription.updated'
         ],
         expectedOutcome: 'Pro subscription automatically converts to active after trial',
         status: 'pending',
-        timeEstimate: '24+ hours'
-      },
-      {
-        id: 'trial-cancel-during',
-        category: 'Core Lifecycle',
-        title: 'Cancel During Trial',
-        description: 'Test canceling subscription while in trial period',
-        instructions: [
-          '1. Create new user account with unique email',
-          '2. Sign up for any plan (1-day trial)',
-          '3. Go to Dashboard → Manage Subscription',
-          '4. Cancel subscription in Stripe portal',
-          '5. Return to dashboard immediately'
-        ],
-        verification: [
-          'Status shows "Free Trial (Canceled)"',
-          'Message: "Subscription will not renew after trial"',
-          'User still has dashboard access',
-          'cancel_at_period_end = true in database'
-        ],
-        expectedOutcome: 'User keeps access until trial ends, then loses access',
-        status: 'pending',
-        timeEstimate: '5 minutes + 24 hours'
+        timeEstimate: '24+ hours',
+        riskLevel: 'medium',
+        cost: '$49 (cancel immediately)'
       },
 
-      // PAYMENT FAILURES
+      // PAYMENT FAILURE TESTS
       {
         id: 'trial-payment-failure',
         category: 'Payment Failures',
-        title: 'Trial → Payment Failure',
-        description: 'Test payment failure when trial converts',
+        title: '💳 Trial → Payment Failure → Grace Period',
+        description: 'Test payment failure when trial converts using insufficient funds card',
         instructions: [
-          '1. Create new user account with unique email',
-          '2. Sign up for any plan (1-day trial)',
-          '3. Use declining card: 4000000000000002',
-          '4. Wait 24+ hours for trial conversion attempt',
-          '5. Check webhook logs for invoice.payment_failed'
+          '1. Create new user account (test3@example.com)',
+          '2. Sign up for Basic plan (1-day trial)',
+          '3. Use REAL CARD initially to start trial',
+          '4. BEFORE trial expires: Go to Stripe dashboard',
+          '5. Update customer payment method to insufficient funds card: 4000000000009995',
+          '6. Wait 24+ hours for trial conversion attempt',
+          '7. Check webhook logs for invoice.payment_failed',
+          '8. Verify grace period starts'
         ],
         verification: [
           'Status changes to "past_due"',
           'payment_issue_since is set to current timestamp',
           'Payment issue banner appears on dashboard',
-          'User still has access (grace period)'
+          'User still has access (grace period)',
+          'Webhook received: invoice.payment_failed'
         ],
-        expectedOutcome: 'Subscription goes past_due, grace period starts',
+        expectedOutcome: 'Subscription goes past_due, 1-day grace period starts',
         status: 'pending',
-        timeEstimate: '24+ hours'
+        timeEstimate: '24+ hours',
+        riskLevel: 'low',
+        cost: '$0 (payment fails)'
       },
       {
         id: 'grace-period-recovery',
         category: 'Payment Failures',
-        title: 'Grace Period → Payment Recovery',
+        title: '🔄 Grace Period → Payment Recovery',
         description: 'Test successful payment after grace period starts',
         instructions: [
           '1. Use subscription from "Trial → Payment Failure" test',
           '2. Go to Dashboard → Manage Subscription',
-          '3. Update payment method to valid card: 4242424242424242',
-          '4. Trigger retry in Stripe dashboard',
-          '5. Check webhook logs for invoice.payment_succeeded'
+          '3. Update payment method to valid card in Stripe portal',
+          '4. In Stripe dashboard, manually retry the failed invoice',
+          '5. Check webhook logs for invoice.payment_succeeded',
+          '6. IMMEDIATELY CANCEL to avoid ongoing charges'
         ],
         verification: [
           'Status changes back to "active"',
           'payment_issue_since is cleared (null)',
           'Payment issue banner disappears',
-          'current_period_end updates properly'
+          'current_period_end updates properly',
+          'Webhook received: invoice.payment_succeeded'
         ],
         expectedOutcome: 'Subscription recovers, grace period ends',
         status: 'pending',
-        timeEstimate: '10 minutes'
+        timeEstimate: '10 minutes',
+        riskLevel: 'medium',
+        cost: '$29 or $49 (cancel immediately)'
       },
       {
         id: 'grace-period-expiry',
         category: 'Payment Failures',
-        title: 'Grace Period Expiry',
-        description: 'Test access loss after grace period expires',
+        title: '⏰ Grace Period Expiry → Access Loss',
+        description: 'Test access loss after 1-day grace period expires',
         instructions: [
-          '1. Use subscription in past_due state',
-          '2. Wait 24+ hours for grace period to expire',
-          '3. Try to access dashboard',
-          '4. Verify redirect behavior'
+          '1. Use subscription in past_due state from previous test',
+          '2. DO NOT fix payment method',
+          '3. Wait 24+ hours for grace period to expire',
+          '4. Try to access /dashboard',
+          '5. Verify redirect behavior'
         ],
         verification: [
           'User redirected from /dashboard to /get-started',
           'No dashboard access',
           'Subscription still shows past_due in database',
-          'Grace period helper returns false'
+          'Grace period helper returns false',
+          'Payment banner no longer shows'
         ],
         expectedOutcome: 'User loses access, must resubscribe',
         status: 'pending',
-        timeEstimate: '24+ hours'
+        timeEstimate: '24+ hours',
+        riskLevel: 'low',
+        cost: '$0'
       },
 
-      // PLAN CHANGES
+      // PLAN CHANGES (EXPENSIVE - DO LAST)
       {
         id: 'upgrade-basic-to-pro',
         category: 'Plan Changes',
-        title: 'Upgrade Basic → Pro (Active)',
+        title: '⬆️ Upgrade Basic → Pro (Active)',
         description: 'Test upgrading from Basic to Pro while active',
         instructions: [
-          '1. Use active Basic subscription',
+          '1. Use active Basic subscription from successful trial test',
           '2. Create new checkout session for Pro plan',
-          '3. Complete payment with 4242424242424242',
+          '3. Complete payment with real card',
           '4. Check webhook logs for subscription updates',
-          '5. Verify immediate access to Pro features'
+          '5. Verify immediate access to Pro features',
+          '6. IMMEDIATELY CANCEL both subscriptions'
         ],
         verification: [
           'price_id changes to Pro price ID',
           'Status remains "active"',
           'Plan shows as "StageCue Pro" in UI',
-          'Proration charge appears in Stripe'
+          'Proration charge appears in Stripe',
+          'Old Basic subscription canceled'
         ],
         expectedOutcome: 'Immediate upgrade with prorated charge',
         status: 'pending',
-        timeEstimate: '10 minutes'
-      },
-      {
-        id: 'downgrade-pro-to-basic',
-        category: 'Plan Changes',
-        title: 'Downgrade Pro → Basic',
-        description: 'Test downgrading from Pro to Basic',
-        instructions: [
-          '1. Use active Pro subscription',
-          '2. Cancel current subscription (end of period)',
-          '3. Create new Basic subscription to start at period end',
-          '4. Wait for period to end',
-          '5. Verify transition'
-        ],
-        verification: [
-          'Pro access continues until period end',
-          'Automatic transition to Basic',
-          'price_id changes to Basic price ID',
-          'No service interruption'
-        ],
-        expectedOutcome: 'Seamless downgrade at period end',
-        status: 'pending',
-        timeEstimate: '24+ hours'
+        timeEstimate: '10 minutes',
+        riskLevel: 'high',
+        cost: '$49 + proration (cancel immediately)'
       },
 
-      // CUSTOMER PORTAL ACTIONS
+      // CUSTOMER PORTAL TESTS
+      {
+        id: 'portal-cancel',
+        category: 'Customer Portal',
+        title: '🚪 Cancel via Customer Portal',
+        description: 'Test subscription cancellation through Stripe portal',
+        instructions: [
+          '1. Use any active subscription',
+          '2. Go to Dashboard → Manage Subscription',
+          '3. Cancel subscription in portal (cancel at period end)',
+          '4. Check webhook logs for customer.subscription.updated',
+          '5. Return to dashboard'
+        ],
+        verification: [
+          'cancel_at_period_end = true in database',
+          'Status remains current until period end',
+          'UI shows "Free Trial (Canceled)" or similar',
+          'Access continues until period end',
+          'Webhook received: customer.subscription.updated'
+        ],
+        expectedOutcome: 'Subscription marked for cancellation at period end',
+        status: 'pending',
+        timeEstimate: '5 minutes',
+        riskLevel: 'low',
+        cost: '$0'
+      },
       {
         id: 'portal-payment-update',
         category: 'Customer Portal',
-        title: 'Update Payment Method',
+        title: '💳 Update Payment Method via Portal',
         description: 'Test payment method updates via customer portal',
         instructions: [
           '1. Use any active subscription',
@@ -251,71 +265,56 @@ export function Admin() {
           'payment_method_brand updates in database',
           'payment_method_last4 updates in database',
           'No status changes',
-          'User sees updated payment info'
+          'User sees updated payment info',
+          'Webhook received: customer.updated'
         ],
         expectedOutcome: 'Payment method updates without affecting subscription',
         status: 'pending',
-        timeEstimate: '5 minutes'
-      },
-      {
-        id: 'portal-cancel',
-        category: 'Customer Portal',
-        title: 'Cancel via Customer Portal',
-        description: 'Test subscription cancellation through Stripe portal',
-        instructions: [
-          '1. Use any active subscription',
-          '2. Go to Dashboard → Manage Subscription',
-          '3. Cancel subscription in portal',
-          '4. Check webhook logs for subscription.updated',
-          '5. Return to dashboard'
-        ],
-        verification: [
-          'cancel_at_period_end = true',
-          'Status remains current until period end',
-          'UI shows cancellation notice',
-          'Access continues until period end'
-        ],
-        expectedOutcome: 'Subscription marked for cancellation at period end',
-        status: 'pending',
-        timeEstimate: '5 minutes'
+        timeEstimate: '5 minutes',
+        riskLevel: 'low',
+        cost: '$0'
       },
 
       // WEBHOOK RELIABILITY
       {
         id: 'webhook-idempotency',
         category: 'Webhook Reliability',
-        title: 'Duplicate Webhook Handling',
+        title: '🔄 Duplicate Webhook Handling',
         description: 'Test that duplicate webhooks don\'t cause issues',
         instructions: [
           '1. Create subscription normally',
-          '2. In Stripe dashboard, resend webhook events',
-          '3. Send same event multiple times',
-          '4. Check database for duplicate entries',
-          '5. Verify data integrity'
+          '2. In Stripe dashboard, go to Webhooks section',
+          '3. Find recent events and click "Resend"',
+          '4. Send same event multiple times',
+          '5. Check database for duplicate entries',
+          '6. Verify data integrity'
         ],
         verification: [
           'No duplicate subscription records',
           'No data corruption',
-          'Idempotency keys working',
-          'Database constraints prevent duplicates'
+          'Database constraints prevent duplicates',
+          'Logs show webhook received multiple times but only processed once'
         ],
         expectedOutcome: 'System handles duplicate webhooks gracefully',
         status: 'pending',
-        timeEstimate: '10 minutes'
+        timeEstimate: '10 minutes',
+        riskLevel: 'low',
+        cost: '$0'
       },
 
       // EDGE CASES
       {
         id: 'multiple-checkout-attempts',
         category: 'Edge Cases',
-        title: 'Multiple Checkout Sessions',
+        title: '🔀 Multiple Checkout Sessions',
         description: 'Test creating multiple checkout sessions for same user',
         instructions: [
           '1. Start checkout session for Basic plan',
           '2. Close window without completing',
           '3. Start new checkout session for Pro plan',
           '4. Complete the Pro checkout',
-          '5. Verify only Pro subscription exists'
+          '5. Verify only Pro subscription exists',
+          '6. CANCEL immediately'
         ],
         verification: [
           'Only one active subscription per customer',
@@ -325,29 +324,33 @@ export function Admin() {
         ],
         expectedOutcome: 'Latest completed checkout wins, no conflicts',
         status: 'pending',
-        timeEstimate: '10 minutes'
+        timeEstimate: '10 minutes',
+        riskLevel: 'medium',
+        cost: '$49 (cancel immediately)'
       },
       {
-        id: 'user-profile-sync',
+        id: 'abandoned-signup',
         category: 'Edge Cases',
-        title: 'User Profile Creation',
-        description: 'Test user profile creation via webhook',
+        title: '🚫 Abandoned Signup Flow',
+        description: 'Test user who signs up but never completes payment',
         instructions: [
-          '1. Create Supabase auth user manually',
-          '2. Create Stripe customer with userId metadata',
-          '3. Trigger subscription webhook',
-          '4. Verify user profile gets created',
-          '5. Check email sync between Auth and profiles'
+          '1. Create new user account (test-abandon@example.com)',
+          '2. Start checkout for any plan',
+          '3. Close checkout window without paying',
+          '4. Try to access /dashboard',
+          '5. Verify redirect to /get-started'
         ],
         verification: [
-          'User record created in users table',
-          'Email matches between auth.users and users table',
-          'Foreign key constraints work',
-          'RLS policies allow access'
+          'User redirected to /get-started',
+          'No subscription record in database',
+          'No access to dashboard features',
+          'Can restart signup process'
         ],
-        expectedOutcome: 'User profile auto-created from webhook',
+        expectedOutcome: 'User must complete payment to access dashboard',
         status: 'pending',
-        timeEstimate: '15 minutes'
+        timeEstimate: '5 minutes',
+        riskLevel: 'low',
+        cost: '$0'
       }
     ];
 
@@ -363,7 +366,8 @@ export function Admin() {
         .select(`
           id,
           email,
-          stripe_customers!inner (
+          created_at,
+          stripe_customers (
             customer_id,
             stripe_subscriptions (
               subscription_status,
@@ -374,7 +378,8 @@ export function Admin() {
               created_at
             )
           )
-        `);
+        `)
+        .order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching subscriptions:', error);
@@ -383,7 +388,8 @@ export function Admin() {
 
       // Transform the data
       const transformedData: SubscriptionData[] = data.map(user => {
-        const subscription = user.stripe_customers[0]?.stripe_subscriptions[0];
+        const customer = user.stripe_customers?.[0];
+        const subscription = customer?.stripe_subscriptions?.[0];
         return {
           user_id: user.id,
           email: user.email,
@@ -392,7 +398,7 @@ export function Admin() {
           current_period_end: subscription?.current_period_end || null,
           cancel_at_period_end: subscription?.cancel_at_period_end || false,
           payment_issue_since: subscription?.payment_issue_since || null,
-          created_at: subscription?.created_at || '',
+          created_at: subscription?.created_at || user.created_at,
         };
       });
 
@@ -420,6 +426,15 @@ export function Admin() {
     }
   };
 
+  const getRiskColor = (risk: TestCase['riskLevel']) => {
+    switch (risk) {
+      case 'low': return 'bg-green-100 text-green-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'high': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const getPlanName = (priceId: string | null) => {
     if (priceId === 'price_1RznJIDn6VTzl81bqsk5O1gR') return 'Basic';
     if (priceId === 'price_1RznJIDn6VTzl81bPK1TDU3Y') return 'Pro';
@@ -438,6 +453,12 @@ export function Admin() {
 
   const completedTests = testCases.filter(t => t.status === 'completed').length;
   const totalTests = testCases.length;
+  const totalCost = testCases
+    .filter(t => t.status === 'completed')
+    .reduce((sum, t) => {
+      const cost = parseFloat(t.cost.replace(/[^0-9.]/g, '')) || 0;
+      return sum + cost;
+    }, 0);
 
   if (!isAuthenticated) {
     return (
@@ -449,8 +470,8 @@ export function Admin() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Admin Access</h2>
-            <p className="text-gray-600 mt-2">Enter admin password to access testing dashboard</p>
+            <h2 className="text-2xl font-bold text-gray-900">⚠️ LIVE MODE TESTING</h2>
+            <p className="text-gray-600 mt-2">Real Stripe charges • Real webhooks • Real risk</p>
           </div>
           <form onSubmit={handleLogin}>
             <input
@@ -462,7 +483,7 @@ export function Admin() {
               autoFocus
             />
             <button type="submit" className="btn btn-primary w-full">
-              Access Admin Panel
+              Access Live Testing Dashboard
             </button>
           </form>
         </div>
@@ -473,16 +494,36 @@ export function Admin() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header with Warning */}
+        <div className="bg-red-50 border-l-4 border-red-400 p-6 rounded-2xl mb-8">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-lg font-medium text-red-800">🚨 LIVE MODE TESTING ACTIVE</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>• Using REAL Stripe products and webhooks</p>
+                <p>• REAL charges will occur - cancel subscriptions immediately after testing</p>
+                <p>• Estimated total cost if all tests completed: ~$200+ (if not canceled quickly)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Dashboard */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Stripe Testing Dashboard</h1>
-              <p className="text-gray-600 mt-2">Track and verify subscription flow testing</p>
+              <h1 className="text-3xl font-bold text-gray-900">Stripe Live Testing Dashboard</h1>
+              <p className="text-gray-600 mt-2">Track and verify subscription flow testing with real data</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">{completedTests}/{totalTests}</div>
+              <div className="text-3xl font-bold text-gray-900">{completedTests}/{totalTests}</div>
               <div className="text-sm text-gray-600">Tests Completed</div>
+              <div className="text-lg font-semibold text-red-600 mt-1">${totalCost.toFixed(2)} spent</div>
             </div>
           </div>
           
@@ -530,7 +571,13 @@ export function Admin() {
                           <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(test.status)}`}>
                             {test.status.replace('-', ' ').toUpperCase()}
                           </span>
-                          <span className="text-sm text-gray-500">⏱️ {test.timeEstimate}</span>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${getRiskColor(test.riskLevel)}`}>
+                            {test.riskLevel.toUpperCase()} RISK
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
+                          <span>⏱️ {test.timeEstimate}</span>
+                          <span>💰 {test.cost}</span>
                         </div>
                         <p className="text-gray-600 mb-4">{test.description}</p>
                       </div>
@@ -538,22 +585,23 @@ export function Admin() {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">📋 Instructions</h4>
-                        <ol className="space-y-1 text-sm text-gray-700">
+                        <h4 className="font-semibold text-gray-900 mb-2">📋 Step-by-Step Instructions</h4>
+                        <ol className="space-y-2 text-sm text-gray-700">
                           {test.instructions.map((instruction, idx) => (
                             <li key={idx} className="flex items-start">
-                              <span className="mr-2">{instruction}</span>
+                              <span className="font-medium text-blue-600 mr-2 min-w-0">{idx + 1}.</span>
+                              <span>{instruction.replace(/^\d+\.\s*/, '')}</span>
                             </li>
                           ))}
                         </ol>
                       </div>
 
                       <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">✅ Verification</h4>
-                        <ul className="space-y-1 text-sm text-gray-700">
+                        <h4 className="font-semibold text-gray-900 mb-2">✅ Verification Checklist</h4>
+                        <ul className="space-y-2 text-sm text-gray-700">
                           {test.verification.map((item, idx) => (
                             <li key={idx} className="flex items-start">
-                              <span className="text-gray-400 mr-2">•</span>
+                              <span className="text-green-500 mr-2 min-w-0">✓</span>
                               <span>{item}</span>
                             </li>
                           ))}
@@ -562,41 +610,41 @@ export function Admin() {
                     </div>
 
                     <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                      <div className="text-sm font-medium text-blue-900">Expected Outcome:</div>
+                      <div className="text-sm font-medium text-blue-900">🎯 Expected Outcome:</div>
                       <div className="text-sm text-blue-800">{test.expectedOutcome}</div>
                     </div>
 
                     {/* Status Controls */}
-                    <div className="mt-4 flex items-center space-x-3">
+                    <div className="mt-4 flex items-center space-x-3 flex-wrap">
                       <button
                         onClick={() => updateTestStatus(test.id, 'in-progress')}
                         className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                       >
-                        Start Test
+                        🚀 Start Test
                       </button>
                       <button
                         onClick={() => updateTestStatus(test.id, 'completed')}
                         className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
                       >
-                        Mark Complete
+                        ✅ Mark Complete
                       </button>
                       <button
                         onClick={() => updateTestStatus(test.id, 'failed')}
                         className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors"
                       >
-                        Mark Failed
+                        ❌ Mark Failed
                       </button>
                       <button
                         onClick={() => updateTestStatus(test.id, 'pending')}
                         className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
                       >
-                        Reset
+                        🔄 Reset
                       </button>
                     </div>
 
                     {test.notes && (
-                      <div className="mt-3 p-3 bg-yellow-50 rounded-lg">
-                        <div className="text-sm font-medium text-yellow-900">Notes:</div>
+                      <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <div className="text-sm font-medium text-yellow-900">📝 Notes:</div>
                         <div className="text-sm text-yellow-800">{test.notes}</div>
                       </div>
                     )}
@@ -611,13 +659,13 @@ export function Admin() {
             {/* Quick Stats */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Live Data</h3>
+                <h3 className="text-lg font-semibold text-gray-900">📊 Live Data</h3>
                 <button
                   onClick={fetchSubscriptions}
                   disabled={refreshing}
                   className="px-3 py-1 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
                 >
-                  {refreshing ? 'Refreshing...' : 'Refresh'}
+                  {refreshing ? '🔄 Refreshing...' : '🔄 Refresh'}
                 </button>
               </div>
 
@@ -636,13 +684,14 @@ export function Admin() {
 
               {/* Status Breakdown */}
               <div className="space-y-2">
-                <h4 className="font-medium text-gray-900">Status Breakdown</h4>
+                <h4 className="font-medium text-gray-900">📈 Status Breakdown</h4>
                 {['trialing', 'active', 'past_due', 'canceled', 'not_started'].map(status => {
                   const count = subscriptions.filter(s => s.subscription_status === status).length;
+                  const percentage = subscriptions.length > 0 ? Math.round((count / subscriptions.length) * 100) : 0;
                   return (
                     <div key={status} className="flex justify-between text-sm">
                       <span className="capitalize text-gray-700">{status.replace('_', ' ')}</span>
-                      <span className="font-medium text-gray-900">{count}</span>
+                      <span className="font-medium text-gray-900">{count} ({percentage}%)</span>
                     </div>
                   );
                 })}
@@ -651,9 +700,9 @@ export function Admin() {
 
             {/* Recent Subscriptions */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Subscriptions</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">👥 Recent Subscriptions</h3>
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {subscriptions.slice(0, 10).map((sub) => (
+                {subscriptions.slice(0, 15).map((sub) => (
                   <div key={sub.user_id} className="p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div className="text-sm font-medium text-gray-900 truncate">
@@ -675,38 +724,82 @@ export function Admin() {
                         <div>Ends: {formatDate(sub.current_period_end)}</div>
                       )}
                       {sub.cancel_at_period_end && (
-                        <div className="text-red-600 font-medium">Will cancel at period end</div>
+                        <div className="text-red-600 font-medium">⚠️ Will cancel at period end</div>
                       )}
                       {sub.payment_issue_since && (
                         <div className="text-red-600 font-medium">
-                          Payment issue since: {new Date(sub.payment_issue_since).toLocaleDateString()}
+                          💳 Payment issue since: {new Date(sub.payment_issue_since).toLocaleDateString()}
                         </div>
                       )}
                     </div>
                   </div>
                 ))}
+                {subscriptions.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    <div className="text-4xl mb-2">📭</div>
+                    <div>No subscriptions yet</div>
+                    <div className="text-sm">Start testing to see data here</div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Test Cards Reference */}
+            {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Stripe Test Cards</h3>
-              <div className="space-y-3 text-sm">
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <div className="font-medium text-green-900">Success</div>
-                  <div className="text-green-800 font-mono">4242424242424242</div>
-                </div>
-                <div className="p-3 bg-red-50 rounded-lg">
-                  <div className="font-medium text-red-900">Decline</div>
-                  <div className="text-red-800 font-mono">4000000000000002</div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">🚀 Quick Actions</h3>
+              <div className="space-y-3">
+                <a
+                  href="/signup"
+                  target="_blank"
+                  className="block w-full p-3 bg-blue-50 hover:bg-blue-100 rounded-lg text-center text-blue-800 font-medium transition-colors"
+                >
+                  🆕 Create Test Account
+                </a>
+                <a
+                  href="https://dashboard.stripe.com/test/webhooks"
+                  target="_blank"
+                  className="block w-full p-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-center text-purple-800 font-medium transition-colors"
+                >
+                  📡 View Webhook Logs
+                </a>
+                <a
+                  href="https://dashboard.stripe.com/test/subscriptions"
+                  target="_blank"
+                  className="block w-full p-3 bg-green-50 hover:bg-green-100 rounded-lg text-center text-green-800 font-medium transition-colors"
+                >
+                  📋 Stripe Subscriptions
+                </a>
+                <button
+                  onClick={() => {
+                    const confirmed = confirm('This will refresh all subscription data from the database. Continue?');
+                    if (confirmed) fetchSubscriptions();
+                  }}
+                  className="block w-full p-3 bg-gray-50 hover:bg-gray-100 rounded-lg text-center text-gray-800 font-medium transition-colors"
+                >
+                  🔄 Force Refresh Data
+                </button>
+              </div>
+            </div>
+
+            {/* Testing Tips */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 Testing Tips</h3>
+              <div className="space-y-3 text-sm text-gray-700">
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <div className="font-medium text-blue-900">🕐 Timing</div>
+                  <div className="text-blue-800">Trials expire after 24 hours. Grace periods last 24 hours.</div>
                 </div>
                 <div className="p-3 bg-yellow-50 rounded-lg">
-                  <div className="font-medium text-yellow-900">Insufficient Funds</div>
-                  <div className="text-yellow-800 font-mono">4000000000009995</div>
+                  <div className="font-medium text-yellow-900">💰 Cost Control</div>
+                  <div className="text-yellow-800">Cancel subscriptions immediately after verification to minimize charges.</div>
                 </div>
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <div className="font-medium text-blue-900">3D Secure</div>
-                  <div className="text-blue-800 font-mono">4000000000003220</div>
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <div className="font-medium text-green-900">📡 Webhooks</div>
+                  <div className="text-green-800">Check Stripe webhook logs to verify events are being received.</div>
+                </div>
+                <div className="p-3 bg-red-50 rounded-lg">
+                  <div className="font-medium text-red-900">⚠️ Safety</div>
+                  <div className="text-red-800">Use unique test emails. Monitor charges closely.</div>
                 </div>
               </div>
             </div>
