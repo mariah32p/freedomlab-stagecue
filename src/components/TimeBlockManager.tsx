@@ -217,6 +217,36 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                             ) : (
                               <h4 className="text-lg font-semibold">{block.title}</h4>
                             )}
+                            <p className="text-sm opacity-75">{block.duration} minutes</p>
+                            {editingBlock?.id === block.id ? (
+                              <div className="flex items-center space-x-2 mb-2">
+                                <input
+                                  type="text"
+                                  value={editTitle}
+                                  onChange={(e) => setEditTitle(e.target.value)}
+                                  className="text-lg font-semibold bg-white/70 border border-white rounded px-2 py-1 flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveEdit();
+                                    if (e.key === 'Escape') handleCancelEdit();
+                                  }}
+                                  autoFocus
+                                />
+                                <button
+                                  onClick={handleSaveEdit}
+                                  className="text-xs px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded font-medium transition-colors"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={handleCancelEdit}
+                                  className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded font-medium transition-colors"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <h4 className="text-lg font-semibold">{block.title}</h4>
+                            )}
                           </div>
                           <div className="flex items-center space-x-1">
                             {/* Move buttons */}
