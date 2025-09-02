@@ -3,7 +3,7 @@ import { Event } from '../types/event';
 interface EventCardProps {
   event: Event;
   onEdit: (event: Event) => void;
-  onDelete: (id: string) => void;
+  onDelete: (event: Event) => void;
   onStartLive: (event: Event) => void;
 }
 
@@ -81,7 +81,7 @@ export function EventCard({ event, onEdit, onDelete, onStartLive }: EventCardPro
             Edit
           </button>
           <button
-            onClick={() => onDelete(event.id)}
+            onClick={() => onDelete(event)}
             className="text-sm text-red-600 hover:text-red-800 font-medium transition-colors"
           >
             Delete

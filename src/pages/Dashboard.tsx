@@ -1,33 +1,34 @@
 import { useState } from 'react';
-import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
 import { useEvents } from '../hooks/useEvents';
 import { useSpeakers } from '../hooks/useSpeakers';
 import { CreateEventModal } from '../components/CreateEventModal';
 import { EventCard } from '../components/EventCard';
 import { LiveEventManager } from '../components/LiveEventManager';
+import { DeleteConfirmModal } from '../components/DeleteConfirmModal';
 import { Event } from '../types/event';
 
 export function Dashboard() {
-  const subscriptionStatus = useSubscriptionStatus();
   const { events, loading: eventsLoading, createEvent, updateEvent, deleteEvent } = useEvents();
   const { addSpeaker } = useSpeakers();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showLiveManager, setShowLiveManager] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; event: Event | null }>({
+    show: false,
+    event: null
+  });
 
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'created_at' | 'updated_at' | 'user_id'>) => {
     const newEvent = await createEvent(eventData);
     
     // Add some default speakers for demo purposes
-    if (subscriptionStatus.plan === 'pro' || subscriptionStatus.status === 'trialing') {
-      await addSpeaker({
-        event_id: newEvent.id,
-        name: 'Opening Speaker',
-        session_title: 'Welcome & Introduction',
-        duration: 15,
-        order_index: 0
-      });
-    }
+    await addSpeaker({
+      event_id: newEvent.id,
+      name: 'Opening Speaker',
+      session_title: 'Welcome & Introduction',
+      duration: 15,
+      order_index: 0
+    });
     
     return newEvent;
   };
@@ -43,16 +44,22 @@ export function Dashboard() {
     alert(`Edit functionality for "${event.name}" would open here`);
   };
 
-  const handleDeleteEvent = async (id: string) => {
-    if (confirm('Are you sure you want to delete this event?')) {
-      await deleteEvent(id);
+  const handleDeleteEvent = (event: Event) => {
+    setDeleteConfirm({ show: true, event });
+  };
+
+  const confirmDelete = async () => {
+    if (deleteConfirm.event) {
+      await deleteEvent(deleteConfirm.event.id);
+      setDeleteConfirm({ show: false, event: null });
     }
   };
 
-  // Check if user has Pro features access
-  const hasProAccess = subscriptionStatus.plan === 'pro' || subscriptionStatus.status === 'trialing';
+  const cancelDelete = () => {
+    setDeleteConfirm({ show: false, event: null });
+  };
 
-  if (subscriptionStatus.loading) {
+  if (eventsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
@@ -73,35 +80,27 @@ export function Dashboard() {
           <div className="card">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-navy-900">Your Events</h2>
-              {subscriptionStatus.status !== 'not_started' && (
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="btn btn-primary px-4 py-2"
-                >
-                  Create New Event
-                </button>
-              )}
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="btn btn-primary px-4 py-2"
+              >
+                Create New Event
+              </button>
             </div>
             
-            {eventsLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
-              </div>
-            ) : events.length === 0 ? (
+            {events.length === 0 ? (
               <div className="text-center py-12">
                 <svg className="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <h3 className="text-lg font-medium text-navy-900 mb-2">No events yet</h3>
                 <p className="text-navy-600 mb-4">Create your first event to start timing sessions</p>
-                {subscriptionStatus.status !== 'not_started' && (
-                  <button
-                    onClick={() => setShowCreateModal(true)}
-                    className="btn btn-primary px-6 py-3"
-                  >
-                    Create Your First Event
-                  </button>
-                )}
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="btn btn-primary px-6 py-3"
+                >
+                  Create Your First Event
+                </button>
               </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
@@ -138,6 +137,14 @@ export function Dashboard() {
           }}
         />
       )}
+
+      <DeleteConfirmModal
+        isOpen={deleteConfirm.show}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        title="Delete Event"
+        message={`Are you sure you want to delete "${deleteConfirm.event?.name}"? This action cannot be undone.`}
+      />
     </div>
   );
 }
