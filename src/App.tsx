@@ -1,17 +1,17 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import RouteGuard from './components/RouteGuard';
-import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
-import Pricing from './pages/Pricing';
-import Success from './pages/Success';
-import GetStarted from './pages/GetStarted';
-import ResetPassword from './pages/ResetPassword';
+import { RouteGuard } from './components/RouteGuard';
+import { Navbar } from './components/Navbar';
+import { Home } from './pages/Home';
+import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
+import { Dashboard } from './pages/Dashboard';
+import { Pricing } from './pages/Pricing';
+import { Success } from './pages/Success';
+import { GetStarted } from './pages/GetStarted';
+import { ResetPassword } from './pages/ResetPassword';
 import { StageCue as Demo } from './pages/Demo';
-import ProtectedRoute from './components/ProtectedRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
   return (
