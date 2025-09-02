@@ -12,6 +12,7 @@ import { GetStarted } from './pages/GetStarted';
 import { ResetPassword } from './pages/ResetPassword';
 import { StageCue as Demo } from './pages/Demo';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { StripeTestPanel } from './components/StripeTestPanel';
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
               }
             />
           </Routes>
+          
+          {/* Development Test Panel */}
+          {import.meta.env.DEV && <StripeTestPanel />}
         </RouteGuard>
       </Router>
     </AuthProvider>

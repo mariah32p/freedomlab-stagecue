@@ -5,12 +5,23 @@ import { PaymentIssueBanner } from '../components/PaymentIssueBanner';
 import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
 import { isInGracePeriod } from '../utils/graceHelper';
 import { supabase } from '../lib/supabase';
+import { useEvents } from '../hooks/useEvents';
+import { useSpeakers } from '../hooks/useSpeakers';
+import { CreateEventModal } from '../components/CreateEventModal';
+import { EventCard } from '../components/EventCard';
+import { LiveEventManager } from '../components/LiveEventManager';
+import { Event } from '../types/event';
 
 export function Dashboard() {
   const { user } = useAuth();
   const subscriptionStatus = useSubscriptionStatus();
+  const { events, loading: eventsLoading, createEvent, updateEvent, deleteEvent } = useEvents();
+  const { addSpeaker } = useSpeakers();
   const [error, setError] = useState('');
   const [portalLoading, setPortalLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showLiveManager, setShowLiveManager] = useState(false);
 
   const showPaymentBanner = subscriptionStatus.status === 'past_due' && 
     isInGracePeriod(subscriptionStatus.paymentIssueSince);
@@ -50,6 +61,43 @@ export function Dashboard() {
     }
   };
 
+  const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'created_at' | 'updated_at' | 'user_id'>) => {
+    const newEvent = await createEvent(eventData);
+    
+    // Add some default speakers for demo purposes
+    if (subscriptionStatus.plan === 'pro' || subscriptionStatus.status === 'trialing') {
+      await addSpeaker({
+        event_id: newEvent.id,
+        name: 'Opening Speaker',
+        session_title: 'Welcome & Introduction',
+        duration: 15,
+        order_index: 0
+      });
+    }
+    
+    return newEvent;
+  };
+
+  const handleStartLive = (event: Event) => {
+    setSelectedEvent(event);
+    setShowLiveManager(true);
+    updateEvent(event.id, { status: 'live' });
+  };
+
+  const handleEditEvent = (event: Event) => {
+    // For now, just show an alert - in real implementation would open edit modal
+    alert(`Edit functionality for "${event.name}" would open here`);
+  };
+
+  const handleDeleteEvent = async (id: string) => {
+    if (confirm('Are you sure you want to delete this event?')) {
+      await deleteEvent(id);
+    }
+  };
+
+  // Check if user has Pro features access
+  const hasProAccess = subscriptionStatus.plan === 'pro' || subscriptionStatus.status === 'trialing';
+
   if (subscriptionStatus.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -79,6 +127,55 @@ export function Dashboard() {
         )}
 
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Events Overview */}
+          <div className="md:col-span-2 card">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-navy-900">Your Events</h2>
+              {subscriptionStatus.status !== 'not_started' && (
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="btn btn-primary px-4 py-2"
+                >
+                  Create New Event
+                </button>
+              )}
+            </div>
+            
+            {eventsLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+              </div>
+            ) : events.length === 0 ? (
+              <div className="text-center py-12">
+                <svg className="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 className="text-lg font-medium text-navy-900 mb-2">No events yet</h3>
+                <p className="text-navy-600 mb-4">Create your first event to start timing sessions</p>
+                {subscriptionStatus.status !== 'not_started' && (
+                  <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="btn btn-primary px-6 py-3"
+                  >
+                    Create Your First Event
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                {events.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    onEdit={handleEditEvent}
+                    onDelete={handleDeleteEvent}
+                    onStartLive={handleStartLive}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="card">
             <h2 className="text-xl font-semibold text-navy-900 mb-4">Subscription Status</h2>
             {subscriptionStatus.status !== 'not_started' ? (
@@ -154,10 +251,11 @@ export function Dashboard() {
               ) : (
                 <div className="space-y-2">
                   <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 w-full">
-                    Create New Timer
+                    onClick={() => setShowCreateModal(true)}
+                    Create New Event
                   </button>
                   <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-current bg-transparent hover:bg-current hover:text-white focus:ring-primary-500 transition-all duration-200 w-full">
-                    Manage Events
+                    View All Events
                   </button>
                 </div>
               )}
@@ -165,39 +263,95 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="mt-8 card">
-          <h2 className="text-xl font-semibold text-navy-900 mb-4">Event Timing Features</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        {/* Pro Features Section */}
+        {hasProAccess && (
+          <div className="mt-8 card">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-navy-900">Pro Features</h2>
+              <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
+                {subscriptionStatus.status === 'trialing' ? 'Trial Access' : 'Pro Plan'}
               </div>
-              <h3 className="font-medium text-navy-900">Countdown Displays</h3>
-              <p className="text-sm text-navy-600 mt-1">Shareable countdown timers with clean design</p>
             </div>
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="text-center p-4 bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg border border-teal-200">
+                <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-navy-900">Unlimited Timers</h3>
+                <p className="text-sm text-navy-600 mt-1">Run multiple sessions simultaneously</p>
               </div>
-              <h3 className="font-medium text-navy-900">Speaker Notes</h3>
-              <p className="text-sm text-navy-600 mt-1">Organize speaker information and transitions</p>
-            </div>
-            <div className="text-center p-4 bg-navy-50 rounded-lg">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z" />
-                </svg>
+              <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
+                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-navy-900">Custom Links</h3>
+                <p className="text-sm text-navy-600 mt-1">Moderator and speaker self-service portals</p>
               </div>
-              <h3 className="font-medium text-navy-900">Slack Notifications</h3>
-              <p className="text-sm text-navy-600 mt-1">Automatic team alerts and updates</p>
+              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-navy-900">Advanced Notifications</h3>
+                <p className="text-sm text-navy-600 mt-1">Rich Slack integration with custom alerts</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Basic Plan Limitation */}
+        {subscriptionStatus.plan === 'basic' && subscriptionStatus.status === 'active' && (
+          <div className="mt-8 card bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-navy-900 mb-2">Upgrade to Pro</h3>
+                <p className="text-navy-600 mb-4">
+                  Unlock unlimited timers, custom links, and advanced Slack notifications
+                </p>
+                <div className="flex items-center space-x-4 text-sm text-navy-600">
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 mr-1 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Current: {events.length}/10 timers
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={handleManageSubscription}
+                className="btn bg-amber-500 hover:bg-amber-600 text-white px-6 py-3"
+              >
+                Upgrade to Pro
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Modals */}
+      <CreateEventModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreateEvent={handleCreateEvent}
+      />
+
+      {selectedEvent && (
+        <LiveEventManager
+          event={selectedEvent}
+          onClose={() => {
+            setShowLiveManager(false);
+            setSelectedEvent(null);
+          }}
+        />
+      )}
     </div>
   );
 }
