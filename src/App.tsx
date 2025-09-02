@@ -14,6 +14,7 @@ import { ResetPassword } from './pages/ResetPassword';
 import { GetStarted } from './pages/GetStarted.tsx';
 import { StageCue } from './pages/Demo';
 import { StripeTestPanel } from './components/StripeTestPanel';
+import { Admin } from './pages/Admin';
 
 function AppContent() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function AppContent() {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/demo" element={<StageCue />} />
+          <Route path="/admin" element={<Admin />} />
           <Route
             path="/dashboard"
             element={
