@@ -20,7 +20,7 @@ export const products: Product[] = [
     id: 'prod_StageCuePro',
     priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
     name: 'StageCue Pro',
-import { StageCue as Demo } from './pages/Demo';
+    description: 'Ideal for professional events and conferences. Unlimited timers, advanced speaker notes, full Slack integration, and priority support.',
     mode: 'subscription',
     price: 49.00,
   },
