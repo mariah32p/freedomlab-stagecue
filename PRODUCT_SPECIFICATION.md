@@ -225,11 +225,10 @@ Transform event timing from chaotic to seamless with:
 ## Known Technical Debt
 
 ### Current Issues (from PRODUCTION_CHECKLIST.md)
-1. **Environment Variables**: Need setup in Netlify deployment
-2. **Stripe Customer Portal**: Endpoint exists but needs testing
-3. **Payment Failure Grace Period**: Logic exists but `payment_issue_since` field needs testing
-4. **Feature Gating**: Basic vs Pro plan restrictions not implemented
-5. **End-to-End Testing**: Core signup → trial → dashboard flow needs validation
+1. **Stripe Customer Portal**: Endpoint exists but needs testing
+2. **Payment Failure Grace Period**: Logic exists but `payment_issue_since` field needs testing
+3. **Feature Gating**: Basic vs Pro plan restrictions not implemented
+4. **End-to-End Testing**: Core signup → trial → dashboard flow needs validation
 
 ### Missing Core Features
 - No actual event timing functionality yet (currently just demo UI)
@@ -259,21 +258,3 @@ APP_URL=your_deployed_app_url
 - **Publish Directory**: `dist`
 - **Node Version**: 18+
 - **Redirects**: SPA routing configured in `netlify.toml`
-
-## Support & Documentation
-
-### User Documentation Needed
-- Quick start guide for event creation
-- Speaker onboarding instructions
-- Slack integration setup guide
-- Troubleshooting common timing issues
-
-### Developer Documentation Needed
-- API documentation for edge functions
-- Database schema documentation
-- Webhook handling procedures
-- Local development setup guide
-
----
-
-**Note**: This product is currently in MVP stage with subscription management complete but core event timing features still in development. The demo UI shows the intended functionality that needs to be built.
