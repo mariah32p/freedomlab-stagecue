@@ -141,7 +141,8 @@ export function Dashboard() {
         />
       )}
 
-          <>
+      {selectedEvent && (
+        <>
             <TimeBlockManager
               event={selectedEvent}
               isOpen={showTimeBlockManager}
@@ -150,7 +151,8 @@ export function Dashboard() {
                 setSelectedEvent(null);
               }}
             />
-          </>
+        </>
+      )}
             
       <DeleteConfirmModal
         isOpen={deleteConfirm.show}
