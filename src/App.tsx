@@ -7,7 +7,7 @@ export interface Product {
   price: number;
 }
 
-export const products: Product[] = [
+const products: Product[] = [
   {
     id: 'prod_SvecCbpHbEWJ0M',
     priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR',
@@ -25,3 +25,6 @@ export const products: Product[] = [
     price: 49.00,
   },
 ];
+
+// The `products` array is now the default export
+export default products;
