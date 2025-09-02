@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Alert } from '../components/Alert';
+import { supabase } from '../lib/supabase';
 
 export function Success() {
-  const [countdown, setCountdown] = useState(5);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          window.location.href = '/dashboard';
-          return 0;
-        }
-        return prev - 1;
-      });
+    const interval = setInterval(async () => {
+      const { data } = await supabase
+        .from('stripe_user_subscriptions')
+        .select('subscription_status')
+        .maybeSingle();
+
+      if (data?.subscription_status === 'trialing' || data?.subscription_status === 'active') {
+        clearInterval(interval);
+        navigate('/dashboard');
+      }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(interval);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -43,13 +45,11 @@ export function Success() {
             Payment Successful!
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Thank you for your purchase. Your subscription is now active.
+            Finalizing your subscription...
           </p>
         </div>
 
-        <Alert type="success">
-          Redirecting to dashboard in {countdown} seconds...
-        </Alert>
+        <Alert type="success">This may take a few seconds.</Alert>
 
         <div className="space-y-4">
           <Link

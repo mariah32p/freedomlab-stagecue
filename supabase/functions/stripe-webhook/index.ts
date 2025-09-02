@@ -127,6 +127,20 @@ async function handleEvent(event: Stripe.Event) {
 // based on the excellent https://github.com/t3dotgg/stripe-recommendations
 async function syncCustomerFromStripe(customerId: string) {
   try {
+    // ensure we have a mapping between Stripe customer and user
+    const stripeCustomer = (await stripe.customers.retrieve(customerId)) as Stripe.Customer;
+    const userId = stripeCustomer.metadata?.userId;
+
+    if (userId) {
+      const { error: customerMapError } = await supabase.from('stripe_customers').upsert(
+        { user_id: userId, customer_id: customerId },
+        { onConflict: 'user_id' },
+      );
+      if (customerMapError) {
+        console.error('Error saving customer mapping:', customerMapError);
+      }
+    }
+
     // fetch latest subscription data from Stripe
     const subscriptions = await stripe.subscriptions.list({
       customer: customerId,

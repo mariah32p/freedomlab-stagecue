@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { products } from '../stripe-config';
 import { Alert } from './Alert';
+import { supabase } from '../lib/supabase';
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -39,12 +40,22 @@ export function SignUpModal({ isOpen, onClose, defaultPlan }: SignUpModalProps) 
         throw new Error('Selected plan not found');
       }
 
+      // Get the authenticated session for the newly created user
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session) {
+        throw new Error('Unable to retrieve session after sign up');
+      }
+
       // Create Stripe checkout session
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           price_id: selectedProduct.priceId,
