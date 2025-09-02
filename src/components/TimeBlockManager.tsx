@@ -217,7 +217,6 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                             ) : (
                               <h4 className="text-lg font-semibold">{block.title}</h4>
                             )}
-                            <p className="text-sm opacity-75">{block.duration} minutes</p>
                           </div>
                           <div className="flex items-center space-x-1">
                             {/* Move buttons */}
