@@ -1,66 +1,92 @@
 import { useState, useEffect } from 'react';
 import { Event } from '../types/event';
-
-// Mock data for now - in real implementation this would connect to Supabase
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    name: 'Q1 Product Launch Planning',
-    date: '2025-03-15',
-    total_duration: 90,
-    meeting_link: 'https://zoom.us/j/123456789',
-    status: 'draft',
-    created_at: '2025-01-22T10:00:00Z',
-    updated_at: '2025-01-22T10:00:00Z',
-    user_id: 'user-1'
-  },
-  {
-    id: '2',
-    name: 'Tech Summit 2025',
-    date: '2025-04-20',
-    total_duration: 480,
-    meeting_link: 'https://teams.microsoft.com/l/meetup-join/...',
-    status: 'live',
-    created_at: '2025-01-20T09:00:00Z',
-    updated_at: '2025-01-22T14:30:00Z',
-    user_id: 'user-1'
-  }
-];
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 export function useEvents() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setEvents(mockEvents);
+    if (user) {
+      fetchEvents();
+    }
+  }, [user]);
+
+  const fetchEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching events:', error);
+        return;
+      }
+
+      setEvents(data || []);
+    } catch (err) {
+      console.error('Error fetching events:', err);
+    } finally {
       setLoading(false);
-    }, 500);
-  }, []);
+    }
+  };
 
   const createEvent = async (eventData: Omit<Event, 'id' | 'created_at' | 'updated_at' | 'user_id'>) => {
-    const newEvent: Event = {
-      ...eventData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      user_id: 'user-1'
-    };
-    
-    setEvents(prev => [...prev, newEvent]);
-    return newEvent;
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase
+      .from('events')
+      .insert({
+        ...eventData,
+        user_id: user.id
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating event:', error);
+      throw error;
+    }
+
+    setEvents(prev => [data, ...prev]);
+    return data;
   };
 
   const updateEvent = async (id: string, updates: Partial<Event>) => {
+    const { data, error } = await supabase
+      .from('events')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating event:', error);
+      throw error;
+    }
+
     setEvents(prev => prev.map(event => 
-      event.id === id 
-        ? { ...event, ...updates, updated_at: new Date().toISOString() }
-        : event
+      event.id === id ? data : event
     ));
   };
 
   const deleteEvent = async (id: string) => {
+    const { error } = await supabase
+      .from('events')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting event:', error);
+      throw error;
+    }
+
     setEvents(prev => prev.filter(event => event.id !== id));
   };
 
@@ -69,6 +95,7 @@ export function useEvents() {
     loading,
     createEvent,
     updateEvent,
-    deleteEvent
+    deleteEvent,
+    refetch: fetchEvents
   };
 }

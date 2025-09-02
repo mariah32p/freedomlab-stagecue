@@ -10,7 +10,6 @@ import { Event } from '../types/event';
 
 export function Dashboard() {
   const { events, loading: eventsLoading, createEvent, updateEvent, deleteEvent } = useEvents();
-  const { addTimeBlock } = useTimeBlocks();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showLiveManager, setShowLiveManager] = useState(false);
@@ -21,19 +20,7 @@ export function Dashboard() {
   });
 
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'created_at' | 'updated_at' | 'user_id'>) => {
-    const newEvent = await createEvent(eventData);
-    
-    // Add a default opening time block for demo purposes
-    await addTimeBlock({
-      event_id: newEvent.id,
-      title: 'Welcome & Introduction',
-      start_time: 0,
-      duration: 15,
-      type: 'session',
-      order_index: 0
-    });
-    
-    return newEvent;
+    return await createEvent(eventData);
   };
 
   const handleStartLive = (event: Event) => {

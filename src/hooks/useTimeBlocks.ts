@@ -1,92 +1,6 @@
 import { useState, useEffect } from 'react';
 import { TimeBlock, Speaker, SpeakerNote } from '../types/event';
-
-// Mock data for time blocks
-const mockTimeBlocks: TimeBlock[] = [
-  {
-    id: '1',
-    event_id: '2',
-    title: 'Opening Keynote',
-    start_time: 0,
-    duration: 45,
-    type: 'session',
-    order_index: 0,
-    created_at: '2025-01-22T10:00:00Z',
-    updated_at: '2025-01-22T10:00:00Z'
-  },
-  {
-    id: '2',
-    event_id: '2',
-    title: 'Coffee Break',
-    start_time: 45,
-    duration: 15,
-    type: 'break',
-    order_index: 1,
-    created_at: '2025-01-22T10:05:00Z',
-    updated_at: '2025-01-22T10:05:00Z'
-  },
-  {
-    id: '3',
-    event_id: '2',
-    title: 'Technical Deep Dive',
-    start_time: 60,
-    duration: 30,
-    type: 'session',
-    order_index: 2,
-    created_at: '2025-01-22T10:10:00Z',
-    updated_at: '2025-01-22T10:10:00Z'
-  }
-];
-
-// Mock data for speakers
-const mockSpeakers: Speaker[] = [
-  {
-    id: '1',
-    time_block_id: '1',
-    name: 'Dr. Emily Chen',
-    email: 'emily@example.com',
-    bio: 'AI researcher and healthcare technology expert',
-    order_index: 0,
-    created_at: '2025-01-22T10:00:00Z'
-  },
-  {
-    id: '2',
-    time_block_id: '3',
-    name: 'Alex Rodriguez',
-    email: 'alex@example.com',
-    bio: 'Senior React developer and conference speaker',
-    order_index: 0,
-    created_at: '2025-01-22T10:05:00Z'
-  }
-];
-
-// Mock data for speaker notes
-const mockNotes: SpeakerNote[] = [
-  {
-    id: '1',
-    speaker_id: '1',
-    time_marker: 0,
-    content: 'Welcome everyone, introduce the topic of AI in healthcare',
-    type: 'essential',
-    created_at: '2025-01-22T10:00:00Z'
-  },
-  {
-    id: '2',
-    speaker_id: '1',
-    time_marker: 300,
-    content: 'Share personal research background (skip if running late)',
-    type: 'optional',
-    created_at: '2025-01-22T10:01:00Z'
-  },
-  {
-    id: '3',
-    speaker_id: '1',
-    time_marker: 2400,
-    content: 'Wrap up main points, prepare for Q&A transition',
-    type: 'transition',
-    created_at: '2025-01-22T10:02:00Z'
-  }
-];
+import { supabase } from '../lib/supabase';
 
 export function useTimeBlocks(eventId?: string) {
   const [timeBlocks, setTimeBlocks] = useState<TimeBlock[]>([]);
@@ -95,86 +9,220 @@ export function useTimeBlocks(eventId?: string) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const filteredBlocks = eventId 
-        ? mockTimeBlocks.filter(b => b.event_id === eventId)
-        : mockTimeBlocks;
-      setTimeBlocks(filteredBlocks);
-      setSpeakers(mockSpeakers);
-      setNotes(mockNotes);
+    if (eventId) {
+      fetchTimeBlocks();
+    } else {
       setLoading(false);
-    }, 300);
+    }
   }, [eventId]);
 
+  const fetchTimeBlocks = async () => {
+    if (!eventId) return;
+
+    try {
+      // Fetch time blocks
+      const { data: blocksData, error: blocksError } = await supabase
+        .from('time_blocks')
+        .select('*')
+        .eq('event_id', eventId)
+        .order('order_index');
+
+      if (blocksError) {
+        console.error('Error fetching time blocks:', blocksError);
+        return;
+      }
+
+      setTimeBlocks(blocksData || []);
+
+      // Fetch speakers for these blocks
+      if (blocksData && blocksData.length > 0) {
+        const blockIds = blocksData.map(b => b.id);
+        
+        const { data: speakersData, error: speakersError } = await supabase
+          .from('speakers')
+          .select('*')
+          .in('time_block_id', blockIds)
+          .order('order_index');
+
+        if (speakersError) {
+          console.error('Error fetching speakers:', speakersError);
+        } else {
+          setSpeakers(speakersData || []);
+
+          // Fetch notes for these speakers
+          if (speakersData && speakersData.length > 0) {
+            const speakerIds = speakersData.map(s => s.id);
+            
+            const { data: notesData, error: notesError } = await supabase
+              .from('speaker_notes')
+              .select('*')
+              .in('speaker_id', speakerIds)
+              .order('time_marker');
+
+            if (notesError) {
+              console.error('Error fetching speaker notes:', notesError);
+            } else {
+              setNotes(notesData || []);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching time blocks data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addTimeBlock = async (blockData: Omit<TimeBlock, 'id' | 'created_at' | 'updated_at'>) => {
-    const newBlock: TimeBlock = {
-      ...blockData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    setTimeBlocks(prev => [...prev, newBlock].sort((a, b) => a.order_index - b.order_index));
-    return newBlock;
+    const { data, error } = await supabase
+      .from('time_blocks')
+      .insert(blockData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating time block:', error);
+      throw error;
+    }
+
+    setTimeBlocks(prev => [...prev, data].sort((a, b) => a.order_index - b.order_index));
+    return data;
   };
 
   const updateTimeBlock = async (id: string, updates: Partial<TimeBlock>) => {
+    const { data, error } = await supabase
+      .from('time_blocks')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating time block:', error);
+      throw error;
+    }
+
     setTimeBlocks(prev => prev.map(block => 
-      block.id === id 
-        ? { ...block, ...updates, updated_at: new Date().toISOString() }
-        : block
+      block.id === id ? data : block
     ));
   };
 
   const deleteTimeBlock = async (id: string) => {
+    const { error } = await supabase
+      .from('time_blocks')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting time block:', error);
+      throw error;
+    }
+
     setTimeBlocks(prev => prev.filter(block => block.id !== id));
-    // Also remove speakers and notes for this block
+    // Remove speakers and notes for this block (cascade delete should handle this)
     setSpeakers(prev => prev.filter(speaker => speaker.time_block_id !== id));
     const speakerIds = speakers.filter(s => s.time_block_id === id).map(s => s.id);
     setNotes(prev => prev.filter(note => !speakerIds.includes(note.speaker_id)));
   };
 
   const addSpeaker = async (speakerData: Omit<Speaker, 'id' | 'created_at'>) => {
-    const newSpeaker: Speaker = {
-      ...speakerData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString()
-    };
-    
-    setSpeakers(prev => [...prev, newSpeaker]);
-    return newSpeaker;
+    const { data, error } = await supabase
+      .from('speakers')
+      .insert(speakerData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating speaker:', error);
+      throw error;
+    }
+
+    setSpeakers(prev => [...prev, data]);
+    return data;
   };
 
   const updateSpeaker = async (id: string, updates: Partial<Speaker>) => {
+    const { data, error } = await supabase
+      .from('speakers')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating speaker:', error);
+      throw error;
+    }
+
     setSpeakers(prev => prev.map(speaker => 
-      speaker.id === id ? { ...speaker, ...updates } : speaker
+      speaker.id === id ? data : speaker
     ));
   };
 
   const deleteSpeaker = async (id: string) => {
+    const { error } = await supabase
+      .from('speakers')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting speaker:', error);
+      throw error;
+    }
+
     setSpeakers(prev => prev.filter(speaker => speaker.id !== id));
     setNotes(prev => prev.filter(note => note.speaker_id !== id));
   };
 
   const addNote = async (noteData: Omit<SpeakerNote, 'id' | 'created_at'>) => {
-    const newNote: SpeakerNote = {
-      ...noteData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString()
-    };
-    
-    setNotes(prev => [...prev, newNote]);
-    return newNote;
+    const { data, error } = await supabase
+      .from('speaker_notes')
+      .insert(noteData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating speaker note:', error);
+      throw error;
+    }
+
+    setNotes(prev => [...prev, data]);
+    return data;
   };
 
   const updateNote = async (id: string, updates: Partial<SpeakerNote>) => {
+    const { data, error } = await supabase
+      .from('speaker_notes')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating speaker note:', error);
+      throw error;
+    }
+
     setNotes(prev => prev.map(note => 
-      note.id === id ? { ...note, ...updates } : note
+      note.id === id ? data : note
     ));
   };
 
   const deleteNote = async (id: string) => {
+    const { error } = await supabase
+      .from('speaker_notes')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting speaker note:', error);
+      throw error;
+    }
+
     setNotes(prev => prev.filter(note => note.id !== id));
   };
 
@@ -209,6 +257,7 @@ export function useTimeBlocks(eventId?: string) {
     deleteNote,
     getSpeakersForBlock,
     getNotesForSpeaker,
-    getBlocksForEvent
+    getBlocksForEvent,
+    refetch: fetchTimeBlocks
   };
 }
