@@ -34,6 +34,7 @@ function AppContent() {
           <Route path="/get-started" element={<GetStarted />} />
           <Route path="/demo" element={<StageCue />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Admin />} />
           <Route
             path="/dashboard"
             element={
