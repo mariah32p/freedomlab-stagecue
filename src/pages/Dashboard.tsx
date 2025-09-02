@@ -104,7 +104,7 @@ export function Dashboard() {
                     {subscriptionStatus.status === 'not_started' 
                       ? 'No Active Subscription'
                       : subscriptionStatus.status === 'trialing'
-                      ? 'Free Trial'
+                     ? subscriptionStatus.cancelAtPeriodEnd ? 'Free Trial (Canceled)' : 'Free Trial'
                       : subscriptionStatus.status}
                   </p>
                 </div>
@@ -117,6 +117,11 @@ export function Dashboard() {
                     <p className="text-sm text-navy-900">
                       {formatDate(subscriptionStatus.currentPeriodEnd)}
                     </p>
+                    {subscriptionStatus.status === 'trialing' && subscriptionStatus.cancelAtPeriodEnd && (
+                      <p className="text-sm text-red-600 mt-1">
+                        Subscription will not renew after trial
+                      </p>
+                    )}
                   </div>
                 )}
                 {subscriptionStatus.status !== 'not_started' && (
