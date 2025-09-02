@@ -45,7 +45,7 @@ export function GetStarted() {
         },
         body: JSON.stringify({
           price_id: selectedProduct.priceId,
-          success_url: `${window.location.origin}/success`,
+          success_url: `${window.location.origin}/dashboard`,
           cancel_url: `${window.location.origin}/get-started`,
           mode: selectedProduct.mode,
           trial_period_days: 7,

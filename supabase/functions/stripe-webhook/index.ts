@@ -132,6 +132,18 @@ async function syncCustomerFromStripe(customerId: string) {
     const userId = stripeCustomer.metadata?.userId;
 
     if (userId) {
+     // Ensure user profile exists in users table
+     const { error: userProfileError } = await supabase.from('users').upsert(
+       { 
+         id: userId,
+         email: stripeCustomer.email || '',
+       },
+       { onConflict: 'id' }
+     );
+     if (userProfileError) {
+       console.error('Error creating/updating user profile:', userProfileError);
+     }
+
       const { error: customerMapError } = await supabase.from('stripe_customers').upsert(
         { user_id: userId, customer_id: customerId },
         { onConflict: 'user_id' },
