@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { useEvents } from '../hooks/useEvents';
-import { useSpeakers } from '../hooks/useSpeakers';
+import { useTimeBlocks } from '../hooks/useTimeBlocks';
 import { CreateEventModal } from '../components/CreateEventModal';
 import { EventCard } from '../components/EventCard';
 import { LiveEventManager } from '../components/LiveEventManager';
+import { TimeBlockManager } from '../components/TimeBlockManager';
 import { DeleteConfirmModal } from '../components/DeleteConfirmModal';
 import { Event } from '../types/event';
 
 export function Dashboard() {
   const { events, loading: eventsLoading, createEvent, updateEvent, deleteEvent } = useEvents();
-  const { addSpeaker } = useSpeakers();
+  const { addTimeBlock } = useTimeBlocks();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showLiveManager, setShowLiveManager] = useState(false);
+  const [showTimeBlockManager, setShowTimeBlockManager] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; event: Event | null }>({
     show: false,
     event: null
@@ -21,12 +23,13 @@ export function Dashboard() {
   const handleCreateEvent = async (eventData: Omit<Event, 'id' | 'created_at' | 'updated_at' | 'user_id'>) => {
     const newEvent = await createEvent(eventData);
     
-    // Add some default speakers for demo purposes
-    await addSpeaker({
+    // Add a default opening time block for demo purposes
+    await addTimeBlock({
       event_id: newEvent.id,
-      name: 'Opening Speaker',
-      session_title: 'Welcome & Introduction',
+      title: 'Welcome & Introduction',
+      start_time: 0,
       duration: 15,
+      type: 'session',
       order_index: 0
     });
     
@@ -39,9 +42,9 @@ export function Dashboard() {
     updateEvent(event.id, { status: 'live' });
   };
 
-  const handleEditEvent = (event: Event) => {
-    // For now, just show an alert - in real implementation would open edit modal
-    alert(`Edit functionality for "${event.name}" would open here`);
+  const handleManageBlocks = (event: Event) => {
+    setSelectedEvent(event);
+    setShowTimeBlockManager(true);
   };
 
   const handleDeleteEvent = (event: Event) => {
@@ -108,7 +111,7 @@ export function Dashboard() {
                   <EventCard
                     key={event.id}
                     event={event}
-                    onEdit={handleEditEvent}
+                    onManageBlocks={handleManageBlocks}
                     onDelete={handleDeleteEvent}
                     onStartLive={handleStartLive}
                   />
@@ -138,6 +141,17 @@ export function Dashboard() {
         />
       )}
 
+          <>
+            <TimeBlockManager
+              event={selectedEvent}
+              isOpen={showTimeBlockManager}
+              onClose={() => {
+                setShowTimeBlockManager(false);
+                setSelectedEvent(null);
+              }}
+            />
+          </>
+            
       <DeleteConfirmModal
         isOpen={deleteConfirm.show}
         onClose={cancelDelete}

@@ -2,12 +2,12 @@ import { Event } from '../types/event';
 
 interface EventCardProps {
   event: Event;
-  onEdit: (event: Event) => void;
+  onManageBlocks: (event: Event) => void;
   onDelete: (event: Event) => void;
   onStartLive: (event: Event) => void;
 }
 
-export function EventCard({ event, onEdit, onDelete, onStartLive }: EventCardProps) {
+export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: EventCardProps) {
   const getStatusColor = (status: Event['status']) => {
     switch (status) {
       case 'draft':
@@ -75,10 +75,10 @@ export function EventCard({ event, onEdit, onDelete, onStartLive }: EventCardPro
       <div className="flex items-center justify-between pt-4 border-t border-slate-200">
         <div className="flex space-x-2">
           <button
-            onClick={() => onEdit(event)}
+            onClick={() => onManageBlocks(event)}
             className="text-sm text-navy-600 hover:text-navy-800 font-medium transition-colors"
           >
-            Edit
+            Manage Blocks
           </button>
           <button
             onClick={() => onDelete(event)}
