@@ -30,7 +30,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
   const [showSpeakerNotes, setShowSpeakerNotes] = useState(false);
   const [selectedBlock, setSelectedBlock] = useState<TimeBlock | null>(null);
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
-  const [editingBlock, setEditingBlock] = useState<TimeBlock | null>(null);
+  const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; block: TimeBlock | null }>({
     show: false,
@@ -59,6 +59,24 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
     return colors[type] || colors.session;
   };
 
+  const handleEditBlock = (block: TimeBlock) => {
+    setEditingBlockId(block.id);
+    setEditTitle(block.title);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editingBlockId && editTitle.trim()) {
+      await updateTimeBlock(editingBlockId, { title: editTitle.trim() });
+      setEditingBlockId(null);
+      setEditTitle('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingBlockId(null);
+    setEditTitle('');
+  };
+
   const handleAddSpeaker = (block: TimeBlock) => {
     setSelectedBlock(block);
     setShowAddSpeaker(true);
@@ -71,24 +89,6 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
 
   const handleDeleteBlock = (block: TimeBlock) => {
     setDeleteConfirm({ show: true, block });
-  };
-
-  const handleEditBlock = (block: TimeBlock) => {
-    setEditingBlock(block);
-    setEditTitle(block.title);
-  };
-
-  const handleSaveEdit = async () => {
-    if (editingBlock && editTitle.trim()) {
-      await updateTimeBlock(editingBlock.id, { title: editTitle.trim() });
-      setEditingBlock(null);
-      setEditTitle('');
-    }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingBlock(null);
-    setEditTitle('');
   };
 
   const handleMoveBlock = async (blockId: string, direction: 'up' | 'down') => {
@@ -105,6 +105,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
     await updateTimeBlock(currentBlock.id, { order_index: targetBlock.order_index });
     await updateTimeBlock(targetBlock.id, { order_index: currentBlock.order_index });
   };
+
   const confirmDeleteBlock = async () => {
     if (deleteConfirm.block) {
       await deleteTimeBlock(deleteConfirm.block.id);
@@ -173,6 +174,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                 <div className="space-y-4">
                   {eventBlocks.map((block, index) => {
                     const blockSpeakers = getSpeakersForBlock(block.id);
+                    const isEditing = editingBlockId === block.id;
                     
                     return (
                       <div key={block.id} className={`border-2 rounded-xl p-4 ${getBlockTypeColor(block.type)}`}>
@@ -186,9 +188,9 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                                 {block.type}
                               </span>
                             </div>
-                            <h4 className="text-lg font-semibold">{block.title}</h4>
-                            <p className="text-sm opacity-75">{block.duration} minutes</p>
-                            {editingBlock?.id === block.id ? (
+                            
+                            {/* Title - either editing or display */}
+                            {isEditing ? (
                               <div className="flex items-center space-x-2 mb-2">
                                 <input
                                   type="text"
@@ -215,9 +217,12 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                                 </button>
                               </div>
                             ) : (
-                              <h4 className="text-lg font-semibold">{block.title}</h4>
+                              <h4 className="text-lg font-semibold mb-1">{block.title}</h4>
                             )}
+                            
+                            <p className="text-sm opacity-75">{block.duration} minutes</p>
                           </div>
+                          
                           <div className="flex items-center space-x-1">
                             {/* Move buttons */}
                             <div className="flex flex-col space-y-1">
@@ -246,12 +251,12 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                               >
                                 Edit
                               </button>
-                            <button
-                              onClick={() => handleAddSpeaker(block)}
-                              className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors"
-                            >
-                              Speaker
-                            </button>
+                              <button
+                                onClick={() => handleAddSpeaker(block)}
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors"
+                              >
+                                Speaker
+                              </button>
                             </div>
                             
                             <button
