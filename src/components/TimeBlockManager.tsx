@@ -30,6 +30,8 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
   const [showSpeakerNotes, setShowSpeakerNotes] = useState(false);
   const [selectedBlock, setSelectedBlock] = useState<TimeBlock | null>(null);
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
+  const [editingBlock, setEditingBlock] = useState<TimeBlock | null>(null);
+  const [editTitle, setEditTitle] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; block: TimeBlock | null }>({
     show: false,
     block: null
@@ -71,6 +73,38 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
     setDeleteConfirm({ show: true, block });
   };
 
+  const handleEditBlock = (block: TimeBlock) => {
+    setEditingBlock(block);
+    setEditTitle(block.title);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editingBlock && editTitle.trim()) {
+      await updateTimeBlock(editingBlock.id, { title: editTitle.trim() });
+      setEditingBlock(null);
+      setEditTitle('');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingBlock(null);
+    setEditTitle('');
+  };
+
+  const handleMoveBlock = async (blockId: string, direction: 'up' | 'down') => {
+    const currentIndex = eventBlocks.findIndex(b => b.id === blockId);
+    if (currentIndex === -1) return;
+
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex >= eventBlocks.length) return;
+
+    // Swap order_index values
+    const currentBlock = eventBlocks[currentIndex];
+    const targetBlock = eventBlocks[newIndex];
+
+    await updateTimeBlock(currentBlock.id, { order_index: targetBlock.order_index });
+    await updateTimeBlock(targetBlock.id, { order_index: currentBlock.order_index });
+  };
   const confirmDeleteBlock = async () => {
     if (deleteConfirm.block) {
       await deleteTimeBlock(deleteConfirm.block.id);
@@ -154,19 +188,77 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                             </div>
                             <h4 className="text-lg font-semibold">{block.title}</h4>
                             <p className="text-sm opacity-75">{block.duration} minutes</p>
+                            {isEditing ? (
+                              <div className="flex items-center space-x-2 mb-2">
+                                <input
+                                  type="text"
+                                  value={editTitle}
+                                  onChange={(e) => setEditTitle(e.target.value)}
+                                  className="text-lg font-semibold bg-white/70 border border-white rounded px-2 py-1 flex-1"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSaveEdit();
+                                    if (e.key === 'Escape') handleCancelEdit();
+                                  }}
+                                  autoFocus
+                                />
+                                <button
+                                  onClick={handleSaveEdit}
+                                  className="text-xs px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded font-medium transition-colors"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={handleCancelEdit}
+                                  className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded font-medium transition-colors"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <h4 className="text-lg font-semibold">{block.title}</h4>
+                            )}
                           </div>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-1">
+                            {/* Move buttons */}
+                            <div className="flex flex-col space-y-1">
+                              <button
+                                onClick={() => handleMoveBlock(block.id, 'up')}
+                                disabled={index === 0}
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Move up"
+                              >
+                                ↑
+                              </button>
+                              <button
+                                onClick={() => handleMoveBlock(block.id, 'down')}
+                                disabled={index === eventBlocks.length - 1}
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Move down"
+                              >
+                                ↓
+                              </button>
+                            </div>
+                            
+                            <div className="flex flex-col space-y-1">
+                              <button
+                                onClick={() => handleEditBlock(block)}
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors"
+                              >
+                                Edit
+                              </button>
                             <button
                               onClick={() => handleAddSpeaker(block)}
-                              className="text-xs px-3 py-1 bg-white/70 hover:bg-white rounded-md font-medium transition-colors"
+                              className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors"
                             >
-                              Add Speaker
+                              Speaker
                             </button>
+                            </div>
+                            
                             <button
                               onClick={() => handleDeleteBlock(block)}
-                              className="text-xs px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded-md font-medium transition-colors"
+                              className="text-xs px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded font-medium transition-colors"
                             >
-                              Delete
+                              Del
                             </button>
                           </div>
                         </div>
