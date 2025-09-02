@@ -47,6 +47,11 @@ export function Navbar() {
                     Dashboard
                   </Link>
                 )}
+                {hasActiveSubscription && (
+                  <Link to="/settings" className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                    Settings
+                  </Link>
+                )}
                 <button
                   onClick={handleSignOut}
                   className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -110,6 +115,15 @@ export function Navbar() {
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Dashboard
+                    </Link>
+                  )}
+                  {hasActiveSubscription && (
+                    <Link
+                      to="/settings"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-teal-600 hover:bg-slate-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Settings
                     </Link>
                   )}
                   <button
