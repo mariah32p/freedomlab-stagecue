@@ -10,6 +10,7 @@ import { Pricing } from './pages/Pricing';
 import { Success } from './pages/Success';
 import { GetStarted } from './pages/GetStarted';
 import { ResetPassword } from './pages/ResetPassword';
+import { Settings } from './pages/Settings';
 import { StageCue as Demo } from './pages/Demo';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { StripeTestPanel } from './components/StripeTestPanel';
@@ -36,6 +37,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
                 </ProtectedRoute>
               }
             />
