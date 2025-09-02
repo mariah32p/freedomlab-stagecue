@@ -4,11 +4,13 @@ import { Alert } from '../components/Alert';
 import { PaymentIssueBanner } from '../components/PaymentIssueBanner';
 import { useSubscriptionStatus } from '../hooks/useSubscriptionStatus';
 import { isInGracePeriod } from '../utils/graceHelper';
+import { supabase } from '../lib/supabase';
 
 export function Dashboard() {
   const { user } = useAuth();
   const subscriptionStatus = useSubscriptionStatus();
-  const [error] = useState('');
+  const [error, setError] = useState('');
+  const [portalLoading, setPortalLoading] = useState(false);
 
   const showPaymentBanner = subscriptionStatus.status === 'past_due' && 
     isInGracePeriod(subscriptionStatus.paymentIssueSince);
@@ -16,6 +18,36 @@ export function Dashboard() {
   const formatDate = (timestamp: number | null) => {
     if (!timestamp) return 'N/A';
     return new Date(timestamp * 1000).toLocaleDateString();
+  };
+
+  const handleManageSubscription = async () => {
+    setPortalLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-portal-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create portal session');
+      }
+
+      if (data.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to open billing portal';
+      setError(message);
+    } finally {
+      setPortalLoading(false);
+    }
   };
 
   if (subscriptionStatus.loading) {
@@ -31,10 +63,7 @@ export function Dashboard() {
       {showPaymentBanner && (
         <PaymentIssueBanner 
           paymentIssueSince={subscriptionStatus.paymentIssueSince}
-          onManageSubscription={() => {
-            // TODO: Implement Stripe Customer Portal
-            console.log('Open Stripe Customer Portal');
-          }}
+          onManageSubscription={handleManageSubscription}
         />
       )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,6 +117,17 @@ export function Dashboard() {
                     <p className="text-sm text-navy-900">
                       {formatDate(subscriptionStatus.currentPeriodEnd)}
                     </p>
+                  </div>
+                )}
+                {subscriptionStatus.status !== 'not_started' && (
+                  <div className="mt-4">
+                    <button
+                      onClick={handleManageSubscription}
+                      disabled={portalLoading}
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-current bg-transparent hover:bg-current hover:text-white focus:ring-primary-500 transition-all duration-200"
+                    >
+                      {portalLoading ? 'Opening...' : 'Manage Subscription'}
+                    </button>
                   </div>
                 )}
               </div>

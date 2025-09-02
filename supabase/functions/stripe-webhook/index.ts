@@ -192,6 +192,10 @@ async function syncCustomerFromStripe(customerId: string) {
         current_period_start: subscription.current_period_start,
         current_period_end: subscription.current_period_end,
         cancel_at_period_end: subscription.cancel_at_period_end,
+        // Track payment issues for grace period
+        payment_issue_since: subscription.status === 'past_due' || subscription.status === 'unpaid' 
+          ? new Date().toISOString() 
+          : null,
         ...(subscription.default_payment_method && typeof subscription.default_payment_method !== 'string'
           ? {
               payment_method_brand: subscription.default_payment_method.card?.brand ?? null,

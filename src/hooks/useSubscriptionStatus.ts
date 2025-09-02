@@ -35,7 +35,7 @@ export function useSubscriptionStatus() {
     try {
       const { data, error } = await supabase
         .from('stripe_user_subscriptions')
-        .select('subscription_status, price_id, current_period_end, cancel_at_period_end')
+        .select('subscription_status, price_id, current_period_end, cancel_at_period_end, payment_issue_since')
         .maybeSingle();
 
       if (error) {
@@ -61,7 +61,7 @@ export function useSubscriptionStatus() {
       setSubscriptionStatus({
         status: data?.subscription_status || 'not_started',
         plan,
-        paymentIssueSince: null, // TODO: Add this field to database schema
+        paymentIssueSince: data?.payment_issue_since || null,
         currentPeriodEnd: data?.current_period_end || null,
         cancelAtPeriodEnd: data?.cancel_at_period_end || false,
         loading: false,
