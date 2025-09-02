@@ -1,27 +1,48 @@
-export interface Product {
-  id: string;
-  priceId: string;
-  name: string;
-  description: string;
-  mode: 'payment' | 'subscription';
-  price: number;
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import RouteGuard from './components/RouteGuard';
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Pricing from './pages/Pricing';
+import Success from './pages/Success';
+import GetStarted from './pages/GetStarted';
+import ResetPassword from './pages/ResetPassword';
+import { StageCue as Demo } from './pages/Demo';
+import ProtectedRoute from './components/ProtectedRoute';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <RouteGuard>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/success" element={<Success />} />
+            <Route path="/get-started" element={<GetStarted />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/demo" element={<Demo />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </RouteGuard>
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export const products: Product[] = [
-  {
-    id: 'prod_SvecCbpHbEWJ0M',
-    priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR',
-    name: 'StageCue Basic',
-    description: 'Perfect for small events, workshops, and team meetings. Up to 10 active timers, speaker notes, and basic Slack notifications.',
-    mode: 'subscription',
-    price: 29.00,
-  },
-  {
-    id: 'prod_StageCuePro',
-    priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
-    name: 'StageCue Pro',
-    description: 'Ideal for professional events and conferences. Unlimited timers, advanced speaker notes, full Slack integration, and priority support.',
-    mode: 'subscription',
-    price: 49.00,
-  },
-];
+export default App;
