@@ -188,7 +188,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                             </div>
                             <h4 className="text-lg font-semibold">{block.title}</h4>
                             <p className="text-sm opacity-75">{block.duration} minutes</p>
-                            {isEditing ? (
+                            {editingBlock?.id === block.id ? (
                               <div className="flex items-center space-x-2 mb-2">
                                 <input
                                   type="text"
