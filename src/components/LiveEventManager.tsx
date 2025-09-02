@@ -6,9 +6,10 @@ import { useSpeakers } from '../hooks/useSpeakers';
 interface LiveEventManagerProps {
   event: Event;
   onClose: () => void;
+  isOpen: boolean;
 }
 
-export function LiveEventManager({ event, onClose }: LiveEventManagerProps) {
+export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerProps) {
   const { speakers, getNotesForSpeaker } = useSpeakers(event.id);
   const [currentSpeakerIndex, setCurrentSpeakerIndex] = useState(0);
   const [notifications, setNotifications] = useState<string[]>([]);

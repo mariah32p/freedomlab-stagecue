@@ -131,6 +131,7 @@ export function Dashboard() {
       {selectedEvent && (
         <LiveEventManager
           event={selectedEvent}
+          isOpen={showLiveManager}
           onClose={() => {
             setShowLiveManager(false);
             setSelectedEvent(null);
