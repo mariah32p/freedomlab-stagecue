@@ -1,63 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { RouteGuard } from './components/RouteGuard';
-import { Navbar } from './components/Navbar';
-import { Home } from './pages/Home';
-import { Login } from './pages/Login';
-import { Signup } from './pages/Signup';
-import { Dashboard } from './pages/Dashboard';
-import { Pricing } from './pages/Pricing';
-import { Success } from './pages/Success';
-import { ResetPassword } from './pages/ResetPassword';
-import { GetStarted } from './pages/GetStarted.tsx';
-import { StageCue } from './pages/Demo';
-import { StripeTestPanel } from './components/StripeTestPanel';
-import { Admin } from './pages/Admin';
-
-function AppContent() {
-  const location = useLocation();
-  const isDemoPage = location.pathname === '/demo';
-
-  return (
-    <RouteGuard>
-      <div className="min-h-screen bg-gray-50">
-        {!isDemoPage && <Navbar />}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/get-started" element={<GetStarted />} />
-          <Route path="/demo" element={<StageCue />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </div>
-      <StripeTestPanel />
-    </RouteGuard>
-  );
+export interface Product {
+  id: string;
+  priceId: string;
+  name: string;
+  description: string;
+  mode: 'payment' | 'subscription';
+  price: number;
 }
 
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
-  );
-}
-
-export default App;
+export const products: Product[] = [
+  {
+    id: 'prod_SvecCbpHbEWJ0M',
+    priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR',
+    name: 'StageCue Basic',
+    description: 'Perfect for small events, workshops, and team meetings. Up to 10 active timers, speaker notes, and basic Slack notifications.',
+    mode: 'subscription',
+    price: 29.00,
+  },
+  {
+    id: 'prod_StageCuePro',
+    priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
+    name: 'StageCue Pro',
+    description: 'Perfect for conferences and larger events. Unlimited timers, custom moderator links, speaker self-service, and advanced Slack notifications.',
+    mode: 'subscription',
+    price: 49.00,
+  },
+];
