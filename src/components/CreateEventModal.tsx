@@ -27,7 +27,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent }: CreateEvent
       await onCreateEvent({
         name: formData.name,
         date: formData.date,
-        duration: parseInt(formData.duration),
+        total_duration: parseInt(formData.duration),
         meeting_link: formData.meeting_link || undefined,
         status: formData.status
       });
@@ -104,7 +104,7 @@ export function CreateEventModal({ isOpen, onClose, onCreateEvent }: CreateEvent
               </div>
               <div>
                 <label htmlFor="event-duration" className="block text-sm font-medium text-navy-700 mb-2">
-                  Duration (minutes) *
+                  Total Duration (minutes) *
                 </label>
                 <input
                   id="event-duration"
