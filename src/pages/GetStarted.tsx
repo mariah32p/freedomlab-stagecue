@@ -48,7 +48,7 @@ export function GetStarted() {
           success_url: `${window.location.origin}/dashboard`,
           cancel_url: `${window.location.origin}/get-started`,
           mode: selectedProduct.mode,
-          trial_period_days: 7,
+          trial_period_days: 1, // Changed to 1 day for testing
         }),
       });
 
