@@ -1,30 +1,44 @@
-export interface Product {
-  id: string;
-  priceId: string;
-  name: string;
-  description: string;
-  mode: 'payment' | 'subscription';
-  price: number;
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { RouteGuard } from './components/RouteGuard';
+import { Navbar } from './components/Navbar';
+import { StripeTestPanel } from './components/StripeTestPanel';
+import { Home } from './pages/Home';
+import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
+import { Dashboard } from './pages/Dashboard';
+import { Pricing } from './pages/Pricing';
+import { Success } from './pages/Success';
+import { GetStarted } from './pages/GetStarted';
+import { ResetPassword } from './pages/ResetPassword';
+import { Admin } from './pages/Admin';
+import { StageCue } from './pages/Demo';
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <RouteGuard>
+          <div className="min-h-screen bg-gray-50">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/get-started" element={<GetStarted />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/demo" element={<StageCue />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+            <StripeTestPanel />
+          </div>
+        </RouteGuard>
+      </Router>
+    </AuthProvider>
+  );
 }
 
-const products: Product[] = [
-  {
-    id: 'prod_SvecCbpHbEWJ0M',
-    priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR',
-    name: 'StageCue Basic',
-    description: 'Perfect for small events, workshops, and team meetings. Up to 10 active timers, speaker notes, and basic Slack notifications.',
-    mode: 'subscription',
-    price: 29.00,
-  },
-  {
-    id: 'prod_StageCuePro',
-    priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
-    name: 'StageCue Pro',
-    description: 'Perfect for conferences and larger events. Unlimited timers, custom moderator links, speaker self-service, and advanced Slack notifications.',
-    mode: 'subscription',
-    price: 49.00,
-  },
-];
-
-// The `products` array is now the default export
-export default products;
+export default App;
