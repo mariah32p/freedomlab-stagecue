@@ -13,6 +13,7 @@ import { Success } from './pages/Success';
 import { ResetPassword } from './pages/ResetPassword';
 import { GetStarted } from './pages/GetStarted.tsx';
 import { StageCue } from './pages/Demo';
+import { StripeTestPanel } from './components/StripeTestPanel';
 
 function AppContent() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function AppContent() {
           />
         </Routes>
       </div>
+      <StripeTestPanel />
     </RouteGuard>
   );
 }
