@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { RouteGuard } from './components/RouteGuard';
 import { Navbar } from './components/Navbar';
@@ -16,6 +16,15 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { CountdownDisplay } from './pages/CountdownDisplay';
 import { SpeakerPortal } from './pages/SpeakerPortal';
 
+function AppWithNavbar() {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -28,49 +37,38 @@ function App() {
             <Route path="/speaker/:speakerId" element={<SpeakerPortal />} />
             
             {/* Regular app routes with navbar */}
-            <Route path="/*" element={
-              <>
-                <Navbar />
-                <AppRoutes />
-              </>
-            } />
+            <Route path="/" element={<AppWithNavbar />}>
+              <Route index element={<Home />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<Signup />} />
+              <Route path="pricing" element={<Pricing />} />
+              <Route path="success" element={<Success />} />
+              <Route path="get-started" element={<GetStarted />} />
+              <Route path="reset-password" element={<ResetPassword />} />
+              <Route path="demo" element={<Demo />} />
+
+              {/* Protected Routes */}
+              <Route
+                path="dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Routes>
         </RouteGuard>
       </Router>
     </AuthProvider>
-  );
-}
-
-function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/pricing" element={<Pricing />} />
-      <Route path="/success" element={<Success />} />
-      <Route path="/get-started" element={<GetStarted />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/demo" element={<Demo />} />
-
-      {/* Protected Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
   );
 }
 
