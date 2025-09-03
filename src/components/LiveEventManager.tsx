@@ -207,7 +207,7 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   </button>
                   
                   <button
-                    onClick={() => handleExtend(-1)}
+                    onClick={() => extendTimer(-60)}
                     className="btn bg-orange-400 hover:bg-orange-500 text-white px-4 py-3"
                   >
                     -1 min
