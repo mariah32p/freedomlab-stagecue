@@ -144,7 +144,7 @@ export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNo
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="time-marker" className="block text-sm font-medium text-navy-700 mb-2">
-                    Time Marker *
+                    Time Marker (within this block) *
                   </label>
                   <input
                     id="time-marker"
@@ -156,7 +156,7 @@ export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNo
                     onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
                   />
                   <p className="text-xs text-navy-500 mt-1">
-                    Format: MM:SS or just minutes (e.g., "5:30" or "5")
+                    Time from start of this block. Format: MM:SS or minutes (e.g., "5:30" or "5")
                   </p>
                 </div>
 
@@ -167,7 +167,7 @@ export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNo
                   <textarea
                     id="note-content"
                     required
-                    className="input h-24 resize-none"
+                    className="input h-32 resize-none"
                     placeholder="Speaking note or cue..."
                     value={formData.content}
                     onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}

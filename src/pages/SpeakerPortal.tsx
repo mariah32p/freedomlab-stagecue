@@ -131,7 +131,7 @@ export function SpeakerPortal() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="time-marker" className="block text-sm font-medium text-navy-700 mb-2">
-                  Time Marker *
+                  Time Marker (within your session) *
                 </label>
                 <input
                   id="time-marker"
@@ -142,6 +142,9 @@ export function SpeakerPortal() {
                   value={formData.time_marker}
                   onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
                 />
+                <p className="text-xs text-navy-500 mt-1">
+                  Time from start of your session. Format: MM:SS or minutes (e.g., "5:30" or "5")
+                </p>
                 <p className="text-xs text-navy-500 mt-1">
                   Format: MM:SS or just minutes (e.g., "5:30" or "5")
                 </p>
@@ -154,7 +157,7 @@ export function SpeakerPortal() {
                 <textarea
                   id="note-content"
                   required
-                  className="input h-24 resize-none"
+                  className="input h-40 resize-none text-base"
                   placeholder="Speaking note or reminder..."
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
