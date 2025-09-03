@@ -83,8 +83,7 @@ export function useTimer(initialDuration: number = 0, autoStart: boolean = false
   const extendTimer = useCallback((additionalSeconds: number) => {
     setTimer(prev => ({
       ...prev,
-      timeRemaining: Math.max(0, prev.timeRemaining + additionalSeconds),
-      totalDuration: prev.totalDuration + additionalSeconds
+      timeRemaining: Math.max(0, prev.timeRemaining + additionalSeconds)
     }));
   }, []);
 
