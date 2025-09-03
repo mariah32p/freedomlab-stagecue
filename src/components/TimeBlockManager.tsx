@@ -408,6 +408,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
               setSelectedSpeaker(null);
             }}
             speaker={selectedSpeaker}
+            timeBlock={timeBlocks.find(b => b.id === selectedSpeaker.time_block_id)!}
             notes={getNotesForSpeaker(selectedSpeaker.id)}
             onAddNote={addNote}
             onUpdateNote={updateNote}

@@ -41,6 +41,15 @@ export function SpeakerPortal() {
     try {
       const timeInSeconds = parseTimeToSeconds(formData.time_marker);
       
+      // For speaker portal, we need to get the time block duration
+      // This would need to be passed from the parent or fetched
+      // For now, we'll add a reasonable validation (assume max 60 minutes)
+      if (timeInSeconds > 3600) { // 60 minutes
+        setError('Time marker cannot exceed 60 minutes');
+        setLoading(false);
+        return;
+      }
+      
       if (editingNote) {
         await updateNote(editingNote.id, {
           time_marker: timeInSeconds,
@@ -143,10 +152,7 @@ export function SpeakerPortal() {
                   onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
                 />
                 <p className="text-xs text-navy-500 mt-1">
-                  Time from start of your session. Format: MM:SS or minutes (e.g., "5:30" or "5")
-                </p>
-                <p className="text-xs text-navy-500 mt-1">
-                  Format: MM:SS or just minutes (e.g., "5:30" or "5")
+                  Time from start of your session block. Format: MM:SS or minutes (e.g., "5:30" or "5")
                 </p>
               </div>
 
@@ -157,7 +163,7 @@ export function SpeakerPortal() {
                 <textarea
                   id="note-content"
                   required
-                  className="input h-40 resize-none text-base"
+                  className="input h-48 resize-none text-base"
                   placeholder="Speaking note or reminder..."
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}

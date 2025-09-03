@@ -1,11 +1,12 @@
 import { useState, type FormEvent } from 'react';
-import { Speaker, SpeakerNote } from '../types/event';
+import { Speaker, SpeakerNote, TimeBlock } from '../types/event';
 import { useTimeBlocks } from '../hooks/useTimeBlocks';
 
 interface SpeakerNotesModalProps {
   isOpen: boolean;
   onClose: () => void;
   speaker: Speaker;
+  timeBlock: TimeBlock;
   notes: SpeakerNote[];
   onAddNote: (noteData: Omit<SpeakerNote, 'id' | 'created_at'>) => Promise<SpeakerNote>;
   onUpdateNote: (id: string, updates: Partial<SpeakerNote>) => Promise<void>;
@@ -16,6 +17,7 @@ export function SpeakerNotesModal({
   isOpen, 
   onClose, 
   speaker, 
+  timeBlock,
   notes, 
   onAddNote, 
   onUpdateNote, 
@@ -37,6 +39,14 @@ export function SpeakerNotesModal({
 
     try {
       const timeInSeconds = parseTimeToSeconds(formData.time_marker);
+      const blockDurationInSeconds = timeBlock.duration * 60;
+      
+      // Validate that time marker doesn't exceed block duration
+      if (timeInSeconds > blockDurationInSeconds) {
+        setError(`Time marker cannot exceed block duration of ${timeBlock.duration} minutes`);
+        setLoading(false);
+        return;
+      }
       
       if (editingNote) {
         await onUpdateNote(editingNote.id, {
@@ -166,7 +176,7 @@ export function SpeakerNotesModal({
                     onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
                   />
                   <p className="text-xs text-navy-500 mt-1">
-                    Time from start of this block. Format: MM:SS or minutes (e.g., "5:30" or "5")
+                    Time from start of this block (max: {timeBlock.duration} minutes). Format: MM:SS or minutes (e.g., "5:30" or "5")
                   </p>
                 </div>
 
@@ -227,6 +237,16 @@ export function SpeakerNotesModal({
                   </button>
                 </div>
               </form>
+            </div>
+
+            {/* Block Info */}
+            <div className="bg-slate-50 rounded-lg p-4 mb-6">
+              <h4 className="font-medium text-navy-900 mb-2">Block Information</h4>
+              <div className="space-y-1 text-sm text-navy-600">
+                <div><strong>Block:</strong> {timeBlock.title}</div>
+                <div><strong>Duration:</strong> {timeBlock.duration} minutes</div>
+                <div><strong>Type:</strong> {timeBlock.type}</div>
+              </div>
             </div>
 
             {/* Notes List */}
