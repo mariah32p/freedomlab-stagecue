@@ -254,18 +254,6 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   >
                     Send Slack Alert
                   </button>
-                  <button
-                    onClick={() => handleExtend(10)}
-                    className="w-full btn bg-amber-500 hover:bg-amber-600 text-white py-2 text-sm"
-                  >
-                    Extend +10 min
-                  </button>
-                  <button
-                    onClick={() => handleExtend(15)}
-                    className="w-full btn bg-orange-500 hover:bg-orange-600 text-white py-2 text-sm"
-                  >
-                    Extend +15 min
-                  </button>
                 </div>
               </div>
 
