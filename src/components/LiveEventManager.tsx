@@ -194,6 +194,20 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   </button>
                   
                   <button
+                    onClick={() => handleExtend(1)}
+                    className="btn bg-blue-400 hover:bg-blue-500 text-white px-4 py-3"
+                  >
+                    +1 min
+                  </button>
+                  
+                  <button
+                    onClick={() => handleExtend(-1)}
+                    className="btn bg-orange-400 hover:bg-orange-500 text-white px-4 py-3"
+                  >
+                    -1 min
+                  </button>
+                  
+                  <button
                     onClick={() => resetTimer()}
                     className="btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-3"
                   >
