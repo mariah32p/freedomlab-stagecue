@@ -73,38 +73,5 @@ function AppRoutes() {
     </Routes>
   );
 }
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/get-started" element={<GetStarted />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/demo" element={<Demo />} />
-
-            {/* Protected Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </RouteGuard>
-      </Router>
-    </AuthProvider>
-  );
-}
 
 export default App;
