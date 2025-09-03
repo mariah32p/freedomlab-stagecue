@@ -238,7 +238,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                               <button
                                 onClick={() => handleMoveBlock(block.id, 'up')}
                                 disabled={index === 0}
-                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-navy-700"
                                 title="Move up"
                               >
                                 ↑
@@ -246,7 +246,7 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
                               <button
                                 onClick={() => handleMoveBlock(block.id, 'down')}
                                 disabled={index === eventBlocks.length - 1}
-                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-navy-700"
                                 title="Move down"
                               >
                                 ↓
