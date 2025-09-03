@@ -22,7 +22,10 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
     deleteTimeBlock,
     addSpeaker,
     getSpeakersForBlock,
-    getNotesForSpeaker
+    getNotesForSpeaker,
+    addNote,
+    updateNote,
+    deleteNote
   } = useTimeBlocks(event.id);
 
   const [showCreateBlock, setShowCreateBlock] = useState(false);
