@@ -7,7 +7,7 @@ import { useTimer } from '../hooks/useTimer';
 export function CountdownDisplay() {
   const { eventId, blockId } = useParams<{ eventId: string; blockId?: string }>();
   const { events } = useEvents();
-  const { timeBlocks, speakers, getSpeakersForBlock } = useTimeBlocks(eventId);
+  const { timeBlocks, getSpeakersForBlock } = useTimeBlocks(eventId);
   const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
   
   const event = events.find(e => e.id === eventId);
@@ -20,7 +20,7 @@ export function CountdownDisplay() {
     : eventBlocks[currentBlockIndex];
     
   const currentSpeakers = currentBlock ? getSpeakersForBlock(currentBlock.id) : [];
-  const { timer, startTimer, formatTime, getProgress } = useTimer(currentBlock ? currentBlock.duration * 60 : 0, true);
+  const { timer, formatTime, getProgress } = useTimer(currentBlock ? currentBlock.duration * 60 : 0, true);
 
   // Auto-advance to next block when timer reaches zero
   useEffect(() => {
@@ -31,13 +31,6 @@ export function CountdownDisplay() {
       }
     }
   }, [timer.timeRemaining, currentBlockIndex, eventBlocks.length, blockId]);
-
-  // Start timer when block changes
-  useEffect(() => {
-    if (currentBlock) {
-      startTimer();
-    }
-  }, [currentBlock?.id, startTimer]);
 
   if (!event || !currentBlock) {
     return (
@@ -114,7 +107,7 @@ export function CountdownDisplay() {
           {/* Speakers */}
           {currentSpeakers.length > 0 && (
             <div className="space-y-4">
-              {currentSpeakers.map((speaker, index) => (
+              {currentSpeakers.map((speaker) => (
                 <div key={speaker.id} className="text-center">
                   <h3 className="text-2xl md:text-3xl font-semibold text-teal-300">
                     {speaker.name}

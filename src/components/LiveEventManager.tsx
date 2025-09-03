@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Event, Speaker } from '../types/event';
+import { Event, TimeBlock } from '../types/event';
 import { useTimer } from '../hooks/useTimer';
-import { useSpeakers } from '../hooks/useSpeakers';
+import { useTimeBlocks } from '../hooks/useTimeBlocks';
 
 interface LiveEventManagerProps {
   event: Event;
@@ -10,21 +10,24 @@ interface LiveEventManagerProps {
 }
 
 export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerProps) {
-  const { speakers, getNotesForSpeaker } = useSpeakers(event.id);
-  const [currentSpeakerIndex, setCurrentSpeakerIndex] = useState(0);
+  const { timeBlocks, speakers, getSpeakersForBlock, getNotesForSpeaker } = useTimeBlocks(event.id);
+  const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
   const [notifications, setNotifications] = useState<string[]>([]);
   
-  const currentSpeaker = speakers[currentSpeakerIndex];
-  const speakerDurationInSeconds = currentSpeaker ? currentSpeaker.duration * 60 : 0;
+  const eventBlocks = timeBlocks.filter(block => block.event_id === event.id)
+    .sort((a, b) => a.order_index - b.order_index);
+  const currentBlock = eventBlocks[currentBlockIndex];
+  const blockDurationInSeconds = currentBlock ? currentBlock.duration * 60 : 0;
+  const currentBlockSpeakers = currentBlock ? getSpeakersForBlock(currentBlock.id) : [];
   
-  const { timer, startTimer, pauseTimer, resumeTimer, extendTimer, resetTimer, formatTime, getProgress } = useTimer(speakerDurationInSeconds, false);
+  const { timer, startTimer, pauseTimer, resumeTimer, extendTimer, resetTimer, formatTime, getProgress } = useTimer(blockDurationInSeconds, false);
 
-  // Update timer when speaker changes
+  // Update timer when time block changes
   useEffect(() => {
-    if (currentSpeaker) {
-      resetTimer(currentSpeaker.duration * 60);
+    if (currentBlock) {
+      resetTimer(currentBlock.duration * 60);
     }
-  }, [currentSpeaker?.id, resetTimer]);
+  }, [currentBlock?.id, resetTimer]);
 
   // Add notifications when timer hits certain thresholds
   useEffect(() => {
@@ -45,17 +48,19 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
     setNotifications(prev => [message, ...prev.slice(0, 4)]); // Keep last 5 notifications
   };
 
-  const handleNextSpeaker = () => {
-    if (currentSpeakerIndex < speakers.length - 1) {
-      setCurrentSpeakerIndex(prev => prev + 1);
-      addNotification(`🎤 Now presenting: ${speakers[currentSpeakerIndex + 1]?.name}`);
+  const handleNextBlock = () => {
+    if (currentBlockIndex < eventBlocks.length - 1) {
+      setCurrentBlockIndex(prev => prev + 1);
+      const nextBlock = eventBlocks[currentBlockIndex + 1];
+      addNotification(`🎤 Now starting: ${nextBlock?.title}`);
     }
   };
 
-  const handlePreviousSpeaker = () => {
-    if (currentSpeakerIndex > 0) {
-      setCurrentSpeakerIndex(prev => prev - 1);
-      addNotification(`🎤 Back to: ${speakers[currentSpeakerIndex - 1]?.name}`);
+  const handlePreviousBlock = () => {
+    if (currentBlockIndex > 0) {
+      setCurrentBlockIndex(prev => prev - 1);
+      const prevBlock = eventBlocks[currentBlockIndex - 1];
+      addNotification(`🎤 Back to: ${prevBlock?.title}`);
     }
   };
 
@@ -68,7 +73,10 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
     addNotification('📢 Slack alert sent to #event-team');
   };
 
-  const currentNotes = currentSpeaker ? getNotesForSpeaker(currentSpeaker.id) : [];
+  // Get all notes for speakers in current block
+  const currentNotes = currentBlockSpeakers.flatMap(speaker => 
+    getNotesForSpeaker(speaker.id)
+  ).sort((a, b) => a.time_marker - b.time_marker);
 
   if (!isOpen) return null;
 
@@ -86,7 +94,7 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   <span className="text-sm font-medium text-red-600">LIVE EVENT</span>
                 </div>
                 <span className="text-sm text-navy-600">
-                  Speaker {currentSpeakerIndex + 1} of {speakers.length}
+                  Block {currentBlockIndex + 1} of {eventBlocks.length}
                 </span>
               </div>
             </div>
@@ -121,12 +129,35 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   ></div>
                 </div>
 
-                {/* Current Speaker Info */}
-                {currentSpeaker && (
+                {/* Current Block Info */}
+                {currentBlock && (
                   <div className="bg-white rounded-lg p-6 mb-6">
-                    <h3 className="text-xl font-semibold text-navy-900">{currentSpeaker.name}</h3>
-                    <p className="text-navy-600">{currentSpeaker.session_title}</p>
-                    <p className="text-sm text-navy-500 mt-1">{currentSpeaker.duration} minutes allocated</p>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
+                        currentBlock.type === 'session' ? 'bg-blue-100 text-blue-800' :
+                        currentBlock.type === 'break' ? 'bg-green-100 text-green-800' :
+                        currentBlock.type === 'qa' ? 'bg-purple-100 text-purple-800' :
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {currentBlock.type}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-navy-900 mb-2">{currentBlock.title}</h3>
+                    <p className="text-sm text-navy-500">{currentBlock.duration} minutes allocated</p>
+                    
+                    {/* Show speakers in this block */}
+                    {currentBlockSpeakers.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-slate-200">
+                        <div className="text-sm text-navy-600 mb-2">Speakers:</div>
+                        <div className="space-y-1">
+                          {currentBlockSpeakers.map(speaker => (
+                            <div key={speaker.id} className="text-navy-900 font-medium">
+                              {speaker.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -171,28 +202,28 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                 </div>
               </div>
 
-              {/* Speaker Navigation */}
+              {/* Block Navigation */}
               <div className="flex justify-between items-center">
                 <button
-                  onClick={handlePreviousSpeaker}
-                  disabled={currentSpeakerIndex === 0}
+                  onClick={handlePreviousBlock}
+                  disabled={currentBlockIndex === 0}
                   className="btn btn-outline px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  ← Previous Speaker
+                  ← Previous Block
                 </button>
                 
                 <div className="text-center">
                   <div className="text-sm text-navy-600">
-                    {currentSpeakerIndex + 1} of {speakers.length}
+                    {currentBlockIndex + 1} of {eventBlocks.length}
                   </div>
                 </div>
                 
                 <button
-                  onClick={handleNextSpeaker}
-                  disabled={currentSpeakerIndex === speakers.length - 1}
+                  onClick={handleNextBlock}
+                  disabled={currentBlockIndex === eventBlocks.length - 1}
                   className="btn btn-outline px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Next Speaker →
+                  Next Block →
                 </button>
               </div>
             </div>
@@ -225,14 +256,19 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
               </div>
 
               {/* Speaker Notes */}
-              {currentSpeaker && currentNotes.length > 0 && (
+              {currentNotes.length > 0 && (
                 <div className="bg-white rounded-xl border border-slate-200 p-4">
-                  <h3 className="font-semibold text-navy-900 mb-4">Speaker Notes</h3>
+                  <h3 className="font-semibold text-navy-900 mb-4">
+                    Speaker Notes {currentBlockSpeakers.length > 1 ? '(All Speakers)' : ''}
+                  </h3>
                   <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
                     {currentNotes.map((note) => {
                       const noteTime = Math.floor(note.time_marker / 60);
                       const noteSeconds = note.time_marker % 60;
                       const timeString = `${noteTime}:${noteSeconds.toString().padStart(2, '0')}`;
+                      
+                      // Find which speaker this note belongs to
+                      const noteSpeaker = currentBlockSpeakers.find(s => s.id === note.speaker_id);
                       
                       const typeColors = {
                         essential: 'bg-blue-50 border-blue-200 text-blue-800',
@@ -243,7 +279,12 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                       return (
                         <div key={note.id} className={`p-3 rounded-lg border ${typeColors[note.type]}`}>
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-medium">{timeString}</span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs font-medium">{timeString}</span>
+                              {currentBlockSpeakers.length > 1 && noteSpeaker && (
+                                <span className="text-xs text-navy-500">({noteSpeaker.name})</span>
+                              )}
+                            </div>
                             <span className="text-xs px-2 py-0.5 bg-white/50 rounded capitalize">
                               {note.type}
                             </span>
