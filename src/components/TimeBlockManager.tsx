@@ -105,8 +105,15 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
     const currentBlock = eventBlocks[currentIndex];
     const targetBlock = eventBlocks[newIndex];
 
-    await updateTimeBlock(currentBlock.id, { order_index: targetBlock.order_index });
-    await updateTimeBlock(targetBlock.id, { order_index: currentBlock.order_index });
+    // Update order indices and recalculate start times
+    await updateTimeBlock(currentBlock.id, { 
+      order_index: targetBlock.order_index,
+      start_time: targetBlock.start_time 
+    });
+    await updateTimeBlock(targetBlock.id, { 
+      order_index: currentBlock.order_index,
+      start_time: currentBlock.start_time 
+    });
   };
 
   const confirmDeleteBlock = async () => {
