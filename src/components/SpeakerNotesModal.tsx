@@ -7,10 +7,20 @@ interface SpeakerNotesModalProps {
   onClose: () => void;
   speaker: Speaker;
   notes: SpeakerNote[];
+  onAddNote: (noteData: Omit<SpeakerNote, 'id' | 'created_at'>) => Promise<SpeakerNote>;
+  onUpdateNote: (id: string, updates: Partial<SpeakerNote>) => Promise<void>;
+  onDeleteNote: (id: string) => Promise<void>;
 }
 
-export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNotesModalProps) {
-  const { addNote, updateNote, deleteNote } = useTimeBlocks();
+export function SpeakerNotesModal({ 
+  isOpen, 
+  onClose, 
+  speaker, 
+  notes, 
+  onAddNote, 
+  onUpdateNote, 
+  onDeleteNote 
+}: SpeakerNotesModalProps) {
   const [formData, setFormData] = useState({
     time_marker: '',
     content: '',
@@ -29,14 +39,14 @@ export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNo
       const timeInSeconds = parseTimeToSeconds(formData.time_marker);
       
       if (editingNote) {
-        await updateNote(editingNote.id, {
+        await onUpdateNote(editingNote.id, {
           time_marker: timeInSeconds,
           content: formData.content,
           type: formData.type
         });
         setEditingNote(null);
       } else {
-        await addNote({
+        await onAddNote({
           speaker_id: speaker.id,
           time_marker: timeInSeconds,
           content: formData.content,
@@ -84,7 +94,7 @@ export function SpeakerNotesModal({ isOpen, onClose, speaker, notes }: SpeakerNo
   };
 
   const handleDeleteNote = async (noteId: string) => {
-    await deleteNote(noteId);
+    await onDeleteNote(noteId);
   };
 
   const cancelEdit = () => {

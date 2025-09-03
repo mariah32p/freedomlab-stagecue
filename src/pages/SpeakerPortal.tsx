@@ -5,7 +5,7 @@ import { SpeakerNote } from '../types/event';
 
 export function SpeakerPortal() {
   const { speakerId } = useParams<{ speakerId: string }>();
-  const { speakers, notes, addNote, updateNote, deleteNote, getNotesForSpeaker } = useTimeBlocks();
+  const { speakers, addNote, updateNote, deleteNote, getNotesForSpeaker } = useTimeBlocks();
   const [formData, setFormData] = useState({
     time_marker: '',
     content: '',

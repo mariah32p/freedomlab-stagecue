@@ -406,6 +406,9 @@ export function TimeBlockManager({ event, isOpen, onClose }: TimeBlockManagerPro
             }}
             speaker={selectedSpeaker}
             notes={getNotesForSpeaker(selectedSpeaker.id)}
+            onAddNote={addNote}
+            onUpdateNote={updateNote}
+            onDeleteNote={deleteNote}
           />
         )}
 
