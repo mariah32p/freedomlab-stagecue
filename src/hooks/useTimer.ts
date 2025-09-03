@@ -9,13 +9,23 @@ export interface TimerState {
   endTime?: Date;
 }
 
-export function useTimer(initialDuration: number = 0) {
+export function useTimer(initialDuration: number = 0, autoStart: boolean = false) {
   const [timer, setTimer] = useState<TimerState>({
     timeRemaining: initialDuration,
-    isRunning: false,
+    isRunning: autoStart,
     isPaused: false,
     totalDuration: initialDuration,
   });
+
+  // Update timer when initialDuration changes
+  useEffect(() => {
+    setTimer(prev => ({
+      ...prev,
+      timeRemaining: initialDuration,
+      totalDuration: initialDuration,
+      isRunning: autoStart
+    }));
+  }, [initialDuration, autoStart]);
 
   // Timer countdown effect
   useEffect(() => {

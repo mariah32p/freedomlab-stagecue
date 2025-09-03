@@ -20,7 +20,7 @@ export function CountdownDisplay() {
     : eventBlocks[currentBlockIndex];
     
   const currentSpeakers = currentBlock ? getSpeakersForBlock(currentBlock.id) : [];
-  const { timer, formatTime, getProgress } = useTimer(currentBlock ? currentBlock.duration * 60 : 0);
+  const { timer, startTimer, formatTime, getProgress } = useTimer(currentBlock ? currentBlock.duration * 60 : 0, true);
 
   // Auto-advance to next block when timer reaches zero
   useEffect(() => {
@@ -31,6 +31,13 @@ export function CountdownDisplay() {
       }
     }
   }, [timer.timeRemaining, currentBlockIndex, eventBlocks.length, blockId]);
+
+  // Start timer when block changes
+  useEffect(() => {
+    if (currentBlock) {
+      startTimer();
+    }
+  }, [currentBlock?.id, startTimer]);
 
   if (!event || !currentBlock) {
     return (

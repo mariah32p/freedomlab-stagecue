@@ -17,14 +17,14 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
   const currentSpeaker = speakers[currentSpeakerIndex];
   const speakerDurationInSeconds = currentSpeaker ? currentSpeaker.duration * 60 : 0;
   
-  const { timer, startTimer, pauseTimer, resumeTimer, extendTimer, resetTimer, formatTime, getProgress } = useTimer(speakerDurationInSeconds);
+  const { timer, startTimer, pauseTimer, resumeTimer, extendTimer, resetTimer, formatTime, getProgress } = useTimer(speakerDurationInSeconds, false);
 
   // Update timer when speaker changes
   useEffect(() => {
     if (currentSpeaker) {
       resetTimer(currentSpeaker.duration * 60);
     }
-  }, [currentSpeaker, resetTimer]);
+  }, [currentSpeaker?.id, resetTimer]);
 
   // Add notifications when timer hits certain thresholds
   useEffect(() => {
