@@ -36,7 +36,7 @@ export function TimerLimitNotice({ currentTimerCount }: TimerLimitNoticeProps) {
             <p className="text-sm text-red-700">
               You've reached your limit of {featureGates.maxActiveTimers} active timers
               {subscriptionStatus.status === 'past_due' ? ' during grace period. Please update your payment method.' : 
-               subscriptionStatus.plan === 'basic' ? '. Upgrade to Pro for unlimited timers.' : '.'}
+               subscriptionStatus.plan === 'standard' ? '. All features included in your Standard plan.' : '.'}
             </p>
           </div>
           {subscriptionStatus.status === 'past_due' ? (
@@ -46,13 +46,8 @@ export function TimerLimitNotice({ currentTimerCount }: TimerLimitNoticeProps) {
             >
               Update Payment
             </a>
-          ) : subscriptionStatus.plan === 'basic' ? (
-            <a
-              href="/get-started"
-              className="btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-sm"
-            >
-              Upgrade to Pro
-            </a>
+          ) : subscriptionStatus.plan === 'standard' ? (
+            null
           ) : null}
         </div>
       </div>
@@ -73,7 +68,7 @@ export function TimerLimitNotice({ currentTimerCount }: TimerLimitNoticeProps) {
             <p className="text-sm text-amber-700">
               You're using {currentTimerCount} of {featureGates.maxActiveTimers} available timers
               {subscriptionStatus.status === 'past_due' ? ' during grace period.' : 
-               subscriptionStatus.plan === 'basic' ? '. Consider upgrading to Pro for unlimited timers.' : '.'}
+               subscriptionStatus.plan === 'standard' ? '. All features included in your Standard plan.' : '.'}
             </p>
           </div>
         </div>

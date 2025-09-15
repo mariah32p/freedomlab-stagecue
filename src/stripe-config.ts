@@ -12,29 +12,12 @@ export interface Product {
 
 export const products: Product[] = [
   {
-    id: 'prod_basic',
-    priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR',
-    name: 'StageCue Basic',
-    description: 'Perfect for small events and workshops',
+    id: 'prod_standard',
+    priceId: 'price_1RznJIDn6VTzl81bqsk5O1gR', // Keep same price ID for now
+    name: 'StageCue Standard',
+    description: 'Professional event timing for all your needs',
     mode: 'subscription',
     price: 29.00,
-    features: [
-      'Up to 10 active timers',
-      'Timer controls via web dashboard',
-      'Speaker notes management',
-      'Basic Slack notifications',
-      'Save/reuse timer configurations',
-      'Real-time countdown displays'
-    ]
-  },
-  {
-    id: 'prod_pro',
-    priceId: 'price_1RznJIDn6VTzl81bPK1TDU3Y',
-    name: 'StageCue Pro',
-    description: 'Professional event timing system for conferences and larger events',
-    mode: 'subscription',
-    price: 49.00,
-    popular: true,
     features: [
       'Unlimited active timers',
       'Timer controls via web dashboard',
@@ -43,19 +26,20 @@ export const products: Product[] = [
       'Save/reuse timer configurations',
       'Real-time countdown displays',
       'Custom moderator links',
-      'Speaker self-service portals'
+      'Speaker self-service portals',
+      'Timer + speaker templates'
     ]
   },
   {
-    id: 'prod_premium',
-    priceId: 'price_premium_monthly',
-    name: 'StageCue Premium',
-    description: 'Enterprise features for large organizations',
+    id: 'prod_pro',
+    priceId: 'price_pro_monthly',
+    name: 'StageCue Pro',
+    description: 'Advanced features for enterprise organizations',
     mode: 'subscription',
-    price: 99.00,
+    price: 49.00,
     comingSoon: true,
     features: [
-      'Everything in Pro, plus:',
+      'Everything in Standard, plus:',
       'White-label branding',
       'Advanced analytics & reporting',
       'Priority support',

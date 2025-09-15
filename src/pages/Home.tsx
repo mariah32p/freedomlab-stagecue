@@ -8,7 +8,7 @@ export function Home() {
   const handleStartTrial = () => {
     navigate('/signup');
   };
-  const premiumPlan = products.find(p => p.name === 'StageCue Premium')!;
+  const proPlan = products.find(p => p.name === 'StageCue Pro')!;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
@@ -458,18 +458,23 @@ export function Home() {
               Simple, Transparent Pricing
             </h2>
             <p className="text-xl text-navy-600 max-w-3xl mx-auto">
-              Choose the plan that fits your event needs. Start with a 7-day free trial.
+              Professional event timing system with a 7-day free trial.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Basic Plan */}
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:shadow-2xl transition-all duration-300">
+          <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Standard Plan */}
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-teal-500 p-8 hover:shadow-2xl transition-all duration-300 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-teal-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                  AVAILABLE NOW
+                </span>
+              </div>
               <div className="text-center mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
-                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
+                <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Standard</h3>
+                <p className="text-navy-600 mb-6">Professional event timing for all your needs</p>
                 <div className="mb-6">
-                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$29</span>
+                  <span className="text-5xl font-bold text-navy-900">$29</span>
                   <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
                 </div>
                 <div className="inline-flex items-center px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium mb-6">
@@ -613,7 +618,7 @@ export function Home() {
                 <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
               </div>
               <div className="space-y-4 mb-8">
-                {premiumPlan.features.map((feature, index) => (
+                {products.find(p => p.name === 'StageCue Standard')!.features.map((feature, index) => (
                   <div key={index} className="flex items-start space-x-3">
                     <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
                       <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
@@ -628,8 +633,8 @@ export function Home() {
               </div>
             </div>
           </div>
-
-          {/* Single CTA */}
+            {/* Pro Plan - Coming Soon */}
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-300 p-8 hover:shadow-2xl transition-all duration-300 relative opacity-75">
           <div className="mt-12 text-center">
             <button
               onClick={handleStartTrial}
@@ -665,69 +670,34 @@ export function Home() {
                 Most users have their first event running in under 15 minutes. Simply create your event, add speakers, and share the countdown display link. No technical setup required.
               </p>
             </div>
-
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                  COMING SOON
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
                 What happens during the 7-day free trial?
               </h3>
               <p className="text-navy-700">
-                You get full access to all features of your chosen plan. No restrictions, no watermarks. After 7 days, your card is automatically charged unless you cancel. You can cancel anytime during the trial with no fees.
+                <p className="text-slate-600 mb-6">Advanced features for enterprise organizations</p>
               </p>
+                  <span className="text-5xl font-bold text-slate-500">${proPlan.price}</span>
+                  <span className="text-lg font-medium text-slate-500">/month</span>
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
             </div>
 
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                Do I need to install any software?
-              </h3>
-              <p className="text-navy-700">
-                No downloads required. StageCue runs entirely in your web browser. Share countdown displays via simple links that work on any device - phones, tablets, laptops, or projection screens.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                Can I switch between Basic and Pro plans?
-              </h3>
+                    <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                      <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
               <p className="text-navy-700">
                 Yes! You can upgrade or downgrade anytime from your account settings. Changes take effect immediately, and billing is prorated automatically.
               </p>
-            </div>
+                    <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'}`}>
+                      {feature}
+                    </span>
 
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
                 How does the Slack integration work?
-              </h3>
-              <p className="text-navy-700">
-                Connect your Slack workspace in one click. StageCue automatically sends time warnings, session transitions, and custom alerts to your chosen channels. Perfect for keeping your entire team coordinated.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                What if my event runs over time?
-              </h3>
-              <p className="text-navy-700">
-                No problem! Extend any session with one click (+5 min, +10 min, or custom time). All countdown displays and notifications update automatically. Your team stays informed without any manual coordination.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                Is my event data secure?
-              </h3>
-              <p className="text-navy-700">
-                Absolutely. All data is encrypted in transit and at rest. We use enterprise-grade security with 99.9% uptime. Your event information is private and never shared with third parties.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                Can I use StageCue for virtual events?
-              </h3>
-              <p className="text-navy-700">
-                Yes! StageCue works perfectly for virtual, hybrid, and in-person events. Share countdown displays in Zoom, Teams, or any video platform. Speakers can access their notes from any device.
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -735,7 +705,7 @@ export function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              className="btn btn-primary px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
             Ready to Transform Your Events?
           </h2>
           <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
@@ -747,7 +717,7 @@ export function Home() {
           >
             Start Your Free Trial
           </button>
-          <p className="text-sm text-teal-200 mt-4">
+              7-day free trial • Cancel anytime • Full access during trial
             7 days free • Full access • No commitment
           </p>
         </div>

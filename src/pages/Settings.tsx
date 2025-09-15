@@ -119,13 +119,13 @@ export function Settings() {
                   <div>
                     <label className="block text-sm font-medium text-navy-500 mb-1">Current Plan</label>
                     <p className="text-lg font-semibold text-navy-900">
-                      {subscriptionStatus.plan === 'basic' ? 'StageCue Basic' : 
+                      {subscriptionStatus.plan === 'standard' ? 'StageCue Standard' : 
                        subscriptionStatus.plan === 'pro' ? 'StageCue Pro' : 
                        subscriptionStatus.plan === 'premium' ? 'StageCue Premium' : 
                        'No active subscription'}
                     </p>
                     <p className="text-sm text-navy-600">
-                      {subscriptionStatus.plan === 'basic' ? '$29/month' : 
+                      {subscriptionStatus.plan === 'standard' ? '$29/month' : 
                        subscriptionStatus.plan === 'pro' ? '$49/month' : 
                        subscriptionStatus.plan === 'premium' ? '$99/month' : ''}
                     </p>
@@ -171,13 +171,13 @@ export function Settings() {
                 <div className="bg-slate-50 rounded-lg p-4">
                   <h3 className="font-medium text-navy-900 mb-3">Your Plan Includes</h3>
                   <div className="space-y-2">
-                    {subscriptionStatus.plan === 'basic' && (
+                    {subscriptionStatus.plan === 'standard' && (
                       <>
                         <div className="flex items-center text-sm text-navy-700">
                           <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
-                          Up to 10 active timers
+                          Unlimited active timers
                         </div>
                         <div className="flex items-center text-sm text-navy-700">
                           <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -189,13 +189,31 @@ export function Settings() {
                           <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
-                          Basic Slack notifications
+                          Advanced Slack notifications
+                        </div>
+                        <div className="flex items-center text-sm text-navy-700">
+                          <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          Custom moderator links
+                        </div>
+                        <div className="flex items-center text-sm text-navy-700">
+                          <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          Speaker self-service portals
                         </div>
                         <div className="flex items-center text-sm text-navy-700">
                           <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                           Real-time countdown displays
+                        </div>
+                        <div className="flex items-center text-sm text-navy-700">
+                          <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          Timer + speaker templates
                         </div>
                       </>
                     )}
@@ -217,7 +235,7 @@ export function Settings() {
                       <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                          Advanced Slack notifications
+                      Advanced Slack notifications
                     </div>
                     <div className="flex items-center text-sm text-navy-700">
                       <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -271,17 +289,17 @@ export function Settings() {
 
           {/* Plan Comparison */}
           {/* Premium Coming Soon */}
-          {(subscriptionStatus.status === 'active' && subscriptionStatus.plan !== 'premium') && (
+          {(subscriptionStatus.status === 'active' && subscriptionStatus.plan !== 'pro') && (
             <div className="card">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-navy-900 mb-2">StageCue Premium</h3>
+                  <h3 className="text-lg font-semibold text-navy-900 mb-2">StageCue Pro</h3>
                   <p className="text-navy-600 mb-4">
-                    Enterprise features coming Q2 2025 - Custom branding, advanced analytics, and priority support
+                    Advanced features coming Q2 2025 - White-label branding, advanced analytics, and priority support
                   </p>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-slate-500 mb-1">$99</div>
+                  <div className="text-2xl font-bold text-slate-500 mb-1">$49</div>
                   <div className="text-sm text-slate-500 mb-4">/month</div>
                   <button
                     disabled
@@ -314,7 +332,7 @@ export function Settings() {
       </div>
 
       {/* Plan Change Modal */}
-      {subscriptionStatus.plan && (subscriptionStatus.plan === 'basic' || subscriptionStatus.plan === 'pro') && (
+      {subscriptionStatus.plan && (subscriptionStatus.plan === 'standard' || subscriptionStatus.plan === 'pro') && (
         <PlanChangeModal
           isOpen={showPlanChange}
           onClose={() => setShowPlanChange(false)}

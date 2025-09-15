@@ -32,7 +32,7 @@ export function FeatureGateNotice({ feature, children }: FeatureGateNoticeProps)
   }
 
   // Show upgrade notice for Basic users
-  if (subscriptionStatus.plan === 'basic' && subscriptionStatus.status === 'active') {
+  if (subscriptionStatus.plan === 'standard' && subscriptionStatus.status === 'active') {
     return (
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
         <div className="flex items-center space-x-3">
@@ -43,13 +43,14 @@ export function FeatureGateNotice({ feature, children }: FeatureGateNoticeProps)
           </div>
           <div className="flex-1">
             <h3 className="font-medium text-purple-900">{featureNames[feature]}</h3>
-            <p className="text-sm text-purple-700">Available with StageCue Pro</p>
+            <p className="text-sm text-purple-700">Coming soon with StageCue Pro</p>
           </div>
           <a
-            href="/get-started"
-            className="btn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 text-sm"
+            href="#"
+            className="btn bg-slate-400 text-white px-4 py-2 text-sm cursor-not-allowed"
+            onClick={(e) => e.preventDefault()}
           >
-            Upgrade to Pro
+            Coming Soon
           </a>
         </div>
       </div>

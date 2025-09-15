@@ -26,16 +26,7 @@ export function useFeatureGating(): FeatureGates {
 
   // During trial or active subscription, provide features based on plan
   if (subscriptionStatus.status === 'trialing' || subscriptionStatus.status === 'active') {
-    if (subscriptionStatus.plan === 'basic') {
-      return {
-        maxActiveTimers: 10,
-        hasCustomLinks: false,
-        hasSpeakerPortals: false,
-        hasAdvancedSlack: false,
-        hasTemplates: true,
-        canCreateEvents: true,
-      };
-    } else if (subscriptionStatus.plan === 'pro') {
+    if (subscriptionStatus.plan === 'standard') {
       return {
         maxActiveTimers: Infinity,
         hasCustomLinks: true,
@@ -44,8 +35,7 @@ export function useFeatureGating(): FeatureGates {
         hasTemplates: true,
         canCreateEvents: true,
       };
-    } else if (subscriptionStatus.plan === 'premium') {
-      // Premium features (when available)
+    } else if (subscriptionStatus.plan === 'pro') {
       return {
         maxActiveTimers: Infinity,
         hasCustomLinks: true,

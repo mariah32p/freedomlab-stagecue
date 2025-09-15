@@ -9,9 +9,8 @@ export function Pricing() {
     navigate('/signup');
   };
 
-  const basicPlan = products.find(p => p.name === 'StageCue Basic')!;
+  const standardPlan = products.find(p => p.name === 'StageCue Standard')!;
   const proPlan = products.find(p => p.name === 'StageCue Pro')!;
-  const premiumPlan = products.find(p => p.name === 'StageCue Premium')!;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white py-12">
@@ -25,51 +24,27 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Basic Plan */}
-          <div className="card relative">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
-              <p className="text-navy-600 mb-6">Perfect for small events</p>
-              <div className="mb-6">
-                <span className="text-5xl font-bold text-navy-900">${basicPlan.price}</span>
-                <span className="text-lg font-medium text-navy-500">/month</span>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {basicPlan.features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-navy-700">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Pro Plan */}
-          <div className="card relative ring-2 ring-purple-500 bg-gradient-to-br from-white to-purple-50">
+        <div className="grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Standard Plan */}
+          <div className="card relative ring-2 ring-teal-500 bg-gradient-to-br from-white to-teal-50">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-purple-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
-                MOST POPULAR
+              <span className="bg-teal-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                AVAILABLE NOW
               </span>
             </div>
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
-              <p className="text-navy-600 mb-6">Professional event timing</p>
+              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Standard</h3>
+              <p className="text-navy-600 mb-6">Professional event timing for all your needs</p>
               <div className="mb-6">
-                <span className="text-5xl font-bold text-navy-900">${proPlan.price}</span>
+                <span className="text-5xl font-bold text-navy-900">${standardPlan.price}</span>
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
             </div>
             <div className="space-y-4">
-              {proPlan.features.map((feature, index) => (
+              {standardPlan.features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -79,7 +54,7 @@ export function Pricing() {
             </div>
           </div>
 
-          {/* Premium Plan - Coming Soon */}
+          {/* Pro Plan - Coming Soon */}
           <div className="card relative ring-2 ring-slate-300 bg-gradient-to-br from-white to-slate-50 opacity-75">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
               <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
@@ -87,16 +62,16 @@ export function Pricing() {
               </span>
             </div>
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-slate-700 mb-2">StageCue Premium</h3>
-              <p className="text-slate-600 mb-6">Enterprise features</p>
+              <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
+              <p className="text-slate-600 mb-6">Advanced features for enterprise organizations</p>
               <div className="mb-6">
-                <span className="text-5xl font-bold text-slate-500">${premiumPlan.price}</span>
+                <span className="text-5xl font-bold text-slate-500">${proPlan.price}</span>
                 <span className="text-lg font-medium text-slate-500">/month</span>
               </div>
               <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
             </div>
             <div className="space-y-4">
-              {premiumPlan.features.map((feature, index) => (
+              {proPlan.features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
                     <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
@@ -115,12 +90,12 @@ export function Pricing() {
         <div className="mt-12 text-center">
           <button
             onClick={handleStartTrial}
-            className="btn btn-primary px-8 py-4 text-lg bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            className="btn btn-primary px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
           >
             Start Free Trial
           </button>
           <p className="text-sm text-navy-600 mt-4">
-            7-day free trial • Choose your plan after signup • Cancel anytime
+            7-day free trial • Cancel anytime • Full access during trial
           </p>
         </div>
 

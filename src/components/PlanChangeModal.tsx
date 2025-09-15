@@ -6,12 +6,12 @@ import { supabase } from '../lib/supabase';
 interface PlanChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentPlan: 'basic' | 'pro';
+  currentPlan: 'standard' | 'pro';
   onSuccess: () => void;
 }
 
 export function PlanChangeModal({ isOpen, onClose, currentPlan, onSuccess }: PlanChangeModalProps) {
-  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'pro'>(currentPlan === 'basic' ? 'pro' : 'basic');
+  const [selectedPlan, setSelectedPlan] = useState<'standard' | 'pro'>(currentPlan === 'standard' ? 'pro' : 'standard');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -21,7 +21,7 @@ export function PlanChangeModal({ isOpen, onClose, currentPlan, onSuccess }: Pla
 
     try {
       const selectedProduct = products.find(p =>
-        selectedPlan === 'basic' ? p.name === 'StageCue Basic' : p.name === 'StageCue Pro'
+        selectedPlan === 'standard' ? p.name === 'StageCue Standard' : p.name === 'StageCue Pro'
       );
 
       if (!selectedProduct) {
@@ -69,8 +69,8 @@ export function PlanChangeModal({ isOpen, onClose, currentPlan, onSuccess }: Pla
 
   if (!isOpen) return null;
 
-  const isUpgrade = currentPlan === 'basic' && selectedPlan === 'pro';
-  const isDowngrade = currentPlan === 'pro' && selectedPlan === 'basic';
+  const isUpgrade = currentPlan === 'standard' && selectedPlan === 'pro';
+  const isDowngrade = currentPlan === 'pro' && selectedPlan === 'standard';
 
   return (
     <div 
@@ -106,30 +106,32 @@ export function PlanChangeModal({ isOpen, onClose, currentPlan, onSuccess }: Pla
             <div className="bg-slate-50 rounded-lg p-4">
               <h3 className="font-medium text-navy-900 mb-2">Current Plan</h3>
               <div className="text-sm text-navy-600">
-                {currentPlan === 'basic' ? 'StageCue Basic - $29/month' : 'StageCue Pro - $49/month'}
+                {currentPlan === 'standard' ? 'StageCue Standard - $29/month' : 'StageCue Pro - $49/month'}
               </div>
             </div>
 
             <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
               <h3 className="font-medium text-navy-900 mb-2">
-                {selectedPlan === 'basic' ? 'StageCue Basic' : 'StageCue Pro'}
+                {selectedPlan === 'standard' ? 'StageCue Standard' : 'StageCue Pro'}
               </h3>
               <div className="text-lg font-bold text-navy-900 mb-2">
-                {selectedPlan === 'basic' ? '$29' : '$49'}/month
+                {selectedPlan === 'standard' ? '$29' : '$49'}/month
               </div>
               <div className="space-y-2 text-sm text-navy-600">
-                {selectedPlan === 'basic' ? (
+                {selectedPlan === 'standard' ? (
                   <>
-                    <div>• Up to 10 active timers</div>
-                    <div>• Basic Slack notifications</div>
+                    <div>• Unlimited active timers</div>
+                    <div>• Advanced Slack notifications</div>
                     <div>• Speaker notes management</div>
+                    <div>• Custom moderator links</div>
+                    <div>• Speaker self-service portals</div>
                   </>
                 ) : (
                   <>
-                    <div>• Unlimited active timers</div>
-                    <div>• Custom moderator links</div>
-                    <div>• Speaker self-service portals</div>
-                    <div>• Advanced Slack integration</div>
+                    <div>• Everything in Standard, plus:</div>
+                    <div>• White-label branding</div>
+                    <div>• Advanced analytics & reporting</div>
+                    <div>• Priority support</div>
                   </>
                 )}
               </div>
