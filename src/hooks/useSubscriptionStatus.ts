@@ -51,10 +51,12 @@ export function useSubscriptionStatus() {
       // Get plan name from price_id
       let plan = null;
       if (data?.price_id) {
-        if (data.price_id === 'price_1RznJIDn6VTzl81bqsk5O1gR') {
+        if (data.price_id === 'price_basic_monthly') {
           plan = 'basic';
-        } else if (data.price_id === 'price_1RznJIDn6VTzl81bPK1TDU3Y') {
+        } else if (data.price_id === 'price_1S3gSqDn6VTzl81bgy9OYmV4') {
           plan = 'pro';
+        } else if (data.price_id === 'price_premium_monthly') {
+          plan = 'premium';
         }
       }
 

@@ -22,6 +22,7 @@ export function Navbar() {
   const hasActiveSubscription = subscriptionStatus.status === 'trialing' || 
     subscriptionStatus.status === 'active' || 
     (subscriptionStatus.status === 'past_due' && subscriptionStatus.paymentIssueSince);
+
   return (
     <nav className="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +40,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <>
                 {hasActiveSubscription && (
@@ -47,11 +48,9 @@ export function Navbar() {
                     Dashboard
                   </Link>
                 )}
-                {hasActiveSubscription && (
-                  <Link to="/settings" className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    Settings
-                  </Link>
-                )}
+                <Link to="/settings" className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                  Settings
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="text-slate-700 hover:text-teal-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
