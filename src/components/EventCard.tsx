@@ -83,8 +83,20 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
           <button
             onClick={() => {
               const moderatorUrl = `${window.location.origin}/moderator/${event.id}`;
-              navigator.clipboard.writeText(moderatorUrl);
-              // You could add a toast notification here
+              navigator.clipboard.writeText(moderatorUrl).then(() => {
+                // Simple feedback - you could replace with a toast notification
+                const button = event.target as HTMLButtonElement;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.color = '#059669'; // green-600
+                setTimeout(() => {
+                  button.textContent = originalText;
+                  button.style.color = '';
+                }, 2000);
+              }).catch(() => {
+                // Fallback for browsers that don't support clipboard API
+                alert(`Moderator link: ${moderatorUrl}`);
+              });
             }}
             className="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors"
           >
