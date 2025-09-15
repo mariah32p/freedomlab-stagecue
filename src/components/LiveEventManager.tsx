@@ -132,7 +132,6 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                   >
                     Open Moderator Portal
                   </button>
-                  Close
                 
                 {/* Progress Bar */}
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-6">
@@ -143,6 +142,8 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                     style={{ width: `${getProgress()}%` }}
                   ></div>
                 </div>
+                {currentBlock && (
+                  <div>
                     <h3 className="text-xl font-semibold text-navy-900 mb-2">{currentBlock.title}</h3>
                     <p className="text-sm text-navy-500">{currentBlock.duration} minutes allocated</p>
                     
@@ -236,6 +237,10 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                 <button
                   onClick={handleNextBlock}
                   disabled={currentBlockIndex === eventBlocks.length - 1}
+                  className="btn bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next Block →
+                </button>
               </div>
             </div>
 
