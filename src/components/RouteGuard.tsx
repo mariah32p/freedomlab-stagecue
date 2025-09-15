@@ -55,9 +55,14 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // If signed in and on landing page → redirect to dashboard
-    if (location.pathname === '/') {
+    // If signed in and on landing page → redirect to dashboard (but not for public routes)
+    if (location.pathname === '/' && !isPublicRoute) {
       navigate('/dashboard');
+      return;
+    }
+
+    // Allow public routes even when signed in
+    if (isPublicRoute) {
       return;
     }
 

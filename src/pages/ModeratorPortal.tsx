@@ -1,18 +1,117 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useEvents } from '../hooks/useEvents';
-import { useTimeBlocks } from '../hooks/useTimeBlocks';
 import { useTimer } from '../hooks/useTimer';
-import { Event, TimeBlock } from '../types/event';
 
 export function ModeratorPortal() {
   const { eventId } = useParams<{ eventId: string }>();
-  const { events } = useEvents();
-  const { timeBlocks, speakers, getSpeakersForBlock, getNotesForSpeaker } = useTimeBlocks(eventId);
+  const [event, setEvent] = useState<any>(null);
+  const [timeBlocks, setTimeBlocks] = useState<any[]>([]);
+  const [speakers, setSpeakers] = useState<any[]>([]);
+  const [notes, setNotes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentBlockIndex, setCurrentBlockIndex] = useState(0);
   const [notifications, setNotifications] = useState<string[]>([]);
   
-  const event = events.find(e => e.id === eventId);
+  // Fetch event data without authentication
+  useEffect(() => {
+    const fetchEventData = async () => {
+      if (!eventId) return;
+      
+      try {
+        // For now, use mock data - in production this would be a public API endpoint
+        const mockEvent = {
+          id: eventId,
+          name: 'Tech Summit 2025',
+          date: '2025-01-25',
+          total_duration: 120,
+          status: 'live'
+        };
+        
+        const mockTimeBlocks = [
+          {
+            id: '1',
+            event_id: eventId,
+            title: 'Opening Keynote',
+            duration: 30,
+            type: 'session',
+            order_index: 0,
+            start_time: 0
+          },
+          {
+            id: '2',
+            event_id: eventId,
+            title: 'Coffee Break',
+            duration: 15,
+            type: 'break',
+            order_index: 1,
+            start_time: 30
+          },
+          {
+            id: '3',
+            event_id: eventId,
+            title: 'Panel Discussion',
+            duration: 45,
+            type: 'session',
+            order_index: 2,
+            start_time: 45
+          }
+        ];
+        
+        const mockSpeakers = [
+          {
+            id: '1',
+            time_block_id: '1',
+            name: 'Dr. Sarah Chen',
+            email: 'sarah@example.com'
+          },
+          {
+            id: '2',
+            time_block_id: '3',
+            name: 'Alex Rodriguez',
+            email: 'alex@example.com'
+          }
+        ];
+        
+        const mockNotes = [
+          {
+            id: '1',
+            speaker_id: '1',
+            time_marker: 300, // 5 minutes
+            content: 'Introduce the new AI features',
+            type: 'essential'
+          },
+          {
+            id: '2',
+            speaker_id: '1',
+            time_marker: 1200, // 20 minutes
+            content: 'Wrap up and transition to Q&A',
+            type: 'transition'
+          }
+        ];
+        
+        setEvent(mockEvent);
+        setTimeBlocks(mockTimeBlocks);
+        setSpeakers(mockSpeakers);
+        setNotes(mockNotes);
+      } catch (error) {
+        console.error('Error fetching event data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchEventData();
+  }, [eventId]);
+  
+  const getSpeakersForBlock = (blockId: string) => {
+    return speakers.filter(speaker => speaker.time_block_id === blockId);
+  };
+  
+  const getNotesForSpeaker = (speakerId: string) => {
+    return notes.filter(note => note.speaker_id === speakerId)
+      .sort((a, b) => a.time_marker - b.time_marker);
+  };
+  
   const eventBlocks = timeBlocks.filter(block => block.event_id === eventId)
     .sort((a, b) => a.order_index - b.order_index);
   const currentBlock = eventBlocks[currentBlockIndex];
@@ -85,12 +184,23 @@ export function ModeratorPortal() {
     getNotesForSpeaker(speaker.id)
   ).sort((a, b) => a.time_marker - b.time_marker);
 
-  if (!event) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mx-auto mb-4"></div>
           <p className="text-navy-600">Loading event...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!event) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-navy-900 mb-4">Event Not Found</h1>
+          <p className="text-navy-600">The requested event could not be found.</p>
         </div>
       </div>
     );
