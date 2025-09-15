@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useTimer } from '../hooks/useTimer';
+import { useSharedTimer } from '../hooks/useSharedTimer';
 
 export function ModeratorPortal() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -115,32 +115,41 @@ export function ModeratorPortal() {
   const eventBlocks = timeBlocks.filter(block => block.event_id === eventId)
     .sort((a, b) => a.order_index - b.order_index);
   const currentBlock = eventBlocks[currentBlockIndex];
-  const blockDurationInSeconds = currentBlock ? currentBlock.duration * 60 : 0;
   const currentBlockSpeakers = currentBlock ? getSpeakersForBlock(currentBlock.id) : [];
   
-  const { timer, startTimer, pauseTimer, resumeTimer, extendTimer, resetTimer, formatTime, getProgress } = useTimer(blockDurationInSeconds, false);
+  const { 
+    timerState, 
+    startTimer, 
+    pauseTimer, 
+    resumeTimer, 
+    extendTimer, 
+    resetTimer, 
+    setCurrentBlock,
+    formatTime, 
+    getProgress 
+  } = useSharedTimer(eventId || '', true); // true = moderator view
 
-  // Update timer when time block changes
+  // Update shared timer when time block changes
   useEffect(() => {
     if (currentBlock) {
-      resetTimer(currentBlock.duration * 60);
+      setCurrentBlock(currentBlockIndex, currentBlock.duration * 60);
     }
-  }, [currentBlock?.id, resetTimer]);
+  }, [currentBlock?.id, currentBlockIndex, setCurrentBlock]);
 
   // Add notifications when timer hits certain thresholds
   useEffect(() => {
-    if (timer.isRunning && !timer.isPaused) {
-      if (timer.timeRemaining === 300) { // 5 minutes
+    if (timerState.isRunning && !timerState.isPaused) {
+      if (timerState.timeRemaining === 300) { // 5 minutes
         addNotification('⏰ 5 minutes remaining');
-      } else if (timer.timeRemaining === 120) { // 2 minutes
+      } else if (timerState.timeRemaining === 120) { // 2 minutes
         addNotification('⚠️ 2 minutes remaining');
-      } else if (timer.timeRemaining === 30) { // 30 seconds
+      } else if (timerState.timeRemaining === 30) { // 30 seconds
         addNotification('🔔 30 seconds remaining');
-      } else if (timer.timeRemaining === 0) {
+      } else if (timerState.timeRemaining === 0) {
         addNotification('⏱️ Time is up!');
       }
     }
-  }, [timer.timeRemaining, timer.isRunning, timer.isPaused]);
+  }, [timerState.timeRemaining, timerState.isRunning, timerState.isPaused]);
 
   const addNotification = (message: string) => {
     setNotifications(prev => [message, ...prev.slice(0, 4)]); // Keep last 5 notifications
@@ -248,9 +257,9 @@ export function ModeratorPortal() {
 
               <div className="text-center mb-6">
                 <div className={`text-6xl md:text-8xl font-mono font-bold mb-4 transition-colors duration-500 ${
-                  timer.timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-navy-900'
+                  timerState.timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-navy-900'
                 }`}>
-                  {formatTime(timer.timeRemaining)}
+                  {formatTime(timerState.timeRemaining)}
                 </div>
                 <div className="text-navy-600 text-lg mb-4">Time Remaining</div>
                 
@@ -258,7 +267,7 @@ export function ModeratorPortal() {
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-6">
                   <div 
                     className={`h-3 rounded-full transition-all duration-1000 ${
-                      timer.timeRemaining < 300 ? 'bg-red-500' : 'bg-gradient-to-r from-teal-500 to-purple-500'
+                      timerState.timeRemaining < 300 ? 'bg-red-500' : 'bg-gradient-to-r from-teal-500 to-purple-500'
                     }`}
                     style={{ width: `${getProgress()}%` }}
                   ></div>
@@ -298,14 +307,14 @@ export function ModeratorPortal() {
 
                 {/* Timer Controls */}
                 <div className="flex justify-center space-x-3 mb-4">
-                  {!timer.isRunning ? (
+                  {!timerState.isRunning ? (
                     <button
                       onClick={startTimer}
                       className="btn bg-green-600 hover:bg-green-700 text-white px-6 py-3"
                     >
                       Start Timer
                     </button>
-                  ) : timer.isPaused ? (
+                  ) : timerState.isPaused ? (
                     <button
                       onClick={resumeTimer}
                       className="btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
