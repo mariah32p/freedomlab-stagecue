@@ -208,7 +208,7 @@ export function GetStarted() {
             <div className="mb-6">
               <span className="text-4xl font-bold text-slate-500">${premiumPlan.price}</span>
               <span className="text-lg font-medium text-slate-500">/month</span>
-              <div className="text-sm text-slate-500 font-medium mt-1">Available Q2 2025</div>
+              <div className="text-sm text-slate-500 font-medium mt-1">7-day free trial</div>
             </div>
 
             <div className="space-y-3">

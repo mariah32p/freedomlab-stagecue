@@ -610,7 +610,7 @@ export function Home() {
                   <span className="text-4xl sm:text-5xl font-bold text-slate-500">${premiumPlan.price}</span>
                   <span className="text-base sm:text-lg font-medium text-slate-500">/month</span>
                 </div>
-                <div className="text-sm text-slate-500 font-medium">Available Q2 2025</div>
+                <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
               </div>
               <div className="space-y-4 mb-8">
                 {premiumPlan.features.map((feature, index) => (
