@@ -251,7 +251,7 @@ export function SpeakerPortal() {
             </div>
           </div>
 
-          {/* Session Info & Tips */}
+        {/* Session Info & Tips */}
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
             <h2 className="text-xl font-semibold text-navy-900 mb-6">Session Information</h2>
             
