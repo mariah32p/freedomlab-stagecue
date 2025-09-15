@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { StageCue } from './Demo';
+import { products } from '../stripe-config';
 
 export function Home() {
   const navigate = useNavigate();
@@ -7,6 +8,7 @@ export function Home() {
   const handleStartTrial = () => {
     navigate('/signup');
   };
+  const premiumPlan = products.find(p => p.name === 'StageCue Premium')!;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
@@ -460,7 +462,7 @@ export function Home() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Basic Plan */}
             <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 hover:shadow-2xl transition-all duration-300">
               <div className="text-center mb-8">
@@ -591,6 +593,38 @@ export function Home() {
                   </div>
                   <span className="text-sm sm:text-base text-navy-700">Timer + speaker templates</span>
                 </div>
+              </div>
+            </div>
+
+            {/* Premium Plan - Coming Soon */}
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-300 p-8 hover:shadow-2xl transition-all duration-300 relative opacity-75">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                  COMING SOON
+                </span>
+              </div>
+              <div className="text-center mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-2">StageCue Premium</h3>
+                <p className="text-sm sm:text-base text-slate-600 mb-6">Enterprise features for large organizations</p>
+                <div className="mb-6">
+                  <span className="text-4xl sm:text-5xl font-bold text-slate-500">${premiumPlan.price}</span>
+                  <span className="text-base sm:text-lg font-medium text-slate-500">/month</span>
+                </div>
+                <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
+              </div>
+              <div className="space-y-4 mb-8">
+                {premiumPlan.features.map((feature, index) => (
+                  <div key={index} className="flex items-start space-x-3">
+                    <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                      <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'} text-sm sm:text-base`}>
+                      {feature}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

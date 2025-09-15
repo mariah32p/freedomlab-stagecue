@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-
-// Pricing page component
+import { products } from '../stripe-config';
 
 export function Pricing() {
   const navigate = useNavigate();
@@ -10,23 +9,9 @@ export function Pricing() {
     navigate('/signup');
   };
 
-  const basicFeatures = [
-    'Up to 10 active timers',
-    'Timer controls via web dashboard',
-    'Speaker notes management',
-    'Basic Slack notifications',
-    'Save/reuse timer configurations',
-    '7-day free trial'
-  ];
-
-  const proFeatures = [
-    'Everything in Basic, plus:',
-    'Unlimited active timers',
-    'Custom moderator links',
-    'Speaker self-service links',
-    'Advanced Slack notifications',
-    'Timer + speaker templates'
-  ];
+  const basicPlan = products.find(p => p.name === 'StageCue Basic')!;
+  const proPlan = products.find(p => p.name === 'StageCue Pro')!;
+  const premiumPlan = products.find(p => p.name === 'StageCue Premium')!;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-navy-50 to-white py-12">
@@ -40,19 +25,19 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Basic Plan */}
           <div className="card relative">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Basic</h3>
-              <p className="text-navy-600 mb-6">Perfect for small events, workshops, team meetings</p>
+              <p className="text-navy-600 mb-6">Perfect for small events</p>
               <div className="mb-6">
-                <span className="text-5xl font-bold text-navy-900">$29</span>
+                <span className="text-5xl font-bold text-navy-900">${basicPlan.price}</span>
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
             </div>
             <div className="space-y-4">
-              {basicFeatures.map((feature, index) => (
+              {basicPlan.features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-primary-100 rounded-full flex items-center justify-center mt-0.5">
                     <svg className="w-3 h-3 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
@@ -74,21 +59,51 @@ export function Pricing() {
             </div>
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
-              <p className="text-navy-600 mb-6">Perfect for conferences and larger events</p>
+              <p className="text-navy-600 mb-6">Professional event timing</p>
               <div className="mb-6">
-                <span className="text-5xl font-bold text-navy-900">$49</span>
+                <span className="text-5xl font-bold text-navy-900">${proPlan.price}</span>
                 <span className="text-lg font-medium text-navy-500">/month</span>
               </div>
             </div>
             <div className="space-y-4">
-              {proFeatures.map((feature, index) => (
+              {proPlan.features.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
                     <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className={`${feature.startsWith('Everything') ? 'font-semibold text-navy-900' : 'text-navy-700'}`}>
+                  <span className="text-navy-700">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Premium Plan - Coming Soon */}
+          <div className="card relative ring-2 ring-slate-300 bg-gradient-to-br from-white to-slate-50 opacity-75">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
+                COMING SOON
+              </span>
+            </div>
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-slate-700 mb-2">StageCue Premium</h3>
+              <p className="text-slate-600 mb-6">Enterprise features</p>
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-slate-500">${premiumPlan.price}</span>
+                <span className="text-lg font-medium text-slate-500">/month</span>
+              </div>
+              <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
+            </div>
+            <div className="space-y-4">
+              {premiumPlan.features.map((feature, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'}`}>
                     {feature}
                   </span>
                 </div>
@@ -100,12 +115,12 @@ export function Pricing() {
         <div className="mt-12 text-center">
           <button
             onClick={handleStartTrial}
-            className="btn btn-primary px-8 py-4 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+            className="btn btn-primary px-8 py-4 text-lg bg-gradient-to-r from-teal-600 to-purple-600 hover:from-teal-700 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
           >
             Start Free Trial
           </button>
           <p className="text-sm text-navy-600 mt-4">
-            7-day free trial • Choose your plan after signup
+            7-day free trial • Choose your plan after signup • Cancel anytime
           </p>
         </div>
 

@@ -55,6 +55,8 @@ export function useSubscriptionStatus() {
           plan = 'basic';
         } else if (data.price_id === 'price_1RznJIDn6VTzl81bPK1TDU3Y') {
           plan = 'pro';
+        } else if (data.price_id === 'price_premium_monthly') {
+          plan = 'premium';
         }
       }
 

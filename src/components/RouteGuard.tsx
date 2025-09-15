@@ -15,6 +15,16 @@ export function RouteGuard({ children }: RouteGuardProps) {
   const location = useLocation();
 
   useEffect(() => {
+       // Handle password reset redirects - check for reset token in URL
+    // This works regardless of which page the user initially lands on
+    if (window.location.hash && window.location.hash.includes('type=recovery')) {
+      // Only redirect if not already on reset-password page
+      if (location.pathname !== '/reset-password') {
+        navigate('/reset-password' + window.location.hash);
+      }
+      return;
+    }
+
     // Don't interfere with Supabase auth redirects (they contain # fragments)
     if (window.location.hash && window.location.hash.includes('access_token')) {
       return;
@@ -50,7 +60,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
     // If user is signed in, apply subscription-based routing
     const { status, paymentIssueSince } = subscriptionStatus;
 
-    // If status is trialing or active → allow access to /dashboard
+    // If status is trialing or active → allow access to /dashboard and /settings
     if (status === 'trialing' || status === 'active') {
       if (location.pathname === '/get-started') {
         navigate('/dashboard');
@@ -58,7 +68,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // If past_due and within 30-day grace period → allow /dashboard but show banner
+    // If past_due and within 30-day grace period → allow /dashboard and /settings but show banner
     if (status === 'past_due' && isInGracePeriod(paymentIssueSince)) {
       if (location.pathname === '/get-started') {
         navigate('/dashboard');
@@ -66,8 +76,9 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // Otherwise → send to /get-started
-    if (location.pathname !== '/get-started') {
+    // For canceled, incomplete, or no subscription → send to /get-started
+    // Allow access to /settings even without subscription for account management
+    if (location.pathname !== '/get-started' && location.pathname !== '/settings') {
       navigate('/get-started');
     }
   }, [user, authLoading, subscriptionStatus, navigate, location.pathname]);

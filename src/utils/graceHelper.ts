@@ -10,7 +10,7 @@ export function isInGracePeriod(paymentIssueSince: string | null): boolean {
   const now = new Date();
   const daysSinceIssue = Math.floor((now.getTime() - issueDate.getTime()) / (1000 * 60 * 60 * 24));
   
-  return daysSinceIssue <= 1; // Changed to 1 day for testing
+  return daysSinceIssue <= 30; // 30-day grace period
 }
 
 /**
@@ -25,5 +25,5 @@ export function getGraceDaysRemaining(paymentIssueSince: string | null): number 
   const now = new Date();
   const daysSinceIssue = Math.floor((now.getTime() - issueDate.getTime()) / (1000 * 60 * 60 * 24));
   
-  return Math.max(0, 1 - daysSinceIssue); // Changed to 1 day for testing
+  return Math.max(0, 30 - daysSinceIssue); // 30-day grace period
 }
