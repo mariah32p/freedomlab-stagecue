@@ -17,7 +17,6 @@ export function SpeakerPortal() {
   const [editingNote, setEditingNote] = useState<SpeakerNote | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { timerState, formatTime, getProgress } = useSharedTimer(eventId || '', false); // false = speaker view
   const { 
     timerState, 
     loading: timerLoading,
