@@ -96,7 +96,7 @@ export function GetStarted() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-2xl font-bold text-slate-900">StageCue Standard</h3>
-                <p className="text-slate-600 mt-1">Professional event timing for all your needs</p>
+                <p className="text-slate-600 mt-1">Core event timing features</p>
               </div>
               <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                 selectedPlan === 'standard'
@@ -118,16 +118,38 @@ export function GetStarted() {
             </div>
 
             <div className="space-y-3">
-              {standardPlan.features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-slate-700">{feature}</span>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
-              ))}
+                <span className="text-slate-700">Unlimited active timers</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-700">Custom moderator links</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-700">Speaker notes management</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-700">Timer + speaker templates</span>
+              </div>
             </div>
           </div>
 
@@ -144,7 +166,7 @@ export function GetStarted() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-2xl font-bold text-slate-900">StageCue Pro</h3>
-                <p className="text-slate-600 mt-1">Advanced features for enterprise organizations</p>
+                <p className="text-slate-600 mt-1">Advanced features for enterprise</p>
               </div>
               <div className="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center">
                 <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,18 +182,38 @@ export function GetStarted() {
             </div>
 
             <div className="space-y-3">
-              {proPlan.features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'}`}>
-                    {feature}
-                  </span>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
-              ))}
+                <span className="text-slate-500">Slack notifications</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-500">Speaker self-service portals</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-500">White-labeling</span>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                  <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-slate-500">Integration support</span>
+              </div>
             </div>
           </div>
         </div>
