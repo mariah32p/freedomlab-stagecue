@@ -4,10 +4,12 @@ import { Event } from '../types/event';
 interface EventDetailsStepProps {
   event: Event;
   onUpdateEvent: (id: string, updates: Partial<Event>) => Promise<void>;
+  onUnsavedChanges: (hasChanges: boolean) => void;
+  onSaveAndContinue: () => void;
   onNext: () => void;
 }
 
-export function EventDetailsStep({ event, onUpdateEvent, onNext }: EventDetailsStepProps) {
+export function EventDetailsStep({ event, onUpdateEvent, onUnsavedChanges, onSaveAndContinue, onNext }: EventDetailsStepProps) {
   const [formData, setFormData] = useState({
     name: event.name || '',
     date: event.date || '',
@@ -15,6 +17,19 @@ export function EventDetailsStep({ event, onUpdateEvent, onNext }: EventDetailsS
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Check for unsaved changes
+  const hasChanges = formData.name !== (event.name || '') ||
+    formData.date !== (event.date || '') ||
+    formData.meeting_link !== (event.meeting_link || '');
+
+  // Notify parent of unsaved changes
+  useState(() => {
+    onUnsavedChanges(hasChanges);
+  }, [hasChanges, onUnsavedChanges]);
+
+  // Handle save and continue from unsaved changes modal
+  window.handleSaveAndContinue = onSaveAndContinue;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,6 +42,7 @@ export function EventDetailsStep({ event, onUpdateEvent, onNext }: EventDetailsS
         date: formData.date,
         meeting_link: formData.meeting_link || undefined
       });
+      onUnsavedChanges(false);
       onNext();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update event');

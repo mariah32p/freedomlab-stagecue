@@ -7,6 +7,8 @@ interface SpeakerLineupStepProps {
   onAddSpeaker: (speakerData: Omit<Speaker, 'id' | 'created_at'>) => Promise<Speaker>;
   onUpdateSpeaker: (id: string, updates: Partial<Speaker>) => Promise<void>;
   onDeleteSpeaker: (id: string) => Promise<void>;
+  onUnsavedChanges: (hasChanges: boolean) => void;
+  onSaveAndContinue: () => void;
   onPrevious: () => void;
   onNext: () => void;
 }
@@ -17,6 +19,8 @@ export function SpeakerLineupStep({
   onAddSpeaker, 
   onUpdateSpeaker, 
   onDeleteSpeaker, 
+  onUnsavedChanges,
+  onSaveAndContinue,
   onPrevious, 
   onNext 
 }: SpeakerLineupStepProps) {
@@ -31,6 +35,17 @@ export function SpeakerLineupStep({
 
   const sortedSpeakers = [...speakers].sort((a, b) => a.order_index - b.order_index);
   const totalDuration = sortedSpeakers.reduce((sum, speaker) => sum + (speaker.duration || 0), 0);
+
+  // Check for unsaved changes in form
+  const hasFormChanges = formData.name !== '' || formData.session_title !== '' || formData.duration !== '';
+
+  // Notify parent of unsaved changes
+  useState(() => {
+    onUnsavedChanges(hasFormChanges);
+  }, [hasFormChanges, onUnsavedChanges]);
+
+  // Handle save and continue from unsaved changes modal
+  window.handleSaveAndContinue = onSaveAndContinue;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -54,6 +69,7 @@ export function SpeakerLineupStep({
         session_title: '',
         duration: ''
       });
+      onUnsavedChanges(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add speaker');
     } finally {

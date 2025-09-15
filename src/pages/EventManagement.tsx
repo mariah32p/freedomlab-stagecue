@@ -6,6 +6,7 @@ import { useTimeBlocks } from '../hooks/useTimeBlocks';
 import { EventDetailsStep } from '../components/EventDetailsStep';
 import { SpeakerLineupStep } from '../components/SpeakerLineupStep';
 import { EventLinksStep } from '../components/EventLinksStep';
+import { UnsavedChangesModal } from '../components/UnsavedChangesModal';
 
 type Step = 'details' | 'speakers' | 'links';
 
@@ -15,6 +16,9 @@ export function EventManagement() {
   const { events, updateEvent } = useEvents();
   const { speakers, addSpeaker, updateSpeaker, deleteSpeaker } = useTimeBlocks(eventId);
   const [currentStep, setCurrentStep] = useState<Step>('details');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [pendingStep, setPendingStep] = useState<Step | null>(null);
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const event = events.find(e => e.id === eventId);
@@ -37,6 +41,39 @@ export function EventManagement() {
 
     setLoading(false);
   }, [event, speakers, eventId, navigate]);
+
+  const handleStepChange = (newStep: Step) => {
+    if (hasUnsavedChanges) {
+      setPendingStep(newStep);
+      setShowUnsavedModal(true);
+    } else {
+      setCurrentStep(newStep);
+    }
+  };
+
+  const handleDiscardChanges = () => {
+    setHasUnsavedChanges(false);
+    setShowUnsavedModal(false);
+    if (pendingStep) {
+      setCurrentStep(pendingStep);
+      setPendingStep(null);
+    }
+  };
+
+  const handleSaveAndContinue = () => {
+    // This will be handled by each step component
+    setShowUnsavedModal(false);
+    
+    // Trigger save action for current step
+    if (typeof window.handleSaveAndContinue === 'function') {
+      window.handleSaveAndContinue();
+    }
+    
+    if (pendingStep) {
+      setCurrentStep(pendingStep);
+      setPendingStep(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -103,7 +140,7 @@ export function EventManagement() {
             {steps.map((step, index) => (
               <div key={step.id} className="flex items-center">
                 <button
-                  onClick={() => setCurrentStep(step.id as Step)}
+                  onClick={() => handleStepChange(step.id as Step)}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
                     currentStep === step.id
                       ? 'bg-teal-100 text-teal-700 font-semibold'
@@ -111,7 +148,6 @@ export function EventManagement() {
                       ? 'text-navy-600 hover:text-teal-600 hover:bg-teal-50'
                       : 'text-navy-400 cursor-not-allowed'
                   }`}
-                  disabled={index > currentStepIndex}
                 >
                   <span className="text-lg">{step.icon}</span>
                   <span className="text-sm font-medium">{step.label}</span>
@@ -132,6 +168,8 @@ export function EventManagement() {
             <EventDetailsStep
               event={event}
               onUpdateEvent={updateEvent}
+              onUnsavedChanges={setHasUnsavedChanges}
+              onSaveAndContinue={() => handleStepChange('speakers')}
               onNext={() => setCurrentStep('speakers')}
             />
           )}
@@ -143,6 +181,8 @@ export function EventManagement() {
               onAddSpeaker={addSpeaker}
               onUpdateSpeaker={updateSpeaker}
               onDeleteSpeaker={deleteSpeaker}
+              onUnsavedChanges={setHasUnsavedChanges}
+              onSaveAndContinue={() => handleStepChange('links')}
               onPrevious={() => setCurrentStep('details')}
               onNext={() => setCurrentStep('links')}
             />
@@ -153,10 +193,24 @@ export function EventManagement() {
               event={event}
               speakers={speakers.filter(s => s.time_block_id === eventId)}
               onUpdateEvent={updateEvent}
+              onUnsavedChanges={setHasUnsavedChanges}
               onPrevious={() => setCurrentStep('speakers')}
             />
           )}
         </div>
+
+        {/* Unsaved Changes Modal */}
+        <UnsavedChangesModal
+          isOpen={showUnsavedModal}
+          onClose={() => {
+            setShowUnsavedModal(false);
+            setPendingStep(null);
+          }}
+          onDiscard={handleDiscardChanges}
+          onSaveAndContinue={handleSaveAndContinue}
+          pendingStep={pendingStep}
+          currentStep={currentStep}
+        />
       </div>
     </div>
   );

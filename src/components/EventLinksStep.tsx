@@ -6,16 +6,22 @@ interface EventLinksStepProps {
   event: Event;
   speakers: Speaker[];
   onUpdateEvent: (id: string, updates: Partial<Event>) => Promise<void>;
+  onUnsavedChanges: (hasChanges: boolean) => void;
   onPrevious: () => void;
 }
 
-export function EventLinksStep({ event, speakers, onUpdateEvent, onPrevious }: EventLinksStepProps) {
+export function EventLinksStep({ event, speakers, onUpdateEvent, onUnsavedChanges, onPrevious }: EventLinksStepProps) {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; isVisible: boolean }>({
     message: '',
     type: 'success',
     isVisible: false
   });
   const [startingLive, setStartingLive] = useState(false);
+
+  // This step typically doesn't have unsaved changes, but we'll track the live status change
+  useState(() => {
+    onUnsavedChanges(false); // Links step doesn't have form data to save
+  }, [onUnsavedChanges]);
 
   const sortedSpeakers = [...speakers].sort((a, b) => a.order_index - b.order_index);
   const totalDuration = sortedSpeakers.reduce((sum, speaker) => sum + (speaker.duration || 0), 0);
