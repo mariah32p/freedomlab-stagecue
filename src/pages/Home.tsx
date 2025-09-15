@@ -402,6 +402,7 @@ export function Home() {
                 "StageCue transformed our annual tech conference. No more awkward delays or rushed sessions. Everything runs like clockwork."
               </p>
             </div>
+            </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
@@ -424,6 +425,7 @@ export function Home() {
                 "The speaker coordination features are incredible. Our software conference speakers love having their notes synced with the countdown timer."
               </p>
             </div>
+            </div>
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 hover:shadow-xl transition-shadow duration-300">
               <div className="flex items-center mb-4">
@@ -445,6 +447,7 @@ export function Home() {
               <p className="text-sm sm:text-base text-navy-700 italic">
                 "Setup took 10 minutes and saved us hours of coordination headaches for our IT training workshops. The Slack integration is a game-changer."
               </p>
+            </div>
             </div>
           </div>
         </div>
