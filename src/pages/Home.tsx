@@ -600,8 +600,10 @@ export function Home() {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Premium Plan - Coming Soon */}
+          {/* Premium Plan - Coming Soon */}
+          <div className="mt-12 max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-300 p-8 hover:shadow-2xl transition-all duration-300 relative opacity-75">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
@@ -612,7 +614,7 @@ export function Home() {
                 <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-2">StageCue Premium</h3>
                 <p className="text-sm sm:text-base text-slate-600 mb-6">Enterprise features for large organizations</p>
                 <div className="mb-6">
-                  <span className="text-4xl sm:text-5xl font-bold text-slate-500">${premiumPlan.price}</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-slate-500">${proPlan.price}</span>
                   <span className="text-base sm:text-lg font-medium text-slate-500">/month</span>
                 </div>
                 <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
@@ -633,8 +635,7 @@ export function Home() {
               </div>
             </div>
           </div>
-            {/* Pro Plan - Coming Soon */}
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-300 p-8 hover:shadow-2xl transition-all duration-300 relative opacity-75">
+
           <div className="mt-12 text-center">
             <button
               onClick={handleStartTrial}
@@ -670,34 +671,33 @@ export function Home() {
                 Most users have their first event running in under 15 minutes. Simply create your event, add speakers, and share the countdown display link. No technical setup required.
               </p>
             </div>
-                <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
-                  COMING SOON
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
                 What happens during the 7-day free trial?
               </h3>
               <p className="text-navy-700">
-                <p className="text-slate-600 mb-6">Advanced features for enterprise organizations</p>
+                You get full access to all features during your trial. No credit card required to start. After 7 days, choose a plan that works for you or cancel anytime.
               </p>
-                  <span className="text-5xl font-bold text-slate-500">${proPlan.price}</span>
-                  <span className="text-lg font-medium text-slate-500">/month</span>
-            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
-                <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
             </div>
 
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
-                    <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
-                      <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                Can I change plans later?
+              </h3>
               <p className="text-navy-700">
                 Yes! You can upgrade or downgrade anytime from your account settings. Changes take effect immediately, and billing is prorated automatically.
               </p>
-                    <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'}`}>
-                      {feature}
-                    </span>
+            </div>
 
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200">
               <h3 className="text-lg font-semibold text-navy-900 mb-3">
                 How does the Slack integration work?
+              </h3>
+              <p className="text-navy-700">
+                Connect your Slack workspace in one click. StageCue sends automated notifications to your chosen channels when sessions are about to end, run over time, or need attention.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -705,7 +705,7 @@ export function Home() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-              className="btn btn-primary px-8 py-4 text-lg bg-teal-600 hover:bg-teal-700 text-white rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Transform Your Events?
           </h2>
           <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
@@ -717,7 +717,7 @@ export function Home() {
           >
             Start Your Free Trial
           </button>
-              7-day free trial • Cancel anytime • Full access during trial
+          <p className="text-sm text-teal-100 mt-4">
             7 days free • Full access • No commitment
           </p>
         </div>
