@@ -78,11 +78,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
     // For canceled, incomplete, or no subscription → send to /get-started
     // Allow access to /settings even without subscription for account management
-    // Don't redirect from dashboard/settings on initial load to prevent flashing
-    const protectedRoutes = ['/dashboard', '/settings'];
-    const isOnProtectedRoute = protectedRoutes.includes(location.pathname);
-    
-    if (!isOnProtectedRoute && location.pathname !== '/get-started') {
+    if (location.pathname !== '/get-started' && location.pathname !== '/settings') {
       navigate('/get-started');
     }
   }, [user, authLoading, subscriptionStatus, navigate, location.pathname]);
