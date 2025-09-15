@@ -15,6 +15,7 @@ import { StageCue as Demo } from './pages/Demo';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CountdownDisplay } from './pages/CountdownDisplay';
 import { SpeakerPortal } from './pages/SpeakerPortal';
+import { ModeratorPortal } from './pages/ModeratorPortal';
 
 function AppWithNavbar() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/display/:eventId" element={<CountdownDisplay />} />
             <Route path="/display/:eventId/:blockId" element={<CountdownDisplay />} />
             <Route path="/speaker/:speakerId" element={<SpeakerPortal />} />
+            <Route path="/moderator/:eventId" element={<ModeratorPortal />} />
             
             {/* Regular app routes with navbar */}
             <Route path="/" element={<AppWithNavbar />}>

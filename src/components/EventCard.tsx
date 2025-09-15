@@ -81,6 +81,16 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
             Manage Blocks
           </button>
           <button
+            onClick={() => {
+              const moderatorUrl = `${window.location.origin}/moderator/${event.id}`;
+              navigator.clipboard.writeText(moderatorUrl);
+              // You could add a toast notification here
+            }}
+            className="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors"
+          >
+            Copy Moderator Link
+          </button>
+          <button
             onClick={() => onDelete(event)}
             className="text-sm text-red-600 hover:text-red-800 font-medium transition-colors"
           >

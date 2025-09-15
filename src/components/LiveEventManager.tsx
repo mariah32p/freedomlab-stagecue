@@ -123,7 +123,16 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                 }`}>
                   {formatTime(timer.timeRemaining)}
                 </div>
-                <div className="text-navy-600 text-lg mb-4">Time Remaining</div>
+                  <button
+                    onClick={() => {
+                      const moderatorUrl = `${window.location.origin}/moderator/${event.id}`;
+                      window.open(moderatorUrl, '_blank');
+                    }}
+                    className="flex-1 btn bg-teal-600 hover:bg-teal-700 text-white py-3"
+                  >
+                    Open Moderator Portal
+                  </button>
+                  Close
                 
                 {/* Progress Bar */}
                 <div className="w-full bg-slate-200 rounded-full h-3 mb-6">
@@ -134,20 +143,6 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                     style={{ width: `${getProgress()}%` }}
                   ></div>
                 </div>
-
-                {/* Current Block Info */}
-                {currentBlock && (
-                  <div className="bg-white rounded-lg p-6 mb-6">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
-                        currentBlock.type === 'session' ? 'bg-blue-100 text-blue-800' :
-                        currentBlock.type === 'break' ? 'bg-green-100 text-green-800' :
-                        currentBlock.type === 'qa' ? 'bg-purple-100 text-purple-800' :
-                        'bg-orange-100 text-orange-800'
-                      }`}>
-                        {currentBlock.type}
-                      </span>
-                    </div>
                     <h3 className="text-xl font-semibold text-navy-900 mb-2">{currentBlock.title}</h3>
                     <p className="text-sm text-navy-500">{currentBlock.duration} minutes allocated</p>
                     
@@ -241,10 +236,6 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                 <button
                   onClick={handleNextBlock}
                   disabled={currentBlockIndex === eventBlocks.length - 1}
-                  className="btn bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next Block →
-                </button>
               </div>
             </div>
 
