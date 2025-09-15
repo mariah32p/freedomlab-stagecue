@@ -20,13 +20,8 @@ export const products: Product[] = [
     price: 29.00,
     features: [
       'Unlimited active timers',
-      'Timer controls via web dashboard',
-      'Speaker notes management',
-      'Advanced Slack notifications',
-      'Save/reuse timer configurations',
-      'Real-time countdown displays',
       'Custom moderator links',
-      'Speaker self-service portals',
+      'Speaker notes management',
       'Timer + speaker templates'
     ]
   },
