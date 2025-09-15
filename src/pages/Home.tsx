@@ -472,7 +472,7 @@ export function Home() {
               </div>
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold text-navy-900 mb-2">StageCue Standard</h3>
-                <p className="text-navy-600 mb-6">Professional event timing for all your needs</p>
+                <p className="text-navy-600 mb-6">Core event timing features</p>
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-navy-900">$29</span>
                   <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
@@ -491,7 +491,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base text-navy-700">Up to 10 active timers</span>
+                  <span className="text-sm sm:text-base text-navy-700">Unlimited active timers</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -499,7 +499,7 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base text-navy-700">Timer controls via web dashboard</span>
+                  <span className="text-sm sm:text-base text-navy-700">Custom moderator links</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
@@ -515,95 +515,12 @@ export function Home() {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <span className="text-sm sm:text-base text-navy-700">Basic Slack notifications</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-teal-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Save/reuse timer configurations</span>
+                  <span className="text-sm sm:text-base text-navy-700">Timer + speaker templates</span>
                 </div>
               </div>
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-500 p-8 hover:shadow-2xl transition-all duration-300 relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
-                  MOST POPULAR
-                </span>
-              </div>
-              <div className="text-center mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
-                <p className="text-sm sm:text-base text-navy-600 mb-6">Perfect for conferences and larger events</p>
-                <div className="mb-6">
-                  <span className="text-4xl sm:text-5xl font-bold text-navy-900">$49</span>
-                  <span className="text-base sm:text-lg font-medium text-navy-500">/month</span>
-                </div>
-                <div className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium mb-6">
-                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  7-day free trial
-                </div>
-              </div>
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base font-semibold text-navy-900">Everything in Basic, plus:</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Unlimited active timers</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Custom moderator links</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Speaker self-service links</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Advanced Slack notifications</span>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-5 h-5 bg-purple-100 rounded-full flex items-center justify-center mt-0.5">
-                    <svg className="w-3 h-3 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <span className="text-sm sm:text-base text-navy-700">Timer + speaker templates</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Premium Plan - Coming Soon */}
-          <div className="mt-12 max-w-2xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-300 p-8 hover:shadow-2xl transition-all duration-300 relative opacity-75">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-slate-600 text-white px-4 py-2 text-sm font-bold rounded-full shadow-lg">
@@ -611,27 +528,49 @@ export function Home() {
                 </span>
               </div>
               <div className="text-center mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-2">StageCue Premium</h3>
-                <p className="text-sm sm:text-base text-slate-600 mb-6">Enterprise features for large organizations</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-navy-900 mb-2">StageCue Pro</h3>
+                <p className="text-sm sm:text-base text-slate-600 mb-6">Advanced features for enterprise</p>
                 <div className="mb-6">
-                  <span className="text-4xl sm:text-5xl font-bold text-slate-500">${proPlan.price}</span>
+                  <span className="text-4xl sm:text-5xl font-bold text-slate-500">$49</span>
                   <span className="text-base sm:text-lg font-medium text-slate-500">/month</span>
                 </div>
-                <div className="text-sm text-slate-500 font-medium">7-day free trial</div>
+                <div className="text-sm text-slate-500 font-medium mb-6">
+                  7-day free trial
+                </div>
               </div>
               <div className="space-y-4 mb-8">
-                {products.find(p => p.name === 'StageCue Standard')!.features.map((feature, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
-                      <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <span className={`${feature.startsWith('Everything') ? 'font-semibold text-slate-500' : 'text-slate-500'} text-sm sm:text-base`}>
-                      {feature}
-                    </span>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
                   </div>
-                ))}
+                  <span className="text-sm sm:text-base text-slate-500">Slack notifications</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-slate-500">Speaker self-service portals</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-slate-500">White-labeling</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center mt-0.5">
+                    <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="text-sm sm:text-base text-slate-500">Integration support</span>
+                </div>
               </div>
             </div>
           </div>
