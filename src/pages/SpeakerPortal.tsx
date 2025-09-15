@@ -18,6 +18,12 @@ export function SpeakerPortal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { timerState, formatTime, getProgress } = useSharedTimer(eventId || '', false); // false = speaker view
+  const { 
+    timerState, 
+    loading: timerLoading,
+    formatTime, 
+    getProgress 
+  } = useSharedTimer(eventId || '', false); // false = speaker view
 
   // Fetch speaker data (mock data for now)
   useEffect(() => {
@@ -178,7 +184,7 @@ export function SpeakerPortal() {
     return colors[type];
   };
 
-  if (loading) {
+  if (loading || timerLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
         <div className="text-center">
@@ -232,6 +238,9 @@ export function SpeakerPortal() {
           <div className="text-sm text-navy-600">
             {timerState.isRunning && !timerState.isPaused ? 'Session in progress' : 
              timerState.isPaused ? 'Session paused' : 'Session not started'}
+            {timerState.isRunning && (
+              <span className="ml-2 text-green-600">• Live from moderator</span>
+            )}
           </div>
         </div>
 

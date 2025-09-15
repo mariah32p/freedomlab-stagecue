@@ -119,6 +119,7 @@ export function ModeratorPortal() {
   
   const { 
     timerState, 
+    loading: timerLoading,
     startTimer, 
     pauseTimer, 
     resumeTimer, 
@@ -132,7 +133,7 @@ export function ModeratorPortal() {
   // Update shared timer when time block changes
   useEffect(() => {
     if (currentBlock) {
-      setCurrentBlock(currentBlockIndex, currentBlock.duration * 60);
+      setCurrentBlock(currentBlockIndex, currentBlock.id, currentBlock.duration * 60);
     }
   }, [currentBlock?.id, currentBlockIndex, setCurrentBlock]);
 
@@ -157,7 +158,8 @@ export function ModeratorPortal() {
 
   const handleNextBlock = () => {
     if (currentBlockIndex < eventBlocks.length - 1) {
-      setCurrentBlockIndex(prev => prev + 1);
+      const newIndex = currentBlockIndex + 1;
+      setCurrentBlockIndex(newIndex);
       const nextBlock = eventBlocks[currentBlockIndex + 1];
       addNotification(`🎤 Now starting: ${nextBlock?.title}`);
     }
@@ -165,7 +167,8 @@ export function ModeratorPortal() {
 
   const handlePreviousBlock = () => {
     if (currentBlockIndex > 0) {
-      setCurrentBlockIndex(prev => prev - 1);
+      const newIndex = currentBlockIndex - 1;
+      setCurrentBlockIndex(newIndex);
       const prevBlock = eventBlocks[currentBlockIndex - 1];
       addNotification(`🎤 Back to: ${prevBlock?.title}`);
     }
@@ -193,7 +196,7 @@ export function ModeratorPortal() {
     getNotesForSpeaker(speaker.id)
   ).sort((a, b) => a.time_marker - b.time_marker);
 
-  if (loading) {
+  if (loading || timerLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
         <div className="text-center">

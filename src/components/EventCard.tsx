@@ -99,21 +99,21 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
           </button>
           <button
             onClick={() => {
-              const moderatorUrl = `${window.location.origin}/moderator/${event.id}`;
+              const speakerUrl = `${window.location.origin}/speaker/${event.id}/speaker-1`;
               if (navigator.clipboard) {
-                navigator.clipboard.writeText(moderatorUrl).then(() => {
-                  showToast('Moderator link copied to clipboard!');
+                navigator.clipboard.writeText(speakerUrl).then(() => {
+                  showToast('Speaker link copied to clipboard!');
                 }).catch(() => {
                   showToast('Failed to copy link', 'error');
                 });
               } else {
                 // Fallback for browsers that don't support clipboard API
-                showToast('Clipboard not supported - link: ' + moderatorUrl, 'error');
+                showToast('Clipboard not supported - link: ' + speakerUrl, 'error');
               }
             }}
             className="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors"
           >
-            Copy Moderator Link
+            Copy Speaker Link
           </button>
           <button
             onClick={() => onDelete(event)}
