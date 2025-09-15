@@ -241,6 +241,7 @@ export function LiveEventManager({ event, onClose, isOpen }: LiveEventManagerPro
                 >
                   Next Block →
                 </button>
+                </button>
               </div>
             </div>
 
