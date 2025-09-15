@@ -122,24 +122,6 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
             Delete
           </button>
         </div>
-        <div className="flex space-x-2">
-          {event.status === 'draft' && (
-            <button
-              onClick={() => onStartLive(event)}
-              className="btn btn-primary px-4 py-2 text-sm"
-            >
-              Start Live
-            </button>
-          )}
-          {event.status === 'live' && (
-            <button
-              onClick={() => onStartLive(event)}
-              className="btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm"
-            >
-              Manage Live
-            </button>
-          )}
-        </div>
       </div>
       </div>
       

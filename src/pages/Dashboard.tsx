@@ -189,38 +189,91 @@ export function Dashboard() {
       </div>
 
       {/* Modals */}
-      <CreateEventModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onCreateEvent={handleCreateEvent}
-      />
-
-      {selectedEvent && (
-        <LiveEventManager
-          event={selectedEvent}
-          isOpen={showLiveManager}
-          onClose={() => {
-            setShowLiveManager(false);
-            setSelectedEvent(null);
-          }}
-        />
+      {showCreateModal && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={() => setShowCreateModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl max-w-md w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-navy-900">Create New Event</h2>
+                <button
+                  onClick={() => setShowCreateModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleCreateEvent({
+                  name: formData.get('name') as string,
+                  date: formData.get('date') as string,
+                  total_duration: 60, // Default 1 hour
+                  meeting_link: (formData.get('meeting_link') as string) || undefined,
+                  status: 'draft'
+                });
+              }} className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-navy-700 mb-2">
+                    Event Name *
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    className="input"
+                    placeholder="e.g., Tech Summit 2025"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="date" className="block text-sm font-medium text-navy-700 mb-2">
+                    Date *
+                  </label>
+                  <input
+                    id="date"
+                    name="date"
+                    type="date"
+                    required
+                    className="input"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="meeting_link" className="block text-sm font-medium text-navy-700 mb-2">
+                    Meeting Link (optional)
+                  </label>
+                  <input
+                    id="meeting_link"
+                    name="meeting_link"
+                    type="url"
+                    className="input"
+                    placeholder="https://zoom.us/j/123456789"
+                  />
+                </div>
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-full py-3"
+                  >
+                    Create Event
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       )}
 
-      {selectedEvent && (
-        <>
-            <TimeBlockManager
-              event={selectedEvent}
-              isOpen={showTimeBlockManager}
-              onClose={() => {
-                setShowTimeBlockManager(false);
-                setSelectedEvent(null);
-              }}
-            />
-        </>
-      )}
-            
       <DeleteConfirmModal
-        isOpen={deleteConfirm.show}
+        isOpen={showCreateModal}
         onClose={cancelDelete}
         onConfirm={confirmDelete}
         title="Delete Event"

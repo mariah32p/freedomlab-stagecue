@@ -162,6 +162,14 @@ export function SpeakerPortal() {
           <p className="text-xl text-navy-600">
             {currentBlock?.title} - {currentBlock?.duration} minutes
           </p>
+          <div className="flex items-center justify-center space-x-4 mt-4">
+            <a
+              href={`/events/${eventId}`}
+              className="text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
+            >
+              ← Back to Event Management
+            </a>
+          </div>
         </div>
 
         {/* Live Timer Display */}

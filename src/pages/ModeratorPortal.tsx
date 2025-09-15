@@ -234,6 +234,14 @@ export function ModeratorPortal() {
           <h2 className="text-xl md:text-2xl font-semibold text-teal-600 mb-2">
             {event.name}
           </h2>
+          <div className="flex items-center justify-center space-x-4 mt-4">
+            <a
+              href={`/events/${eventId}`}
+              className="text-sm text-teal-600 hover:text-teal-700 font-medium transition-colors"
+            >
+              ← Back to Event Management
+            </a>
+          </div>
           <p className="text-navy-600">
             {new Date(event.date).toLocaleDateString('en-US', {
               weekday: 'long',
