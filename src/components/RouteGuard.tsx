@@ -39,7 +39,8 @@ export function RouteGuard({ children }: RouteGuardProps) {
     const isPublicRoute = publicRoutes.includes(location.pathname) ||
       location.pathname.startsWith('/moderator/') ||
       location.pathname.startsWith('/display/') ||
-      location.pathname.startsWith('/speaker/');
+      location.pathname.startsWith('/speaker/') ||
+      location.pathname.startsWith('/events/');
 
     // If not signed in → send to /signup
     if (!user) {
@@ -87,7 +88,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
     // For canceled, incomplete, or no subscription → send to /get-started
     // Allow access to /settings even without subscription for account management
-    if (location.pathname !== '/get-started' && location.pathname !== '/settings') {
+    if (location.pathname !== '/get-started' && location.pathname !== '/settings' && !location.pathname.startsWith('/events/')) {
       navigate('/get-started');
     }
   }, [user, authLoading, subscriptionStatus, navigate, location.pathname]);
