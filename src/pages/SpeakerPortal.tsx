@@ -1,21 +1,100 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useTimeBlocks } from '../hooks/useTimeBlocks';
+import { useSharedTimer } from '../hooks/useSharedTimer';
 import { SpeakerNote } from '../types/event';
 
 export function SpeakerPortal() {
-  const { speakerId } = useParams<{ speakerId: string }>();
-  const { speakers, addNote, updateNote, deleteNote, getNotesForSpeaker } = useTimeBlocks();
+  const { eventId, speakerId } = useParams<{ eventId: string; speakerId: string }>();
+  const [speaker, setSpeaker] = useState<any>(null);
+  const [notes, setNotes] = useState<SpeakerNote[]>([]);
+  const [currentBlock, setCurrentBlock] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     time_marker: '',
     content: '',
     type: 'essential' as SpeakerNote['type']
   });
   const [editingNote, setEditingNote] = useState<SpeakerNote | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { timerState, formatTime, getProgress } = useSharedTimer(eventId || '', false); // false = speaker view
 
-  const speaker = speakers.find(s => s.id === speakerId);
-  const speakerNotes = speaker ? getNotesForSpeaker(speaker.id) : [];
+  // Fetch speaker data (mock data for now)
+  useEffect(() => {
+    const fetchSpeakerData = async () => {
+      if (!speakerId || !eventId) return;
+      
+      try {
+        // Mock data - in production this would be a public API call
+        const mockSpeaker = {
+          id: speakerId,
+          name: 'Dr. Sarah Chen',
+          email: 'sarah@example.com',
+          bio: 'AI Research Scientist',
+          time_block_id: '1'
+        };
+        
+        const mockBlock = {
+          id: '1',
+          title: 'AI in Healthcare',
+          duration: 30,
+          type: 'session'
+        };
+        
+        const mockNotes = [
+          {
+            id: '1',
+            speaker_id: speakerId,
+            time_marker: 300, // 5 minutes
+            content: 'Introduce the new AI diagnostic tools',
+            type: 'essential' as const,
+            created_at: '2025-01-22T10:00:00Z'
+          },
+          {
+            id: '2',
+            speaker_id: speakerId,
+            time_marker: 1200, // 20 minutes
+            content: 'Wrap up and transition to Q&A',
+            type: 'transition' as const,
+            created_at: '2025-01-22T10:01:00Z'
+          }
+        ];
+        
+        setSpeaker(mockSpeaker);
+        setCurrentBlock(mockBlock);
+        setNotes(mockNotes);
+      } catch (error) {
+        console.error('Error fetching speaker data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchSpeakerData();
+  }, [speakerId, eventId]);
+  
+  const addNote = async (noteData: Omit<SpeakerNote, 'id' | 'created_at'>) => {
+    const newNote: SpeakerNote = {
+      ...noteData,
+      id: Date.now().toString(),
+      created_at: new Date().toISOString()
+    };
+    setNotes(prev => [...prev, newNote]);
+    return newNote;
+  };
+  
+  const updateNote = async (id: string, updates: Partial<SpeakerNote>) => {
+    setNotes(prev => prev.map(note => 
+      note.id === id ? { ...note, ...updates } : note
+    ));
+  };
+  
+  const deleteNote = async (id: string) => {
+    setNotes(prev => prev.filter(note => note.id !== id));
+  };
+  
+  const speakerNotes = notes.filter(note => note.speaker_id === speakerId)
+    .sort((a, b) => a.time_marker - b.time_marker);
 
   const parseTimeToSeconds = (timeString: string): number => {
     const parts = timeString.split(':');
@@ -37,16 +116,14 @@ export function SpeakerPortal() {
     e.preventDefault();
     if (!speaker) return;
 
-    setLoading(true);
+    setIsSubmitting(true);
     try {
       const timeInSeconds = parseTimeToSeconds(formData.time_marker);
       
-      // For speaker portal, we need to get the time block duration
-      // This would need to be passed from the parent or fetched
-      // For now, we'll add a reasonable validation (assume max 60 minutes)
-      if (timeInSeconds > 3600) { // 60 minutes
-        setError('Time marker cannot exceed 60 minutes');
-        setLoading(false);
+      // Validate against current block duration
+      if (currentBlock && timeInSeconds > currentBlock.duration * 60) {
+        setError(`Time marker cannot exceed ${currentBlock.duration} minutes`);
+        setIsSubmitting(false);
         return;
       }
       
@@ -70,7 +147,7 @@ export function SpeakerPortal() {
     } catch (err) {
       console.error('Error saving note:', err);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -101,7 +178,7 @@ export function SpeakerPortal() {
     return colors[type];
   };
 
-  if (!speaker) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
         <div className="text-center">
@@ -126,8 +203,36 @@ export function SpeakerPortal() {
             Welcome, {speaker.name}
           </h1>
           <p className="text-xl text-navy-600">
-            Manage your speaking notes and preparation
+            {currentBlock?.title} - {currentBlock?.duration} minutes
           </p>
+        </div>
+
+        {/* Live Timer Display */}
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-8 text-center">
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-blue-600">LIVE SESSION TIMER</span>
+          </div>
+          
+          <div className={`text-4xl md:text-6xl font-mono font-bold mb-4 transition-colors duration-500 ${
+            timerState.timeRemaining < 300 ? 'text-red-500 animate-pulse' : 'text-navy-900'
+          }`}>
+            {formatTime(timerState.timeRemaining)}
+          </div>
+          
+          <div className="w-full bg-slate-200 rounded-full h-3 mb-4">
+            <div 
+              className={`h-3 rounded-full transition-all duration-1000 ${
+                timerState.timeRemaining < 300 ? 'bg-red-500' : 'bg-gradient-to-r from-teal-500 to-purple-500'
+              }`}
+              style={{ width: `${getProgress()}%` }}
+            ></div>
+          </div>
+          
+          <div className="text-sm text-navy-600">
+            {timerState.isRunning && !timerState.isPaused ? 'Session in progress' : 
+             timerState.isPaused ? 'Session paused' : 'Session not started'}
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -152,7 +257,7 @@ export function SpeakerPortal() {
                   onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
                 />
                 <p className="text-xs text-navy-500 mt-1">
-                  Time from start of your session block. Format: MM:SS or minutes (e.g., "5:30" or "5")
+                  Time from start of your session. Format: MM:SS or minutes (e.g., "5:30" or "5")
                 </p>
               </div>
 
@@ -199,10 +304,10 @@ export function SpeakerPortal() {
                 )}
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={isSubmitting}
                   className="flex-1 btn btn-primary py-3"
                 >
-                  {loading ? (
+                  {isSubmitting ? (
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       {editingNote ? 'Updating...' : 'Adding...'}
@@ -220,6 +325,16 @@ export function SpeakerPortal() {
             <h2 className="text-xl font-semibold text-navy-900 mb-6">
               Your Speaking Notes ({speakerNotes.length})
             </h2>
+            
+            {/* Block Info */}
+            <div className="bg-slate-50 rounded-lg p-4 mb-6">
+              <h4 className="font-medium text-navy-900 mb-2">Session Information</h4>
+              <div className="space-y-1 text-sm text-navy-600">
+                <div><strong>Session:</strong> {currentBlock?.title}</div>
+                <div><strong>Duration:</strong> {currentBlock?.duration} minutes</div>
+                <div><strong>Type:</strong> {currentBlock?.type}</div>
+              </div>
+            </div>
             
             {speakerNotes.length === 0 ? (
               <div className="text-center py-12 bg-slate-50 rounded-xl">
@@ -283,7 +398,7 @@ export function SpeakerPortal() {
                 <div>• <strong>Essential notes:</strong> Must-cover content</div>
                 <div>• <strong>Optional notes:</strong> Skip if running behind</div>
                 <div>• <strong>Transition notes:</strong> Handoff cues to next speaker</div>
-                <div>• Time markers help you stay on track during your presentation</div>
+                <div>• <strong>Live timer:</strong> Shows real-time countdown from moderator</div>
               </div>
             </div>
           </div>

@@ -35,7 +35,7 @@ function App() {
             {/* Public countdown display - no navbar */}
             <Route path="/display/:eventId" element={<CountdownDisplay />} />
             <Route path="/display/:eventId/:blockId" element={<CountdownDisplay />} />
-            <Route path="/speaker/:speakerId" element={<SpeakerPortal />} />
+            <Route path="/speaker/:eventId/:speakerId" element={<SpeakerPortal />} />
             <Route path="/moderator/:eventId" element={<ModeratorPortal />} />
             
             {/* Regular app routes with navbar */}
