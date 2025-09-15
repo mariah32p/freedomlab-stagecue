@@ -11,12 +11,6 @@ export function SpeakerPortal() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     time_marker: '',
-    content: '',
-    type: 'essential' as SpeakerNote['type']
-  });
-  const [editingNote, setEditingNote] = useState<SpeakerNote | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const { 
     timerState, 
     loading: timerLoading,
