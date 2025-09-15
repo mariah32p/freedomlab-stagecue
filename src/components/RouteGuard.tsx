@@ -15,6 +15,10 @@ export function RouteGuard({ children }: RouteGuardProps) {
   const location = useLocation();
 
   useEffect(() => {
+    // Don't navigate while still loading
+    if (authLoading || subscriptionStatus.loading) {
+      return;
+    }
        // Handle password reset redirects - check for reset token in URL
     // This works regardless of which page the user initially lands on
     if (window.location.hash && window.location.hash.includes('type=recovery')) {
@@ -30,10 +34,6 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // Don't redirect while still loading
-    if (authLoading || subscriptionStatus.loading) {
-      return;
-    }
 
     // If not signed in → send to /signup
     if (!user) {
@@ -78,7 +78,11 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
     // For canceled, incomplete, or no subscription → send to /get-started
     // Allow access to /settings even without subscription for account management
-    if (location.pathname !== '/get-started' && location.pathname !== '/settings') {
+    // Don't redirect from dashboard/settings on initial load to prevent flashing
+    const protectedRoutes = ['/dashboard', '/settings'];
+    const isOnProtectedRoute = protectedRoutes.includes(location.pathname);
+    
+    if (!isOnProtectedRoute && location.pathname !== '/get-started') {
       navigate('/get-started');
     }
   }, [user, authLoading, subscriptionStatus, navigate, location.pathname]);
