@@ -12,6 +12,18 @@ export interface FeatureGates {
 export function useFeatureGating(): FeatureGates {
   const subscriptionStatus = useSubscriptionStatus();
 
+  // While loading, return optimistic defaults to avoid showing limiting messages
+  if (subscriptionStatus.loading) {
+    return {
+      maxActiveTimers: Infinity,
+      hasCustomLinks: true,
+      hasSpeakerPortals: true,
+      hasAdvancedSlack: true,
+      hasTemplates: true,
+      canCreateEvents: true,
+    };
+  }
+
   // During trial or active subscription, provide features based on plan
   if (subscriptionStatus.status === 'trialing' || subscriptionStatus.status === 'active') {
     if (subscriptionStatus.plan === 'basic') {
