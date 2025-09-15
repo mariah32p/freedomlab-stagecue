@@ -6,17 +6,12 @@ import { SpeakerNote } from '../types/event';
 export function SpeakerPortal() {
   const { eventId, speakerId } = useParams<{ eventId: string; speakerId: string }>();
   const [speaker, setSpeaker] = useState<any>(null);
-  const [notes, setNotes] = useState<SpeakerNote[]>([]);
+  const [speakerNotes, setSpeakerNotes] = useState('');
+  const [originalNotes, setOriginalNotes] = useState('');
   const [currentBlock, setCurrentBlock] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    time_marker: '',
-    content: '',
-    type: 'essential' as SpeakerNote['type']
-  });
-  const [editingNote, setEditingNote] = useState<SpeakerNote | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error' | null>(null);
   const { 
     timerState, 
     loading: timerLoading,
@@ -67,7 +62,11 @@ export function SpeakerPortal() {
         
         setSpeaker(mockSpeaker);
         setCurrentBlock(mockBlock);
-        setNotes(mockNotes);
+        
+        // Load speaker's notes (simplified to single text block)
+        const existingNotes = "Welcome everyone to today's session on AI in Healthcare.\n\n5:00 - Introduce the new diagnostic tools\n10:00 - Share research findings\n20:00 - Demo the AI system\n25:00 - Wrap up and prepare for Q&A";
+        setSpeakerNotes(existingNotes);
+        setOriginalNotes(existingNotes);
       } catch (error) {
         console.error('Error fetching speaker data:', error);
       } finally {
@@ -78,109 +77,62 @@ export function SpeakerPortal() {
     fetchSpeakerData();
   }, [speakerId, eventId]);
   
-  const addNote = async (noteData: Omit<SpeakerNote, 'id' | 'created_at'>) => {
-    const newNote: SpeakerNote = {
-      ...noteData,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString()
-    };
-    setNotes(prev => [...prev, newNote]);
-    return newNote;
-  };
-  
-  const updateNote = async (id: string, updates: Partial<SpeakerNote>) => {
-    setNotes(prev => prev.map(note => 
-      note.id === id ? { ...note, ...updates } : note
-    ));
-  };
-  
-  const deleteNote = async (id: string) => {
-    setNotes(prev => prev.filter(note => note.id !== id));
-  };
-  
-  const speakerNotes = notes.filter(note => note.speaker_id === speakerId)
-    .sort((a, b) => a.time_marker - b.time_marker);
+  // Auto-save notes with debouncing
+  useEffect(() => {
+    if (speakerNotes === originalNotes) return;
+    
+    const saveTimer = setTimeout(async () => {
+      setIsSaving(true);
+      setSaveStatus('saving');
+      
+      try {
+        // In production, this would save to Supabase
+        // await supabase.from('speaker_notes').upsert({
+        //   speaker_id: speakerId,
+        //   content: speakerNotes
+        // });
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        setOriginalNotes(speakerNotes);
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus(null), 2000);
+      } catch (err) {
+        console.error('Error saving notes:', err);
+        setSaveStatus('error');
+      } finally {
+        setIsSaving(false);
+      }
+    }, 1000); // Save 1 second after user stops typing
+    
+    return () => clearTimeout(saveTimer);
+  }, [speakerNotes, originalNotes, speakerId]);
 
-  const parseTimeToSeconds = (timeString: string): number => {
-    const parts = timeString.split(':');
-    if (parts.length === 2) {
-      const minutes = parseInt(parts[0]) || 0;
-      const seconds = parseInt(parts[1]) || 0;
-      return minutes * 60 + seconds;
+  const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSpeakerNotes(e.target.value);
+    if (saveStatus === 'error') {
+      setSaveStatus(null);
     }
-    return (parseInt(timeString) || 0) * 60;
   };
 
-  const formatTimeMarker = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!speaker) return;
-
-    setIsSubmitting(true);
+  const handleSaveNow = async () => {
+    setIsSaving(true);
+    setSaveStatus('saving');
+    
     try {
-      const timeInSeconds = parseTimeToSeconds(formData.time_marker);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Validate against current block duration
-      if (currentBlock && timeInSeconds > currentBlock.duration * 60) {
-        setError(`Time marker cannot exceed ${currentBlock.duration} minutes`);
-        setIsSubmitting(false);
-        return;
-      }
-      
-      if (editingNote) {
-        await updateNote(editingNote.id, {
-          time_marker: timeInSeconds,
-          content: formData.content,
-          type: formData.type
-        });
-        setEditingNote(null);
-      } else {
-        await addNote({
-          speaker_id: speaker.id,
-          time_marker: timeInSeconds,
-          content: formData.content,
-          type: formData.type
-        });
-      }
-
-      setFormData({ time_marker: '', content: '', type: 'essential' });
+      setOriginalNotes(speakerNotes);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus(null), 2000);
     } catch (err) {
-      console.error('Error saving note:', err);
+      console.error('Error saving notes:', err);
+      setSaveStatus('error');
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
-  };
-
-  const handleEditNote = (note: SpeakerNote) => {
-    setEditingNote(note);
-    setFormData({
-      time_marker: formatTimeMarker(note.time_marker),
-      content: note.content,
-      type: note.type
-    });
-  };
-
-  const handleDeleteNote = async (noteId: string) => {
-    await deleteNote(noteId);
-  };
-
-  const cancelEdit = () => {
-    setEditingNote(null);
-    setFormData({ time_marker: '', content: '', type: 'essential' });
-  };
-
-  const getNoteTypeColor = (type: SpeakerNote['type']) => {
-    const colors = {
-      essential: 'bg-blue-50 border-blue-200 text-blue-800',
-      optional: 'bg-slate-50 border-slate-200 text-slate-600',
-      transition: 'bg-purple-50 border-purple-200 text-purple-800'
-    };
-    return colors[type];
   };
 
   if (loading || timerLoading) {
@@ -244,169 +196,134 @@ export function SpeakerPortal() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Add/Edit Note Form */}
+          {/* Speaker Notes */}
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-xl font-semibold text-navy-900 mb-6">
-              {editingNote ? 'Edit Speaking Note' : 'Add Speaking Note'}
-            </h2>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="time-marker" className="block text-sm font-medium text-navy-700 mb-2">
-                  Time Marker (within your session) *
-                </label>
-                <input
-                  id="time-marker"
-                  type="text"
-                  required
-                  className="input"
-                  placeholder="5:30 or 5 (minutes)"
-                  value={formData.time_marker}
-                  onChange={(e) => setFormData(prev => ({ ...prev, time_marker: e.target.value }))}
-                />
-                <p className="text-xs text-navy-500 mt-1">
-                  Time from start of your session. Format: MM:SS or minutes (e.g., "5:30" or "5")
-                </p>
-              </div>
-
-              <div>
-                <label htmlFor="note-content" className="block text-sm font-medium text-navy-700 mb-2">
-                  Note Content *
-                </label>
-                <textarea
-                  id="note-content"
-                  required
-                  className="input h-48 resize-none text-base"
-                  placeholder="Speaking note or reminder..."
-                  value={formData.content}
-                  onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="note-type" className="block text-sm font-medium text-navy-700 mb-2">
-                  Note Type *
-                </label>
-                <select
-                  id="note-type"
-                  required
-                  className="input"
-                  value={formData.type}
-                  onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as SpeakerNote['type'] }))}
-                >
-                  <option value="essential">Essential - Must cover</option>
-                  <option value="optional">Optional - Skip if running late</option>
-                  <option value="transition">Transition - Handoff cue</option>
-                </select>
-              </div>
-
-              <div className="flex space-x-3 pt-4">
-                {editingNote && (
-                  <button
-                    type="button"
-                    onClick={cancelEdit}
-                    className="flex-1 btn btn-outline py-3"
-                  >
-                    Cancel
-                  </button>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-navy-900">
+                Your Speaking Notes
+              </h2>
+              <div className="flex items-center space-x-2">
+                {saveStatus === 'saving' && (
+                  <div className="flex items-center text-sm text-blue-600">
+                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-1"></div>
+                    Saving...
+                  </div>
                 )}
+                {saveStatus === 'saved' && (
+                  <div className="flex items-center text-sm text-green-600">
+                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    Saved
+                  </div>
+                )}
+                {saveStatus === 'error' && (
+                  <div className="flex items-center text-sm text-red-600">
+                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+            <div className="space-y-4">
+              <textarea
+                className="w-full h-96 p-4 border border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base leading-relaxed"
+                placeholder="Add your speaking notes here...&#10;&#10;You can organize them however you like:&#10;• Key points to cover&#10;• Time markers (5:00 - introduce topic)&#10;• Reminders and cues&#10;• Transition notes"
+                value={speakerNotes}
+                onChange={handleNotesChange}
+              />
+              
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-navy-500">
+                  {speakerNotes !== originalNotes ? 'Unsaved changes' : 'All changes saved'}
+                </div>
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 btn btn-primary py-3"
+                  onClick={handleSaveNow}
+                  disabled={isSaving || speakerNotes === originalNotes}
+                  className="btn btn-primary px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      {editingNote ? 'Updating...' : 'Adding...'}
-                    </div>
-                  ) : (
-                    editingNote ? 'Update Note' : 'Add Note'
-                  )}
+                  {isSaving ? 'Saving...' : 'Save Now'}
                 </button>
               </div>
-            </form>
+            </div>
           </div>
 
-          {/* Notes List */}
+          {/* Session Info & Tips */}
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-            <h2 className="text-xl font-semibold text-navy-900 mb-6">
-              Your Speaking Notes ({speakerNotes.length})
-            </h2>
+            <h2 className="text-xl font-semibold text-navy-900 mb-6">Session Information</h2>
             
-            {/* Block Info */}
-            <div className="bg-slate-50 rounded-lg p-4 mb-6">
-              <h4 className="font-medium text-navy-900 mb-2">Session Information</h4>
+            <div className="space-y-6">
+              {/* Session Details */}
+              <div className="bg-slate-50 rounded-lg p-4">
+                <h4 className="font-medium text-navy-900 mb-2">Your Session</h4>
+                <div className="space-y-1 text-sm text-navy-600">
+                  <div><strong>Session:</strong> {currentBlock?.title}</div>
+                  <div><strong>Duration:</strong> {currentBlock?.duration} minutes</div>
+                  <div><strong>Speaker:</strong> {speaker?.name}</div>
+                </div>
+              </div>
+              
+              {/* Tips */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900 mb-2">💡 Tips for Your Notes</h4>
+                <div className="space-y-2 text-sm text-blue-800">
+                  <div>• Add time markers: "5:00 - introduce topic"</div>
+                  <div>• Mark key points you must cover</div>
+                  <div>• Include transition cues for smooth handoffs</div>
+                  <div>• Notes auto-save as you type</div>
+                </div>
+              </div>
+              
+              {/* Timer Status */}
+              <div className="bg-green-50 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">🎤 Session Status</h4>
+                <div className="text-sm text-green-800">
+                  {timerState.isRunning && !timerState.isPaused ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2"></div>
+                      Your session is live! Timer controlled by moderator.
+                    </div>
+                  ) : timerState.isPaused ? (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-amber-500 rounded-full mr-2"></div>
+                      Session paused by moderator.
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-slate-400 rounded-full mr-2"></div>
+                      Waiting for moderator to start your session.
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Character Count */}
               <div className="space-y-1 text-sm text-navy-600">
-                <div><strong>Session:</strong> {currentBlock?.title}</div>
-                <div><strong>Duration:</strong> {currentBlock?.duration} minutes</div>
-                <div><strong>Type:</strong> {currentBlock?.type}</div>
+                <div className="text-xs text-navy-500">
+                  {speakerNotes.length} characters • {speakerNotes.split('\n').length} lines
+                </div>
               </div>
             </div>
-            
-            {speakerNotes.length === 0 ? (
-              <div className="text-center py-12 bg-slate-50 rounded-xl">
-                <svg className="w-12 h-12 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <h3 className="text-lg font-medium text-navy-900 mb-2">No notes yet</h3>
-                <p className="text-navy-600">Add time-synced speaking notes to help with your presentation</p>
-              </div>
-            ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                {speakerNotes.map((note) => (
-                  <div key={note.id} className={`p-4 rounded-lg border ${getNoteTypeColor(note.type)}`}>
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-sm font-medium">
-                          {formatTimeMarker(note.time_marker)}
-                        </span>
-                        <span className="text-xs px-2 py-0.5 bg-white/50 rounded capitalize">
-                          {note.type}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => handleEditNote(note)}
-                          className="text-xs px-2 py-1 bg-white/70 hover:bg-white rounded text-navy-600 hover:text-navy-800 transition-colors"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteNote(note.id)}
-                          className="text-xs px-2 py-1 bg-red-100 hover:bg-red-200 text-red-600 rounded transition-colors"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                    <div className="text-sm">{note.content}</div>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Session Info */}
+        {/* Additional Info */}
         <div className="mt-8 bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
-          <h2 className="text-xl font-semibold text-navy-900 mb-4">Session Information</h2>
+          <h2 className="text-xl font-semibold text-navy-900 mb-4">How It Works</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-medium text-navy-700 mb-2">Speaker Details</h3>
+              <h3 className="font-medium text-navy-700 mb-2">During Your Session</h3>
               <div className="space-y-2 text-sm text-navy-600">
-                <div><strong>Name:</strong> {speaker.name}</div>
-                {speaker.email && <div><strong>Email:</strong> {speaker.email}</div>}
-                {speaker.bio && <div><strong>Bio:</strong> {speaker.bio}</div>}
+                <div>• The timer shows your remaining time</div>
+                <div>• Moderator controls start/stop/extend</div>
+                <div>• Timer updates in real-time across all devices</div>
+                <div>• Use your notes as a reference during presentation</div>
               </div>
             </div>
             <div>
-              <h3 className="font-medium text-navy-700 mb-2">Preparation Tips</h3>
+              <h3 className="font-medium text-navy-700 mb-2">Note Organization Tips</h3>
               <div className="space-y-2 text-sm text-navy-600">
-                <div>• <strong>Essential notes:</strong> Must-cover content</div>
-                <div>• <strong>Optional notes:</strong> Skip if running behind</div>
-                <div>• <strong>Transition notes:</strong> Handoff cues to next speaker</div>
-                <div>• <strong>Live timer:</strong> Shows real-time countdown from moderator</div>
+                <div>• Add time markers: "10:00 - demo feature"</div>
+                <div>• Mark essential vs optional content</div>
+                <div>• Include transition cues for handoffs</div>
+                <div>• Keep it simple - you'll be presenting!</div>
               </div>
             </div>
           </div>
