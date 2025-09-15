@@ -34,12 +34,16 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
+    // Allow public access to moderator portals, countdown displays, and speaker portals
+    const publicRoutes = ['/login', '/signup', '/pricing', '/', '/demo'];
+    const isPublicRoute = publicRoutes.includes(location.pathname) ||
+      location.pathname.startsWith('/moderator/') ||
+      location.pathname.startsWith('/display/') ||
+      location.pathname.startsWith('/speaker/');
 
     // If not signed in → send to /signup
     if (!user) {
-      // Allow certain public routes without authentication
-      const publicRoutes = ['/login', '/signup', '/pricing', '/', '/demo'];
-      if (publicRoutes.includes(location.pathname)) {
+      if (isPublicRoute) {
         return;
       }
       navigate('/signup');
