@@ -16,6 +16,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { CountdownDisplay } from './pages/CountdownDisplay';
 import { SpeakerPortal } from './pages/SpeakerPortal';
 import { ModeratorPortal } from './pages/ModeratorPortal';
+import { EventManagement } from './pages/EventManagement';
 
 function AppWithNavbar() {
   return (
@@ -55,6 +56,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="events/:eventId"
+                element={
+                  <ProtectedRoute>
+                    <EventManagement />
                   </ProtectedRoute>
                 }
               />

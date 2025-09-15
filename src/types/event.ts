@@ -26,6 +26,8 @@ export interface Speaker {
   id: string;
   time_block_id: string;
   name: string;
+  session_title?: string;
+  duration?: number; // in minutes
   email?: string;
   bio?: string;
   order_index: number; // for multiple speakers in one block

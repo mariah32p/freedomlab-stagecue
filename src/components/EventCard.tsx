@@ -92,10 +92,10 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
       <div className="flex items-center justify-between pt-4 border-t border-slate-200">
         <div className="flex space-x-2">
           <button
-            onClick={() => onManageBlocks(event)}
-            className="text-sm text-navy-600 hover:text-navy-800 font-medium transition-colors"
+            onClick={() => window.location.href = `/events/${event.id}`}
+            className="btn btn-primary px-4 py-2 text-sm"
           >
-            Manage Blocks
+            Manage Event
           </button>
           <button
             onClick={() => {
