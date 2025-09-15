@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Event } from '../types/event';
+import { Toast } from './Toast';
 
 interface EventCardProps {
   event: Event;
@@ -8,6 +10,12 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: EventCardProps) {
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error'; isVisible: boolean }>({
+    message: '',
+    type: 'success',
+    isVisible: false
+  });
+
   const getStatusColor = (status: Event['status']) => {
     switch (status) {
       case 'draft':
@@ -30,8 +38,17 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
     });
   };
 
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type, isVisible: true });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, isVisible: false }));
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
+    <>
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-navy-900 mb-2">{event.name}</h3>
@@ -83,20 +100,16 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
           <button
             onClick={() => {
               const moderatorUrl = `${window.location.origin}/moderator/${event.id}`;
-              navigator.clipboard.writeText(moderatorUrl).then(() => {
-                // Simple feedback - you could replace with a toast notification
-                const button = event.target as HTMLButtonElement;
-                const originalText = button.textContent;
-                button.textContent = 'Copied!';
-                button.style.color = '#059669'; // green-600
-                setTimeout(() => {
-                  button.textContent = originalText;
-                  button.style.color = '';
-                }, 2000);
-              }).catch(() => {
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(moderatorUrl).then(() => {
+                  showToast('Moderator link copied to clipboard!');
+                }).catch(() => {
+                  showToast('Failed to copy link', 'error');
+                });
+              } else {
                 // Fallback for browsers that don't support clipboard API
-                alert(`Moderator link: ${moderatorUrl}`);
-              });
+                showToast('Clipboard not supported - link: ' + moderatorUrl, 'error');
+              }
             }}
             className="text-sm text-teal-600 hover:text-teal-800 font-medium transition-colors"
           >
@@ -128,6 +141,14 @@ export function EventCard({ event, onManageBlocks, onDelete, onStartLive }: Even
           )}
         </div>
       </div>
-    </div>
+      </div>
+      
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
+    </>
   );
 }
