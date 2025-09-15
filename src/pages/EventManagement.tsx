@@ -6,7 +6,7 @@ import { useTimeBlocks } from '../hooks/useTimeBlocks';
 import { EventDetailsStep } from '../components/EventDetailsStep';
 import { SpeakerLineupStep } from '../components/SpeakerLineupStep';
 import { EventLinksStep } from '../components/EventLinksStep';
-import { UnsavedChangesModal } from '../components/UnsavedChangesModal';
+import { UnsavedChangesModal } from '../components/UnsavedChangesModal.tsx';
 
 type Step = 'details' | 'speakers' | 'links';
 
